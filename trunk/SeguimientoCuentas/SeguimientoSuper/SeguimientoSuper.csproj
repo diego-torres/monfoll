@@ -13,6 +13,21 @@
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -33,7 +48,16 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Fatcow-Farm-Fresh-Account-balances.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>SeguimientoSuper.Program</StartupObject>
+  </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Npgsql">
+      <HintPath>..\..\pgsql_driver\Npgsql.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -46,17 +70,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AboutBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AboutBox.Designer.cs">
+      <DependentUpon>AboutBox.cs</DependentUpon>
+    </Compile>
     <Compile Include="Catalogs\FormClientes.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Catalogs\FormClientes.Designer.cs">
       <DependentUpon>FormClientes.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Catalogs\FormClientesGrid.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Catalogs\FormClientesGrid.Designer.cs">
-      <DependentUpon>FormClientesGrid.cs</DependentUpon>
     </Compile>
     <Compile Include="Catalogs\FormCobradores.cs">
       <SubType>Form</SubType>
@@ -64,12 +88,12 @@
     <Compile Include="Catalogs\FormCobradores.Designer.cs">
       <DependentUpon>FormCobradores.cs</DependentUpon>
     </Compile>
-    <Compile Include="Catalogs\FormCobradoresGrid.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Catalogs\FormCobradoresGrid.Designer.cs">
-      <DependentUpon>FormCobradoresGrid.cs</DependentUpon>
-    </Compile>
+    <Compile Include="Collectable\AdminPaqImp.cs" />
+    <Compile Include="Collectable\CollectableDTO.cs" />
+    <Compile Include="Collectable\PostgresImpl\Account.cs" />
+    <Compile Include="Collectable\PostgresImpl\Collector.cs" />
+    <Compile Include="Collectable\PostgresImpl\CommonBase.cs" />
+    <Compile Include="Collectable\PostgresImpl\Customer.cs" />
     <Compile Include="Config\FormConfig.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -102,6 +126,22 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Settings.cs" />
+    <EmbeddedResource Include="AboutBox.resx">
+      <DependentUpon>AboutBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Catalogs\FormClientes.resx">
+      <DependentUpon>FormClientes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Catalogs\FormCobradores.resx">
+      <DependentUpon>FormCobradores.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Config\FormConfig.resx">
+      <DependentUpon>FormConfig.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Config\FormDownload.resx">
+      <DependentUpon>FormDownload.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormMain.resx">
       <DependentUpon>FormMain.cs</DependentUpon>
     </EmbeddedResource>
@@ -114,6 +154,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <None Include="app.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -123,6 +164,38 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CommonAdminPaq\CommonAdminPaq.csproj">
+      <Project>{FBFE32B7-F433-430E-9DBC-60CAC18725D2}</Project>
+      <Name>CommonAdminPaq</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fatcow-Farm-Fresh-Account-balances.ico" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4 Client Profile %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

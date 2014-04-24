@@ -40,8 +40,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AdminPaqDTO.cs" />
-    <Compile Include="AdminPaqImpl.cs" />
     <Compile Include="AdminPaqLib.cs" />
     <Compile Include="ErrLogger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
