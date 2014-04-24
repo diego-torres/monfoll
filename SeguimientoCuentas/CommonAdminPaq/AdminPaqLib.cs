@@ -49,6 +49,8 @@ namespace CommonAdminPaq
         public static extern long dbGetRecCount(long hDbc, string fileName, ref long lpLong);
         [DllImport("DBFWIN32")]
         public static extern long dbFieldLen(long hDbc, string fileName, int nField, ref long lpFieldLen);
+        [DllImport("DBFWIN32")]
+        public static extern void dbResult([MarshalAs(UnmanagedType.I4)]int hDbc, out TDBError dbError);
 
         /* **************************************************************************************************
          * WINDOWS API TO SET DLL DIRECTORY (Adding AdminPaq libraries to the knowledge of our application. *
@@ -86,10 +88,12 @@ namespace CommonAdminPaq
 
     [StructLayout(LayoutKind.Sequential)]
     public class TDBError {
-        public long nErrorSeverity;
-        public long nErrorCode;
-        public long nSubErrorCode;
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst=120)]
-        public string szErrorMessage;
+        [MarshalAs(UnmanagedType.I4)]
+        public int nErrorSeverity;
+        [MarshalAs(UnmanagedType.I4)]
+        public int nErrorCode;
+        [MarshalAs(UnmanagedType.I4)]
+        public int nSubErrorCode;
+        public char[] szErrorMessage;
     }
 }

@@ -29,45 +29,32 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
-            this.toolStripContainer1 = new System.Windows.Forms.ToolStripContainer();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.catalogsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clientesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cobradoresToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cuentasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.configuracionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.descargarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.busquedaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.bitacoraToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.descargarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
-            this.toolStripContainer1.SuspendLayout();
+            this.toolStripMenuItemConfig = new System.Windows.Forms.ToolStripMenuItem();
+            this.configuracionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.acercaDeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.mainStatus = new System.Windows.Forms.ToolStripStatusLabel();
+            this.mainProgressBar = new System.Windows.Forms.ToolStripProgressBar();
             this.menuStrip1.SuspendLayout();
+            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // toolStripContainer1
-            // 
-            // 
-            // toolStripContainer1.ContentPanel
-            // 
-            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(744, 355);
-            this.toolStripContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.toolStripContainer1.Location = new System.Drawing.Point(0, 0);
-            this.toolStripContainer1.Name = "toolStripContainer1";
-            this.toolStripContainer1.Size = new System.Drawing.Size(744, 379);
-            this.toolStripContainer1.TabIndex = 0;
-            this.toolStripContainer1.Text = "toolStripContainer1";
-            // 
-            // toolStripContainer1.TopToolStripPanel
-            // 
-            this.toolStripContainer1.TopToolStripPanel.Controls.Add(this.menuStrip1);
             // 
             // menuStrip1
             // 
-            this.menuStrip1.Dock = System.Windows.Forms.DockStyle.None;
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.catalogsToolStripMenuItem,
-            this.cuentasToolStripMenuItem});
+            this.cuentasToolStripMenuItem,
+            this.toolStripMenuItemConfig});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(744, 24);
@@ -86,32 +73,34 @@
             // clientesToolStripMenuItem
             // 
             this.clientesToolStripMenuItem.Name = "clientesToolStripMenuItem";
-            this.clientesToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.clientesToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
             this.clientesToolStripMenuItem.Text = "Cli&entes";
+            this.clientesToolStripMenuItem.Click += new System.EventHandler(this.clientesToolStripMenuItem_Click);
             // 
             // cobradoresToolStripMenuItem
             // 
             this.cobradoresToolStripMenuItem.Name = "cobradoresToolStripMenuItem";
-            this.cobradoresToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.cobradoresToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
             this.cobradoresToolStripMenuItem.Text = "C&obradores";
+            this.cobradoresToolStripMenuItem.Click += new System.EventHandler(this.cobradoresToolStripMenuItem_Click);
             // 
             // cuentasToolStripMenuItem
             // 
             this.cuentasToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.configuracionToolStripMenuItem,
+            this.descargarToolStripMenuItem,
             this.busquedaToolStripMenuItem,
             this.toolStripSeparator1,
-            this.bitacoraToolStripMenuItem,
-            this.descargarToolStripMenuItem});
+            this.bitacoraToolStripMenuItem});
             this.cuentasToolStripMenuItem.Name = "cuentasToolStripMenuItem";
             this.cuentasToolStripMenuItem.Size = new System.Drawing.Size(59, 20);
             this.cuentasToolStripMenuItem.Text = "C&uentas";
             // 
-            // configuracionToolStripMenuItem
+            // descargarToolStripMenuItem
             // 
-            this.configuracionToolStripMenuItem.Name = "configuracionToolStripMenuItem";
-            this.configuracionToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.configuracionToolStripMenuItem.Text = "&Configuración";
+            this.descargarToolStripMenuItem.Name = "descargarToolStripMenuItem";
+            this.descargarToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.descargarToolStripMenuItem.Text = "&Descargar";
+            this.descargarToolStripMenuItem.Click += new System.EventHandler(this.descargarToolStripMenuItem_Click);
             // 
             // busquedaToolStripMenuItem
             // 
@@ -130,46 +119,101 @@
             this.bitacoraToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.bitacoraToolStripMenuItem.Text = "B&itácora";
             // 
-            // descargarToolStripMenuItem
+            // toolStripMenuItemConfig
             // 
-            this.descargarToolStripMenuItem.Name = "descargarToolStripMenuItem";
-            this.descargarToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.descargarToolStripMenuItem.Text = "&Descargar";
+            this.toolStripMenuItemConfig.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.configuracionToolStripMenuItem,
+            this.toolStripSeparator2,
+            this.acercaDeToolStripMenuItem});
+            this.toolStripMenuItemConfig.Name = "toolStripMenuItemConfig";
+            this.toolStripMenuItemConfig.Size = new System.Drawing.Size(83, 20);
+            this.toolStripMenuItemConfig.Text = "&Herramientas";
+            // 
+            // configuracionToolStripMenuItem
+            // 
+            this.configuracionToolStripMenuItem.Name = "configuracionToolStripMenuItem";
+            this.configuracionToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.configuracionToolStripMenuItem.Text = "Configuración";
+            this.configuracionToolStripMenuItem.Click += new System.EventHandler(this.configuracionToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(149, 6);
+            // 
+            // acercaDeToolStripMenuItem
+            // 
+            this.acercaDeToolStripMenuItem.Name = "acercaDeToolStripMenuItem";
+            this.acercaDeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.acercaDeToolStripMenuItem.Text = "Acerca de ...";
+            this.acercaDeToolStripMenuItem.Click += new System.EventHandler(this.acercaDeToolStripMenuItem_Click);
+            // 
+            // statusStrip1
+            // 
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mainStatus,
+            this.mainProgressBar});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 357);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(744, 22);
+            this.statusStrip1.TabIndex = 2;
+            this.statusStrip1.Text = "statusStrip1";
+            // 
+            // mainStatus
+            // 
+            this.mainStatus.Name = "mainStatus";
+            this.mainStatus.Size = new System.Drawing.Size(308, 17);
+            this.mainStatus.Text = "Seguimiento a cuentas por cobrar - módulo de supervisor V 1.0";
+            // 
+            // mainProgressBar
+            // 
+            this.mainProgressBar.Name = "mainProgressBar";
+            this.mainProgressBar.Size = new System.Drawing.Size(100, 16);
+            this.mainProgressBar.Visible = false;
             // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
+            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(744, 379);
-            this.Controls.Add(this.toolStripContainer1);
+            this.Controls.Add(this.statusStrip1);
+            this.Controls.Add(this.menuStrip1);
+            this.DoubleBuffered = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.IsMdiContainer = true;
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "FormMain";
             this.Text = "Seguimiento Supervisores";
-            this.toolStripContainer1.TopToolStripPanel.ResumeLayout(false);
-            this.toolStripContainer1.TopToolStripPanel.PerformLayout();
-            this.toolStripContainer1.ResumeLayout(false);
-            this.toolStripContainer1.PerformLayout();
+            this.Load += new System.EventHandler(this.FormMain_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.ToolStripContainer toolStripContainer1;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem catalogsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem clientesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem cobradoresToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem cuentasToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem configuracionToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem busquedaToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem bitacoraToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem descargarToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemConfig;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripMenuItem acercaDeToolStripMenuItem;
+        private System.Windows.Forms.StatusStrip statusStrip1;
+        public System.Windows.Forms.ToolStripStatusLabel mainStatus;
+        public System.Windows.Forms.ToolStripProgressBar mainProgressBar;
+        private System.Windows.Forms.ToolStripMenuItem configuracionToolStripMenuItem;
     }
 }
 

@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("CommonAdminPaq")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Fam.Torres Romero")]
+[assembly: AssemblyCompany("Inspiracode")]
 [assembly: AssemblyProduct("CommonAdminPaq")]
-[assembly: AssemblyCopyright("Copyright © Fam.Torres Romero 2014")]
+[assembly: AssemblyCopyright("Copyright © Inspiracode 2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
