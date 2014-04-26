@@ -36,8 +36,6 @@
             this.cuentasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.descargarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.busquedaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.bitacoraToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemConfig = new System.Windows.Forms.ToolStripMenuItem();
             this.configuracionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
@@ -88,9 +86,7 @@
             // 
             this.cuentasToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.descargarToolStripMenuItem,
-            this.busquedaToolStripMenuItem,
-            this.toolStripSeparator1,
-            this.bitacoraToolStripMenuItem});
+            this.busquedaToolStripMenuItem});
             this.cuentasToolStripMenuItem.Name = "cuentasToolStripMenuItem";
             this.cuentasToolStripMenuItem.Size = new System.Drawing.Size(59, 20);
             this.cuentasToolStripMenuItem.Text = "C&uentas";
@@ -106,18 +102,7 @@
             // 
             this.busquedaToolStripMenuItem.Name = "busquedaToolStripMenuItem";
             this.busquedaToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.busquedaToolStripMenuItem.Text = "&Búsqueda";
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
-            // 
-            // bitacoraToolStripMenuItem
-            // 
-            this.bitacoraToolStripMenuItem.Name = "bitacoraToolStripMenuItem";
-            this.bitacoraToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.bitacoraToolStripMenuItem.Text = "B&itácora";
+            this.busquedaToolStripMenuItem.Text = "&Proceso";
             // 
             // toolStripMenuItemConfig
             // 
@@ -132,19 +117,19 @@
             // configuracionToolStripMenuItem
             // 
             this.configuracionToolStripMenuItem.Name = "configuracionToolStripMenuItem";
-            this.configuracionToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.configuracionToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
             this.configuracionToolStripMenuItem.Text = "Configuración";
             this.configuracionToolStripMenuItem.Click += new System.EventHandler(this.configuracionToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(149, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(148, 6);
             // 
             // acercaDeToolStripMenuItem
             // 
             this.acercaDeToolStripMenuItem.Name = "acercaDeToolStripMenuItem";
-            this.acercaDeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.acercaDeToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
             this.acercaDeToolStripMenuItem.Text = "Acerca de ...";
             this.acercaDeToolStripMenuItem.Click += new System.EventHandler(this.acercaDeToolStripMenuItem_Click);
             // 
@@ -204,8 +189,6 @@
         private System.Windows.Forms.ToolStripMenuItem cobradoresToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem cuentasToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem busquedaToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripMenuItem bitacoraToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem descargarToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemConfig;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;

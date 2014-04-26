@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using SeguimientoSuper.Catalogs;
 using SeguimientoSuper.Collectable;
 using SeguimientoSuper.Config;
+using SeguimientoSuper.Process;
 
 namespace SeguimientoSuper
 {
@@ -23,10 +24,51 @@ namespace SeguimientoSuper
         private FormConfig fConfig;
         private AboutBox about;
         private FormDownload fDownload;
+        private Dictionary<int, FormFollowup> followups = new Dictionary<int, FormFollowup>();
         
         public FormMain()
         {
             InitializeComponent();
+        }
+
+        public bool IsClientesOpen
+        {
+            get
+            {
+                return !(fClientes == null || fClientes.IsDisposed);
+            }
+        }
+
+        public void RefreshAccountsInClientes()
+        {
+            if (IsClientesOpen)
+                fClientes.RefreshAccounts();
+        }
+
+        public void ShowFollowUp(Account account)
+        {
+            FormFollowup currentFollowing;
+            bool following = followups.TryGetValue(account.DocId, out currentFollowing); 
+
+            if (!following)
+            {
+                currentFollowing = new FormFollowup();
+                currentFollowing.MdiParent = this;
+                currentFollowing.API = api;
+                currentFollowing.Account = account;
+                followups.Add(account.DocId, currentFollowing);
+            }
+
+            if (currentFollowing.IsDisposed)
+            {
+                currentFollowing = new FormFollowup();
+                currentFollowing.MdiParent = this;
+                currentFollowing.API = api;
+                currentFollowing.Account = account;
+            }
+
+            currentFollowing.Show();
+            currentFollowing.Focus();
         }
 
         public void ShowDownload()
@@ -101,7 +143,7 @@ namespace SeguimientoSuper
             List<Collectable.Account> adminPaqAccounts = api.DownloadCollectables(mainStatus);
             mainStatus.Text = "Uploading accounts to databasel";
             Collectable.PostgresImpl.Account AccountInterface = new Collectable.PostgresImpl.Account();
-            AccountInterface.UploadAccounts(adminPaqAccounts);
+            AccountInterface.UploadAccounts(adminPaqAccounts, api.Cancelados);
             mainStatus.Text = "Listo";
             CloseDownload();
         }
