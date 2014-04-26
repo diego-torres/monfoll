@@ -18,7 +18,7 @@ namespace CommonAdminPaq
         [DllImport("DBFWIN32")]
         public static extern void dbLogOut(int hDbc);
         [DllImport("DBFWIN32")]
-        public static extern long dbCmdExec(int hDbc, string CmdStr);
+        public static extern int dbCmdExec(int hDbc, string CmdStr);
         [DllImport("DBFWIN32")]
         public static extern int dbFieldChar([MarshalAs(UnmanagedType.I4)] int hDbc, [MarshalAs(UnmanagedType.LPStr)] string FileName, [MarshalAs(UnmanagedType.I4)] int nField, [MarshalAs(UnmanagedType.LPStr)] StringBuilder lpszChar, [MarshalAs(UnmanagedType.I4)] int nlen);
         [DllImport("DBFWIN32")]
@@ -28,7 +28,7 @@ namespace CommonAdminPaq
         [DllImport("DBFWIN32")]
         public static extern int dbFieldDouble(int hDbc, string FileName, int nField, ref double lpLong);
         [DllImport("DBFWIN32")]
-        public static extern long dbGet(long hDbc, string fileName, string TagName, string Key);
+        public static extern int dbGet(int hDbc, string FileName, string TagName, string Key);
         [DllImport("DBFWIN32")]
         public static extern int dbGetNoLock(int hDbc, string FileName, string TagName, string Key);
         [DllImport("DBFWIN32")]

@@ -106,23 +106,17 @@
     <Compile Include="Config\FormDownload.Designer.cs">
       <DependentUpon>FormDownload.cs</DependentUpon>
     </Compile>
-    <Compile Include="Config\FormLog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Config\FormLog.Designer.cs">
-      <DependentUpon>FormLog.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Config\FormSearch.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Config\FormSearch.Designer.cs">
-      <DependentUpon>FormSearch.cs</DependentUpon>
-    </Compile>
     <Compile Include="FormMain.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="FormMain.Designer.cs">
       <DependentUpon>FormMain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Process\FormFollowup.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Process\FormFollowup.Designer.cs">
+      <DependentUpon>FormFollowup.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -144,6 +138,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormMain.resx">
       <DependentUpon>FormMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Process\FormFollowup.resx">
+      <DependentUpon>FormFollowup.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

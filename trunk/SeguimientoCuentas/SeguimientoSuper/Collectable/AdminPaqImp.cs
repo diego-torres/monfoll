@@ -12,8 +12,10 @@ namespace SeguimientoSuper.Collectable
     {
         private AdminPaqLib lib;
         private IList<Empresa> empresas = new List<Empresa>();
+        private List<int> cancelados = new List<int>();
 
         public IList<Empresa> Empresas { get { return empresas; } set { empresas = value; } }
+        public List<int> Cancelados { get { return cancelados; } }
 
         public AdminPaqImp()
         {
@@ -31,9 +33,67 @@ namespace SeguimientoSuper.Collectable
             InitializeSDK();
         }
 
+        public void UpdateCollectable(Account account)
+        {
+            int connection, dbResponse;
+            string key, command;
+
+            Empresa configuredCompany = ConfiguredCompany();
+
+            if (configuredCompany == null)
+            {
+                ErrLogger.Log("Wrong Company configuration.");
+                return;
+            }
+
+            connection = AdminPaqLib.dbLogIn("", configuredCompany.Ruta);
+            if (connection == 0)
+            {
+                ErrLogger.Log("Unable to open connection to documents table for company [" + configuredCompany.Nombre + "]");
+                return;
+            }
+
+            key = account.DocId.ToString().PadLeft(11);
+            dbResponse = AdminPaqLib.dbGet(connection, TableNames.DOCUMENTOS, IndexNames.PRIMARY_KEY, key);
+
+            if (dbResponse == 0)
+            {
+                string sCollectDate = account.CollectDate.ToString("yyyyMMdd");
+                command = string.Format("UPDATE {0}(CFECHAEX01=\"{1}\",CTEXTOEX01=\"{2}\",CTEXTOEX02=\"{3}\");", 
+                    TableNames.DOCUMENTOS, sCollectDate, account.CollectType, account.Note);
+
+                dbResponse = AdminPaqLib.dbCmdExec(connection, command);
+                if (dbResponse != 0)
+                {
+                    dbResponse = AdminPaqLib.dbCmdExec(connection, "ROLLBACK;");
+                    AdminPaqLib.dbLogOut(connection);
+                    throw new Exception("No se pudo actualizar el registro");
+                }
+                else 
+                {
+                    dbResponse = AdminPaqLib.dbCmdExec(connection, "COMMIT;");
+                    if (dbResponse != 0)
+                    {
+                        dbResponse = AdminPaqLib.dbCmdExec(connection, "ROLLBACK;");
+                        AdminPaqLib.dbLogOut(connection);
+                        throw new Exception("No se pudo confirmar la actualización del registro.");
+                    }
+                }
+            }
+            else 
+            {
+                AdminPaqLib.dbLogOut(connection);
+                throw new Exception("El registro del documento se encuentra bloqueado por otro usuario.");
+            }
+
+            AdminPaqLib.dbLogOut(connection);
+            
+        }
+
         public List<Account> DownloadCollectables(System.Windows.Forms.ToolStripStatusLabel statusBar)
         {
             List<Account> result = new List<Account>();
+            cancelados.Clear();
             Settings set = Settings.Default;
             int connDocos, dbResponse, fieldResponse, collectableDocType=4;
             string startDate, endDate, tipo_doc;
@@ -82,9 +142,11 @@ namespace SeguimientoSuper.Collectable
                 fieldResponse = AdminPaqLib.dbFieldLong(connDocos, TableNames.DOCUMENTOS, 2, ref docType);
                 if (docType != collectableDocType) break;
 
+                fieldResponse = AdminPaqLib.dbFieldLong(connDocos, TableNames.DOCUMENTOS, 1, ref docId);
                 fieldResponse = AdminPaqLib.dbFieldLong(connDocos, TableNames.DOCUMENTOS, 26, ref cancelled);
                 if (cancelled != 0)
                 {
+                    cancelados.Add(docId);
                     dbResponse = AdminPaqLib.dbSkip(connDocos, TableNames.DOCUMENTOS, IndexNames.DOCUMENTOS_ID_DOCUMENTO01, 1);
                     continue;
                 } 
@@ -146,7 +208,6 @@ namespace SeguimientoSuper.Collectable
                 account.Balance = saldoPendiente;
                 account.DocType = concept.Name;
 
-                fieldResponse = AdminPaqLib.dbFieldLong(connDocos, TableNames.DOCUMENTOS, 1, ref docId);
                 account.DocId = docId;
 
                 fieldResponse = AdminPaqLib.dbFieldChar(connDocos, TableNames.DOCUMENTOS, 11, sbFechaVenc, 9);
@@ -211,6 +272,7 @@ namespace SeguimientoSuper.Collectable
             string key;
 
             int docId = 0;
+            double amount = 0;
 
             connPayments = AdminPaqLib.dbLogIn("", filePath);
             if (connPayments == 0)
@@ -227,7 +289,9 @@ namespace SeguimientoSuper.Collectable
                 if (docId != account.DocId) break;
 
                 fqResponse = AdminPaqLib.dbFieldLong(connPayments, TableNames.ABONOS_CARGOS, 1, ref docId);
-                AddPayment(account, filePath, docId, conceptosAbono);
+                fqResponse = AdminPaqLib.dbFieldDouble(connPayments, TableNames.ABONOS_CARGOS, 3, ref amount);
+
+                AddPayment(account, filePath, docId, conceptosAbono, amount);
 
                 dbResponse = AdminPaqLib.dbSkip(connPayments, TableNames.ABONOS_CARGOS, IndexNames.ABONOS_DOCUMENTOS, 1);
             }
@@ -235,7 +299,7 @@ namespace SeguimientoSuper.Collectable
             AdminPaqLib.dbLogOut(connPayments);
         }
 
-        private void AddPayment(Account account, string filePath, int docId, string[] conceptosAbono)
+        private void AddPayment(Account account, string filePath, int docId, string[] conceptosAbono, double importe)
         {
             int connPayment, dbResponse, fqResponse;
             string key;
@@ -246,7 +310,6 @@ namespace SeguimientoSuper.Collectable
 
             string sDepositDate;
 
-            double amount = 0;
             int folio = 0;
 
             bool isAbono = false;
@@ -276,12 +339,10 @@ namespace SeguimientoSuper.Collectable
                 payment.Concept = concept.Name;
                 payment.DocId = account.DocId;
                 payment.PaymentId = docId;
+                payment.Amount = importe;
 
                 fqResponse = AdminPaqLib.dbFieldChar(connPayment, TableNames.DOCUMENTOS, 17, sbTipoPago, 21);
                 payment.PaymentType = sbTipoPago.ToString().Substring(0, 20).Trim();
-
-                fqResponse = AdminPaqLib.dbFieldDouble(connPayment, TableNames.DOCUMENTOS, 3, ref amount);
-                payment.Amount = amount;
 
                 fqResponse = AdminPaqLib.dbFieldLong(connPayment, TableNames.DOCUMENTOS, 5, ref folio);
                 payment.Folio = folio;

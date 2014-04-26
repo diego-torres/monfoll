@@ -1,8 +1,11 @@
 TRUNCATE TABLE CAT_MOVIMIENTO CASCADE;
-INSERT INTO CAT_MOVIMIENTO(DESCRIPCION) VALUES('Asignado');
-INSERT INTO CAT_MOVIMIENTO(DESCRIPCION) VALUES('Escalado');
-INSERT INTO CAT_MOVIMIENTO(DESCRIPCION) VALUES('Llamada');
-INSERT INTO CAT_MOVIMIENTO(DESCRIPCION) VALUES('Visita');
-INSERT INTO CAT_MOVIMIENTO(DESCRIPCION) VALUES('Email');
-INSERT INTO CAT_MOVIMIENTO(DESCRIPCION) VALUES('Otro Seguimiento');
-INSERT INTO CAT_MOVIMIENTO(DESCRIPCION) VALUES('Cerrado');
+INSERT INTO CAT_MOVIMIENTO(descripcion, system_based) VALUES('Descargado', true);
+INSERT INTO CAT_MOVIMIENTO(descripcion, system_based) VALUES('Actualizado', true);
+INSERT INTO CAT_MOVIMIENTO(descripcion, system_based) VALUES('Asignado', true);
+INSERT INTO CAT_MOVIMIENTO(descripcion, system_based) VALUES('Escalado', true);
+INSERT INTO CAT_MOVIMIENTO(descripcion, system_based) VALUES('Llamada', false);
+INSERT INTO CAT_MOVIMIENTO(descripcion, system_based) VALUES('Visita', false);
+INSERT INTO CAT_MOVIMIENTO(descripcion, system_based) VALUES('Email', false);
+INSERT INTO CAT_MOVIMIENTO(descripcion, system_based) VALUES('Otro Seguimiento', false);
+INSERT INTO CAT_MOVIMIENTO(descripcion, system_based) VALUES('Cerrado', false);
+INSERT INTO CAT_MOVIMIENTO(descripcion, system_based) VALUES('Cancelado', false);

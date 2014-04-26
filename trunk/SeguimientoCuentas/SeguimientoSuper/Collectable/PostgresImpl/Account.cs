@@ -9,7 +9,28 @@ namespace SeguimientoSuper.Collectable.PostgresImpl
 {
     public class Account : CommonBase
     {
-        public void UploadAccounts(List<Collectable.Account> adminPaqAccounts)
+
+        public DataTable FollowUp(int docId)
+        {
+            DataSet ds = new DataSet();
+            NpgsqlDataAdapter da;
+            string sqlString = "SELECT id_seguimiento, ctrl_seguimiento.id_movimiento, cat_movimiento.descripcion AS movimiento, " +
+                "system_based, ctrl_seguimiento.descripcion as seguimiento, ts_seguimiento " +
+                "FROM ctrl_seguimiento INNER JOIN cat_movimiento ON ctrl_seguimiento.id_movimiento = cat_movimiento.id_movimiento " +
+                "WHERE id_doco = " + docId.ToString() + ";";
+
+            if (conn == null || conn.State != ConnectionState.Open)
+                connect();
+
+            da = new NpgsqlDataAdapter(sqlString, conn);
+
+            ds.Reset();
+            da.Fill(ds);
+            conn.Close();
+            return ds.Tables[0];
+        }
+
+        public void UploadAccounts(List<Collectable.Account> adminPaqAccounts, List<int> cancelled)
         {
             if (conn == null || conn.State != ConnectionState.Open)
                 connect();
@@ -31,7 +52,62 @@ namespace SeguimientoSuper.Collectable.PostgresImpl
                 }
 
             }
+
+            foreach (int docId in cancelled)
+            {
+                CancelAccount(docId);
+            }
+
             conn.Close();
+        }
+
+        private void CancelAccount(int docId)
+        {
+            if (DocumentExists(docId))
+            {
+                if (IsCancelled(docId)) return;
+
+                string sqlString = "INSERT INTO ctrl_seguimiento(id_movimiento, id_doco, descripcion) " +
+                    "VALUES(10, @docId, 'Documento cancelado en AdminPaq');";
+
+                NpgsqlCommand cmd = new NpgsqlCommand(sqlString, conn);
+                cmd.Parameters.Add("@docId", NpgsqlTypes.NpgsqlDbType.Integer);
+                cmd.Parameters["@docId"].Value = docId;
+                
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        private bool IsCancelled(int docId)
+        {
+            DataSet ds = new DataSet();
+            DataTable dt = new DataTable();
+            NpgsqlDataAdapter da;
+            string sqlString = "SELECT id_doco FROM ctrl_seguimiento " +
+                "WHERE id_doco = " + docId.ToString() + " " +
+                "AND id_movimiento = 10;";
+            da = new NpgsqlDataAdapter(sqlString, conn);
+
+            ds.Reset();
+            da.Fill(ds);
+            dt = ds.Tables[0];
+
+            return dt.Rows.Count >= 1;
+        }
+
+        private bool DocumentExists(int docId)
+        {
+            DataSet ds = new DataSet();
+            DataTable dt = new DataTable();
+            NpgsqlDataAdapter da;
+            string sqlString = "SELECT id_doco FROM ctrl_cuenta WHERE id_doco = " + docId.ToString() + ";";
+            da = new NpgsqlDataAdapter(sqlString, conn);
+
+            ds.Reset();
+            da.Fill(ds);
+            dt = ds.Tables[0];
+
+            return dt.Rows.Count >= 1;
         }
 
         private void SavePayment(Payment payment)
@@ -184,25 +260,17 @@ namespace SeguimientoSuper.Collectable.PostgresImpl
 
         private void SaveAccount(Collectable.Account adminPaqAccount)
         {
-            DataSet ds = new DataSet();
-            DataTable dt = new DataTable();
-            NpgsqlDataAdapter da;
-            string sqlString = "SELECT id_doco FROM ctrl_cuenta WHERE id_doco = " + adminPaqAccount.DocId.ToString() + ";";
-            da = new NpgsqlDataAdapter(sqlString, conn);
-
-            ds.Reset();
-            da.Fill(ds);
-            dt = ds.Tables[0];
-
-            if (dt.Rows.Count >= 1)
+            if (DocumentExists(adminPaqAccount.DocId))
                 UpdateAccount(adminPaqAccount);
             else
                 AddAccount(adminPaqAccount);
         }
 
-        private void UpdateAccount(Collectable.Account adminPaqAccount)
+        public void UpdateAccount(Collectable.Account adminPaqAccount)
         {
-            
+            if (conn == null || conn.State != ConnectionState.Open)
+                connect();
+
             string sqlString = "UPDATE ctrl_cuenta " +
                 "SET F_DOCUMENTO = @f_documento, " +
                 "F_VENCIMIENTO = @f_vencimiento, " +
@@ -250,6 +318,8 @@ namespace SeguimientoSuper.Collectable.PostgresImpl
             cmd.Parameters["@id"].Value = adminPaqAccount.DocId;
 
             cmd.ExecuteNonQuery();
+
+            conn.Close();
         }
 
         private void AddAccount(Collectable.Account adminPaqAccount)
@@ -292,5 +362,108 @@ namespace SeguimientoSuper.Collectable.PostgresImpl
             cmd.ExecuteNonQuery();
         }
 
+
+        internal void AddFollowUp(string followUpType, string descripcion, int docId)
+        {
+            if (conn == null || conn.State != ConnectionState.Open)
+                connect();
+
+            string sqlString = "INSERT INTO ctrl_seguimiento (id_movimiento, id_doco, descripcion)" +
+                "VALUES( @id_movimiento, @id_doco, @descripcion);";
+
+            NpgsqlCommand cmd = new NpgsqlCommand(sqlString, conn);
+
+            cmd.Parameters.Add("@id_movimiento", NpgsqlTypes.NpgsqlDbType.Integer);
+            cmd.Parameters.Add("@id_doco", NpgsqlTypes.NpgsqlDbType.Integer);
+            cmd.Parameters.Add("@descripcion", NpgsqlTypes.NpgsqlDbType.Varchar, 250);
+
+            int id_movimiento = 8;
+            switch (followUpType)
+            {
+                case "Llamada":
+                    id_movimiento = 5;
+                    break;
+                case "Visita":
+                    id_movimiento = 6;
+                    break;
+                case "Email":
+                    id_movimiento = 7;
+                    break;
+                case "Cerrado":
+                    id_movimiento = 9;
+                    break;
+                default:
+                    id_movimiento = 8;
+                    break;
+            }
+
+            cmd.Parameters["@id_movimiento"].Value = id_movimiento;
+            cmd.Parameters["@id_doco"].Value = docId;
+            cmd.Parameters["@descripcion"].Value = descripcion;
+            
+            cmd.ExecuteNonQuery();
+            conn.Close();
+        }
+
+        internal void UpdateFollowUp(string followUpType, string descripcion, int followUpId)
+        {
+            if (conn == null || conn.State != ConnectionState.Open)
+                connect();
+
+            string sqlString = "UPDATE ctrl_seguimiento " +
+                "SET id_movimiento = @id_movimiento, " +
+                "descripcion = @descripcion " +
+                "WHERE id_seguimiento = @followUpId;";
+
+            NpgsqlCommand cmd = new NpgsqlCommand(sqlString, conn);
+
+            cmd.Parameters.Add("@id_movimiento", NpgsqlTypes.NpgsqlDbType.Integer);
+            cmd.Parameters.Add("@descripcion", NpgsqlTypes.NpgsqlDbType.Varchar, 250);
+            cmd.Parameters.Add("@followUpId", NpgsqlTypes.NpgsqlDbType.Integer);
+
+            int id_movimiento = 8;
+            switch (followUpType)
+            {
+                case "Llamada":
+                    id_movimiento = 5;
+                    break;
+                case "Visita":
+                    id_movimiento = 6;
+                    break;
+                case "Email":
+                    id_movimiento = 7;
+                    break;
+                case "Cerrado":
+                    id_movimiento = 9;
+                    break;
+                default:
+                    id_movimiento = 8;
+                    break;
+            }
+
+            cmd.Parameters["@id_movimiento"].Value = id_movimiento;
+            cmd.Parameters["@descripcion"].Value = descripcion;
+            cmd.Parameters["@followUpId"].Value = followUpId;
+
+            cmd.ExecuteNonQuery();
+            conn.Close();
+        }
+
+        public void RemoveFollowUp(int followUpId)
+        {
+            if (conn == null || conn.State != ConnectionState.Open)
+                connect();
+
+            string sqlString = "DELETE FROM ctrl_seguimiento " +
+                "WHERE id_seguimiento = @followUpId;";
+
+            NpgsqlCommand cmd = new NpgsqlCommand(sqlString, conn);
+
+            cmd.Parameters.Add("@followUpId", NpgsqlTypes.NpgsqlDbType.Integer);
+            cmd.Parameters["@followUpId"].Value = followUpId;
+            
+            cmd.ExecuteNonQuery();
+            conn.Close();
+        }
     }
 }
