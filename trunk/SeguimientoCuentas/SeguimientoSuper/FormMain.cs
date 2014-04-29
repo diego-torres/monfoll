@@ -179,11 +179,8 @@ namespace SeguimientoSuper
             {
                 fProcess = new FormProcess();
                 fProcess.MdiParent = this;
-                // SET API
             }
             fProcess.Show();
         }
-
-        
     }
 }

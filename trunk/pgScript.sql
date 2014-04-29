@@ -51,7 +51,6 @@ CREATE TABLE IF NOT EXISTS ctrl_abono(
 );
 GRANT ALL ON ctrl_abono TO monfoll;
 
-
 DROP TABLE IF EXISTS cat_cobrador CASCADE;
 CREATE TABLE IF NOT EXISTS cat_cobrador (
 	id_cobrador SERIAL PRIMARY KEY,

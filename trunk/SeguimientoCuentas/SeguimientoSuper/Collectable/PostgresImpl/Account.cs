@@ -10,6 +10,110 @@ namespace SeguimientoSuper.Collectable.PostgresImpl
     public class Account : CommonBase
     {
 
+        public DataTable Cancelled()
+        {
+            DataSet ds = new DataSet();
+            NpgsqlDataAdapter da;
+            string sqlString = "SELECT ctrl_cuenta.id_doco, f_documento, f_vencimiento, f_cobro, ctrl_cuenta.id_cliente, cd_cliente, nombre_cliente, ruta, dia_pago, " +
+                "serie_doco, folio_doco, tipo_documento, tipo_cobro, facturado, saldo, moneda, observaciones, CURRENT_DATE - f_vencimiento AS dias_vencido " +
+                "FROM ctrl_cuenta INNER JOIN cat_cliente ON ctrl_cuenta.id_cliente = cat_cliente.id_cliente " +
+                "WHERE ctrl_cuenta.id_doco IN(SELECT id_doco FROM ctrl_seguimiento WHERE id_movimiento=10);";
+
+            if (conn == null || conn.State != ConnectionState.Open)
+                connect();
+
+            da = new NpgsqlDataAdapter(sqlString, conn);
+
+            ds.Reset();
+            da.Fill(ds);
+            conn.Close();
+            return ds.Tables[0];
+        }
+
+        public DataTable Closed()
+        {
+            DataSet ds = new DataSet();
+            NpgsqlDataAdapter da;
+            string sqlString = "SELECT ctrl_cuenta.id_doco, f_documento, f_vencimiento, f_cobro, ctrl_cuenta.id_cliente, cd_cliente, nombre_cliente, ruta, dia_pago, " +
+                "serie_doco, folio_doco, tipo_documento, tipo_cobro, facturado, saldo, moneda, observaciones, CURRENT_DATE - f_vencimiento AS dias_vencido " +
+                "FROM ctrl_cuenta INNER JOIN cat_cliente ON ctrl_cuenta.id_cliente = cat_cliente.id_cliente " +
+                "WHERE ctrl_cuenta.id_doco IN(SELECT id_doco FROM ctrl_seguimiento WHERE id_movimiento=9);";
+
+            if (conn == null || conn.State != ConnectionState.Open)
+                connect();
+
+            da = new NpgsqlDataAdapter(sqlString, conn);
+
+            ds.Reset();
+            da.Fill(ds);
+            conn.Close();
+            return ds.Tables[0];
+        }
+
+        public DataTable Escalated()
+        {
+            DataSet ds = new DataSet();
+            NpgsqlDataAdapter da;
+            string sqlString = "SELECT ctrl_cuenta.id_doco, f_documento, f_vencimiento, f_cobro, ctrl_cuenta.id_cliente, cd_cliente, nombre_cliente, ruta, dia_pago, " +
+                "serie_doco, folio_doco, tipo_documento, tipo_cobro, facturado, saldo, moneda, observaciones, CURRENT_DATE - f_vencimiento AS dias_vencido " +
+                "FROM ctrl_cuenta INNER JOIN cat_cliente ON ctrl_cuenta.id_cliente = cat_cliente.id_cliente " +
+                "WHERE ctrl_cuenta.id_doco IN(SELECT id_doco FROM ctrl_seguimiento WHERE id_movimiento=4);";
+
+            if (conn == null || conn.State != ConnectionState.Open)
+                connect();
+
+            da = new NpgsqlDataAdapter(sqlString, conn);
+
+            ds.Reset();
+            da.Fill(ds);
+            conn.Close();
+            return ds.Tables[0];
+        }
+
+        public DataTable Assigned()
+        {
+            DataSet ds = new DataSet();
+            NpgsqlDataAdapter da;
+            string sqlString = "SELECT ctrl_cuenta.id_doco, f_documento, f_vencimiento, f_cobro, ctrl_cuenta.id_cliente, cd_cliente, nombre_cliente, ruta, dia_pago, " +
+                "serie_doco, folio_doco, tipo_documento, tipo_cobro, facturado, saldo, moneda, observaciones, CURRENT_DATE - f_vencimiento AS dias_vencido, " +
+                "nombre_cobrador " +
+                "FROM ctrl_cuenta INNER JOIN cat_cliente ON ctrl_cuenta.id_cliente = cat_cliente.id_cliente " +
+                "INNER JOIN ctrl_asignacion ON ctrl_cuenta.id_doco = ctrl_asignacion.id_doco " +
+                "INNER JOIN cat_cobrador ON ctrl_asignacion.id_cobrador = cat_cobrador.id_cobrador " +
+                "WHERE ctrl_cuenta.id_doco NOT IN(SELECT id_doco FROM ctrl_seguimiento WHERE id_movimiento IN(4,9,10));";
+
+            if (conn == null || conn.State != ConnectionState.Open)
+                connect();
+
+            da = new NpgsqlDataAdapter(sqlString, conn);
+
+            ds.Reset();
+            da.Fill(ds);
+            conn.Close();
+            return ds.Tables[0];
+        }
+
+        public DataTable UnAssigned()
+        {
+            DataSet ds = new DataSet();
+            NpgsqlDataAdapter da;
+            string sqlString = "SELECT ctrl_cuenta.id_doco, f_documento, f_vencimiento, f_cobro, ctrl_cuenta.id_cliente, cd_cliente, nombre_cliente, ruta, dia_pago, " +
+                "serie_doco, folio_doco, tipo_documento, tipo_cobro, facturado, saldo, moneda, observaciones, CURRENT_DATE - f_vencimiento AS dias_vencido " +
+                "FROM ctrl_cuenta INNER JOIN cat_cliente ON ctrl_cuenta.id_cliente = cat_cliente.id_cliente " +
+                "WHERE ctrl_cuenta.id_doco NOT IN(SELECT id_doco FROM ctrl_asignacion) " +
+                "AND ctrl_cuenta.id_doco NOT IN(SELECT id_doco FROM ctrl_seguimiento WHERE id_movimiento IN(4,9,10));";
+
+            if (conn == null || conn.State != ConnectionState.Open)
+                connect();
+
+            da = new NpgsqlDataAdapter(sqlString, conn);
+
+            ds.Reset();
+            da.Fill(ds);
+            conn.Close();
+            return ds.Tables[0];
+        }
+
         public DataTable FollowUp(int docId)
         {
             DataSet ds = new DataSet();
@@ -502,5 +606,23 @@ namespace SeguimientoSuper.Collectable.PostgresImpl
             cmd.ExecuteNonQuery();
             conn.Close();
         }
+
+        public void Escale(int docId)
+        {
+            if (conn == null || conn.State != ConnectionState.Open)
+                connect();
+
+            string sqlString = "INSERT INTO ctrl_seguimiento(id_movimiento, id_doco, descripcion) " +
+                "VALUES(4, @documento, 'Cuenta escalada a gerencia.');";
+
+            NpgsqlCommand cmd = new NpgsqlCommand(sqlString, conn);
+
+            cmd.Parameters.Add("@documento", NpgsqlTypes.NpgsqlDbType.Integer);
+            cmd.Parameters["@documento"].Value = docId;
+
+            cmd.ExecuteNonQuery();
+            conn.Close();
+        }
+
     }
 }

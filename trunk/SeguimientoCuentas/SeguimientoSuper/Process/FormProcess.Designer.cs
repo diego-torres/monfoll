@@ -277,6 +277,7 @@
             this.NAtoolStripButtonEscale.Name = "NAtoolStripButtonEscale";
             this.NAtoolStripButtonEscale.Size = new System.Drawing.Size(23, 22);
             this.NAtoolStripButtonEscale.Text = "Escalar Selección";
+            this.NAtoolStripButtonEscale.Click += new System.EventHandler(this.NAtoolStripButtonEscale_Click);
             // 
             // toolStripSeparator2
             // 
@@ -444,6 +445,7 @@
             this.dataGridViewAssignedAccounts.AllowUserToDeleteRows = false;
             this.dataGridViewAssignedAccounts.AllowUserToOrderColumns = true;
             this.dataGridViewAssignedAccounts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewAssignedAccounts.ContextMenuStrip = this.contextMenuStripAccountsGrid;
             this.dataGridViewAssignedAccounts.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridViewAssignedAccounts.Location = new System.Drawing.Point(0, 0);
             this.dataGridViewAssignedAccounts.Name = "dataGridViewAssignedAccounts";
@@ -643,6 +645,7 @@
             this.dataGridViewEscalatedAccounts.AllowUserToDeleteRows = false;
             this.dataGridViewEscalatedAccounts.AllowUserToOrderColumns = true;
             this.dataGridViewEscalatedAccounts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewEscalatedAccounts.ContextMenuStrip = this.contextMenuStripAccountsGrid;
             this.dataGridViewEscalatedAccounts.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridViewEscalatedAccounts.Location = new System.Drawing.Point(0, 0);
             this.dataGridViewEscalatedAccounts.Name = "dataGridViewEscalatedAccounts";
@@ -763,6 +766,7 @@
             this.dataGridViewClosedAccounts.AllowUserToDeleteRows = false;
             this.dataGridViewClosedAccounts.AllowUserToOrderColumns = true;
             this.dataGridViewClosedAccounts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewClosedAccounts.ContextMenuStrip = this.contextMenuStripAccountsGrid;
             this.dataGridViewClosedAccounts.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridViewClosedAccounts.Location = new System.Drawing.Point(0, 0);
             this.dataGridViewClosedAccounts.Name = "dataGridViewClosedAccounts";
@@ -867,6 +871,7 @@
             this.dataGridViewCancelledAccounts.AllowUserToDeleteRows = false;
             this.dataGridViewCancelledAccounts.AllowUserToOrderColumns = true;
             this.dataGridViewCancelledAccounts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewCancelledAccounts.ContextMenuStrip = this.contextMenuStripAccountsGrid;
             this.dataGridViewCancelledAccounts.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridViewCancelledAccounts.Location = new System.Drawing.Point(0, 0);
             this.dataGridViewCancelledAccounts.Name = "dataGridViewCancelledAccounts";
@@ -896,6 +901,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormProcess";
             this.Text = "FormProcess";
+            this.Load += new System.EventHandler(this.FormProcess_Load);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
