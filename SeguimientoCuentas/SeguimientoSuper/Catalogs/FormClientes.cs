@@ -199,7 +199,40 @@ namespace SeguimientoSuper.Catalogs
             RefreshNotesGrid();
         }
 
+        private void dataGridViewCusNotes_SelectionChanged(object sender, EventArgs e)
+        {
+            selectAciveNote();
+        }
+
+        private void toolStripButtonRestoreNota_Click(object sender, EventArgs e)
+        {
+            selectAciveNote();
+        }
+
+        private void toolStripButtonEscaleSelected_Click(object sender, EventArgs e)
+        {
+            EscalateDocuments(true);
+        }
+
+        private void toolStripButtonEscaleAll_Click(object sender, EventArgs e)
+        {
+            EscalateDocuments(false);
+        }
+
         # endregion
+
+        private void EscalateDocuments(bool onlySelected)
+        {
+            foreach (DataGridViewRow row in dataGridViewAccounts.Rows)
+            {
+                if (onlySelected && !row.Selected) continue;
+
+                int docId = int.Parse(row.Cells["id_doco"].Value.ToString());
+                dbAccount.Escale(docId);
+            }
+
+            MessageBox.Show("Las cuentas seleccionadas han sido escaladas a gerencia.", "Cuentas escaladas", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
 
         private void AssignDocuments(bool onlySelected)
         {
@@ -380,16 +413,6 @@ namespace SeguimientoSuper.Catalogs
             dataGridViewAccounts.DataSource = null;
             dataGridViewPayments.DataSource = null;
 
-        }
-
-        private void dataGridViewCusNotes_SelectionChanged(object sender, EventArgs e)
-        {
-            selectAciveNote();
-        }
-
-        private void toolStripButtonRestoreNota_Click(object sender, EventArgs e)
-        {
-            selectAciveNote();
         }
     }
 }

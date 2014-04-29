@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeguimientoSuper", "Seguimi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonAdminPaq", "CommonAdminPaq\CommonAdminPaq.csproj", "{FBFE32B7-F433-430E-9DBC-60CAC18725D2}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup_Seguimiento_Super", "Setup_Seguimiento_Super\Setup_Seguimiento_Super.vdproj", "{D44A977E-3982-454D-BF39-35418484572C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +37,12 @@ Global
 		{FBFE32B7-F433-430E-9DBC-60CAC18725D2}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{FBFE32B7-F433-430E-9DBC-60CAC18725D2}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{FBFE32B7-F433-430E-9DBC-60CAC18725D2}.Release|x86.ActiveCfg = Release|Any CPU
+		{D44A977E-3982-454D-BF39-35418484572C}.Debug|Any CPU.ActiveCfg = Debug
+		{D44A977E-3982-454D-BF39-35418484572C}.Debug|Mixed Platforms.ActiveCfg = Debug
+		{D44A977E-3982-454D-BF39-35418484572C}.Debug|x86.ActiveCfg = Debug
+		{D44A977E-3982-454D-BF39-35418484572C}.Release|Any CPU.ActiveCfg = Release
+		{D44A977E-3982-454D-BF39-35418484572C}.Release|Mixed Platforms.ActiveCfg = Release
+		{D44A977E-3982-454D-BF39-35418484572C}.Release|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

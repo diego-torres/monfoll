@@ -9,3 +9,4 @@ INSERT INTO CAT_MOVIMIENTO(descripcion, system_based) VALUES('Email', false);
 INSERT INTO CAT_MOVIMIENTO(descripcion, system_based) VALUES('Otro Seguimiento', false);
 INSERT INTO CAT_MOVIMIENTO(descripcion, system_based) VALUES('Cerrado', false);
 INSERT INTO CAT_MOVIMIENTO(descripcion, system_based) VALUES('Cancelado', false);
+INSERT INTO CAT_MOVIMIENTO(descripcion, system_based) VALUES('Re-abierto', false);
