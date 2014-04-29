@@ -30,23 +30,25 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormCobradores));
             this.dataGridViewCollectors = new System.Windows.Forms.DataGridView();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.splitContainerMain = new System.Windows.Forms.SplitContainer();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.splitContainerGeneral = new System.Windows.Forms.SplitContainer();
+            this.label1 = new System.Windows.Forms.Label();
+            this.labelID = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.comboBoxArea = new System.Windows.Forms.ComboBox();
+            this.textBoxNombre = new System.Windows.Forms.TextBox();
+            this.dataGridViewAssignedDocuments = new System.Windows.Forms.DataGridView();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripButtonSave = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonAdd = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonRemoveCollector = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonUndo = new System.Windows.Forms.ToolStripButton();
-            this.label4 = new System.Windows.Forms.Label();
-            this.comboBoxArea = new System.Windows.Forms.ComboBox();
-            this.textBoxNombre = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.labelID = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.splitContainerNotes = new System.Windows.Forms.SplitContainer();
             this.labelNoteID = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.toolStrip2 = new System.Windows.Forms.ToolStrip();
@@ -57,19 +59,26 @@
             this.toolStripButtonUndoNote = new System.Windows.Forms.ToolStripButton();
             this.textBoxComment = new System.Windows.Forms.TextBox();
             this.dataGridViewNotes = new System.Windows.Forms.DataGridView();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripButtonPrintAssignments = new System.Windows.Forms.ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewCollectors)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
-            this.splitContainer1.Panel1.SuspendLayout();
-            this.splitContainer1.Panel2.SuspendLayout();
-            this.splitContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerMain)).BeginInit();
+            this.splitContainerMain.Panel1.SuspendLayout();
+            this.splitContainerMain.Panel2.SuspendLayout();
+            this.splitContainerMain.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerGeneral)).BeginInit();
+            this.splitContainerGeneral.Panel1.SuspendLayout();
+            this.splitContainerGeneral.Panel2.SuspendLayout();
+            this.splitContainerGeneral.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAssignedDocuments)).BeginInit();
             this.toolStrip1.SuspendLayout();
             this.tabPage2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
-            this.splitContainer2.Panel1.SuspendLayout();
-            this.splitContainer2.Panel2.SuspendLayout();
-            this.splitContainer2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerNotes)).BeginInit();
+            this.splitContainerNotes.Panel1.SuspendLayout();
+            this.splitContainerNotes.Panel2.SuspendLayout();
+            this.splitContainerNotes.SuspendLayout();
             this.toolStrip2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewNotes)).BeginInit();
             this.SuspendLayout();
@@ -90,22 +99,22 @@
             this.dataGridViewCollectors.TabIndex = 0;
             this.dataGridViewCollectors.SelectionChanged += new System.EventHandler(this.dataGridViewCollectors_SelectionChanged);
             // 
-            // splitContainer1
+            // splitContainerMain
             // 
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer1.Name = "splitContainer1";
+            this.splitContainerMain.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainerMain.Location = new System.Drawing.Point(0, 0);
+            this.splitContainerMain.Name = "splitContainerMain";
             // 
-            // splitContainer1.Panel1
+            // splitContainerMain.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.dataGridViewCollectors);
+            this.splitContainerMain.Panel1.Controls.Add(this.dataGridViewCollectors);
             // 
-            // splitContainer1.Panel2
+            // splitContainerMain.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.tabControl1);
-            this.splitContainer1.Size = new System.Drawing.Size(792, 566);
-            this.splitContainer1.SplitterDistance = 370;
-            this.splitContainer1.TabIndex = 2;
+            this.splitContainerMain.Panel2.Controls.Add(this.tabControl1);
+            this.splitContainerMain.Size = new System.Drawing.Size(792, 566);
+            this.splitContainerMain.SplitterDistance = 370;
+            this.splitContainerMain.TabIndex = 2;
             // 
             // tabControl1
             // 
@@ -122,13 +131,8 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.splitContainerGeneral);
             this.tabPage1.Controls.Add(this.toolStrip1);
-            this.tabPage1.Controls.Add(this.label4);
-            this.tabPage1.Controls.Add(this.comboBoxArea);
-            this.tabPage1.Controls.Add(this.textBoxNombre);
-            this.tabPage1.Controls.Add(this.label3);
-            this.tabPage1.Controls.Add(this.labelID);
-            this.tabPage1.Controls.Add(this.label1);
             this.tabPage1.Location = new System.Drawing.Point(4, 25);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
@@ -137,6 +141,104 @@
             this.tabPage1.Text = "General";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // splitContainerGeneral
+            // 
+            this.splitContainerGeneral.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainerGeneral.Location = new System.Drawing.Point(3, 28);
+            this.splitContainerGeneral.Name = "splitContainerGeneral";
+            this.splitContainerGeneral.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainerGeneral.Panel1
+            // 
+            this.splitContainerGeneral.Panel1.Controls.Add(this.label1);
+            this.splitContainerGeneral.Panel1.Controls.Add(this.labelID);
+            this.splitContainerGeneral.Panel1.Controls.Add(this.label4);
+            this.splitContainerGeneral.Panel1.Controls.Add(this.label3);
+            this.splitContainerGeneral.Panel1.Controls.Add(this.comboBoxArea);
+            this.splitContainerGeneral.Panel1.Controls.Add(this.textBoxNombre);
+            // 
+            // splitContainerGeneral.Panel2
+            // 
+            this.splitContainerGeneral.Panel2.Controls.Add(this.dataGridViewAssignedDocuments);
+            this.splitContainerGeneral.Size = new System.Drawing.Size(404, 506);
+            this.splitContainerGeneral.SplitterDistance = 212;
+            this.splitContainerGeneral.TabIndex = 7;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(11, 19);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(67, 16);
+            this.label1.TabIndex = 1;
+            this.label1.Text = "ID Interno:";
+            // 
+            // labelID
+            // 
+            this.labelID.AutoSize = true;
+            this.labelID.Location = new System.Drawing.Point(84, 19);
+            this.labelID.Name = "labelID";
+            this.labelID.Size = new System.Drawing.Size(0, 16);
+            this.labelID.TabIndex = 2;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(38, 69);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(40, 16);
+            this.label4.TabIndex = 5;
+            this.label4.Text = "Área:";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(18, 41);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(60, 16);
+            this.label3.TabIndex = 3;
+            this.label3.Text = "Nombre:";
+            // 
+            // comboBoxArea
+            // 
+            this.comboBoxArea.AutoCompleteCustomSource.AddRange(new string[] {
+            "Local",
+            "Foráneo"});
+            this.comboBoxArea.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.comboBoxArea.FormattingEnabled = true;
+            this.comboBoxArea.Items.AddRange(new object[] {
+            "Local",
+            "Foráneo"});
+            this.comboBoxArea.Location = new System.Drawing.Point(84, 66);
+            this.comboBoxArea.Name = "comboBoxArea";
+            this.comboBoxArea.Size = new System.Drawing.Size(142, 24);
+            this.comboBoxArea.TabIndex = 6;
+            this.comboBoxArea.SelectedIndexChanged += new System.EventHandler(this.collectorControls_TextChanged);
+            // 
+            // textBoxNombre
+            // 
+            this.textBoxNombre.Location = new System.Drawing.Point(84, 38);
+            this.textBoxNombre.MaxLength = 150;
+            this.textBoxNombre.Name = "textBoxNombre";
+            this.textBoxNombre.Size = new System.Drawing.Size(259, 22);
+            this.textBoxNombre.TabIndex = 4;
+            this.textBoxNombre.TextChanged += new System.EventHandler(this.collectorControls_TextChanged);
+            // 
+            // dataGridViewAssignedDocuments
+            // 
+            this.dataGridViewAssignedDocuments.AllowUserToAddRows = false;
+            this.dataGridViewAssignedDocuments.AllowUserToDeleteRows = false;
+            this.dataGridViewAssignedDocuments.AllowUserToOrderColumns = true;
+            this.dataGridViewAssignedDocuments.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewAssignedDocuments.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridViewAssignedDocuments.Location = new System.Drawing.Point(0, 0);
+            this.dataGridViewAssignedDocuments.Name = "dataGridViewAssignedDocuments";
+            this.dataGridViewAssignedDocuments.ReadOnly = true;
+            this.dataGridViewAssignedDocuments.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dataGridViewAssignedDocuments.Size = new System.Drawing.Size(404, 290);
+            this.dataGridViewAssignedDocuments.TabIndex = 0;
+            this.dataGridViewAssignedDocuments.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.dataGridViewAssignedDocuments_MouseDoubleClick);
+            // 
             // toolStrip1
             // 
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -144,7 +246,9 @@
             this.toolStripButtonAdd,
             this.toolStripSeparator1,
             this.toolStripButtonRemoveCollector,
-            this.toolStripButtonUndo});
+            this.toolStripButtonUndo,
+            this.toolStripSeparator3,
+            this.toolStripButtonPrintAssignments});
             this.toolStrip1.Location = new System.Drawing.Point(3, 3);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(404, 25);
@@ -198,69 +302,9 @@
             this.toolStripButtonUndo.Text = "Revertir Cambios";
             this.toolStripButtonUndo.Click += new System.EventHandler(this.toolStripButtonUndo_Click);
             // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(47, 118);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(40, 16);
-            this.label4.TabIndex = 5;
-            this.label4.Text = "Área:";
-            // 
-            // comboBoxArea
-            // 
-            this.comboBoxArea.AutoCompleteCustomSource.AddRange(new string[] {
-            "Local",
-            "Foráneo"});
-            this.comboBoxArea.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
-            this.comboBoxArea.FormattingEnabled = true;
-            this.comboBoxArea.Items.AddRange(new object[] {
-            "Local",
-            "Foráneo"});
-            this.comboBoxArea.Location = new System.Drawing.Point(93, 115);
-            this.comboBoxArea.Name = "comboBoxArea";
-            this.comboBoxArea.Size = new System.Drawing.Size(142, 24);
-            this.comboBoxArea.TabIndex = 6;
-            this.comboBoxArea.SelectedIndexChanged += new System.EventHandler(this.collectorControls_TextChanged);
-            // 
-            // textBoxNombre
-            // 
-            this.textBoxNombre.Location = new System.Drawing.Point(93, 87);
-            this.textBoxNombre.MaxLength = 150;
-            this.textBoxNombre.Name = "textBoxNombre";
-            this.textBoxNombre.Size = new System.Drawing.Size(259, 22);
-            this.textBoxNombre.TabIndex = 4;
-            this.textBoxNombre.TextChanged += new System.EventHandler(this.collectorControls_TextChanged);
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(27, 90);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(60, 16);
-            this.label3.TabIndex = 3;
-            this.label3.Text = "Nombre:";
-            // 
-            // labelID
-            // 
-            this.labelID.AutoSize = true;
-            this.labelID.Location = new System.Drawing.Point(93, 68);
-            this.labelID.Name = "labelID";
-            this.labelID.Size = new System.Drawing.Size(0, 16);
-            this.labelID.TabIndex = 2;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(20, 68);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(67, 16);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "ID Interno:";
-            // 
             // tabPage2
             // 
-            this.tabPage2.Controls.Add(this.splitContainer2);
+            this.tabPage2.Controls.Add(this.splitContainerNotes);
             this.tabPage2.Location = new System.Drawing.Point(4, 25);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
@@ -269,26 +313,26 @@
             this.tabPage2.Text = "Notas";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
-            // splitContainer2
+            // splitContainerNotes
             // 
-            this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer2.Location = new System.Drawing.Point(3, 3);
-            this.splitContainer2.Name = "splitContainer2";
-            this.splitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            this.splitContainerNotes.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainerNotes.Location = new System.Drawing.Point(3, 3);
+            this.splitContainerNotes.Name = "splitContainerNotes";
+            this.splitContainerNotes.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
-            // splitContainer2.Panel1
+            // splitContainerNotes.Panel1
             // 
-            this.splitContainer2.Panel1.Controls.Add(this.labelNoteID);
-            this.splitContainer2.Panel1.Controls.Add(this.label2);
-            this.splitContainer2.Panel1.Controls.Add(this.toolStrip2);
-            this.splitContainer2.Panel1.Controls.Add(this.textBoxComment);
+            this.splitContainerNotes.Panel1.Controls.Add(this.labelNoteID);
+            this.splitContainerNotes.Panel1.Controls.Add(this.label2);
+            this.splitContainerNotes.Panel1.Controls.Add(this.toolStrip2);
+            this.splitContainerNotes.Panel1.Controls.Add(this.textBoxComment);
             // 
-            // splitContainer2.Panel2
+            // splitContainerNotes.Panel2
             // 
-            this.splitContainer2.Panel2.Controls.Add(this.dataGridViewNotes);
-            this.splitContainer2.Size = new System.Drawing.Size(404, 531);
-            this.splitContainer2.SplitterDistance = 188;
-            this.splitContainer2.TabIndex = 0;
+            this.splitContainerNotes.Panel2.Controls.Add(this.dataGridViewNotes);
+            this.splitContainerNotes.Size = new System.Drawing.Size(404, 531);
+            this.splitContainerNotes.SplitterDistance = 188;
+            this.splitContainerNotes.TabIndex = 0;
             // 
             // labelNoteID
             // 
@@ -389,33 +433,54 @@
             this.dataGridViewNotes.TabIndex = 0;
             this.dataGridViewNotes.SelectionChanged += new System.EventHandler(this.dataGridViewNotes_SelectionChanged);
             // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripButtonPrintAssignments
+            // 
+            this.toolStripButtonPrintAssignments.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonPrintAssignments.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonPrintAssignments.Image")));
+            this.toolStripButtonPrintAssignments.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonPrintAssignments.Name = "toolStripButtonPrintAssignments";
+            this.toolStripButtonPrintAssignments.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonPrintAssignments.Text = "Imprimir Asignaciones";
+            this.toolStripButtonPrintAssignments.Click += new System.EventHandler(this.toolStripButtonPrintAssignments_Click);
+            // 
             // FormCobradores
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(792, 566);
-            this.Controls.Add(this.splitContainer1);
+            this.Controls.Add(this.splitContainerMain);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormCobradores";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Catálogo de Cobradores";
             this.Load += new System.EventHandler(this.FormCobradoresGrid_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewCollectors)).EndInit();
-            this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
-            this.splitContainer1.ResumeLayout(false);
+            this.splitContainerMain.Panel1.ResumeLayout(false);
+            this.splitContainerMain.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerMain)).EndInit();
+            this.splitContainerMain.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
+            this.splitContainerGeneral.Panel1.ResumeLayout(false);
+            this.splitContainerGeneral.Panel1.PerformLayout();
+            this.splitContainerGeneral.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerGeneral)).EndInit();
+            this.splitContainerGeneral.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAssignedDocuments)).EndInit();
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             this.tabPage2.ResumeLayout(false);
-            this.splitContainer2.Panel1.ResumeLayout(false);
-            this.splitContainer2.Panel1.PerformLayout();
-            this.splitContainer2.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
-            this.splitContainer2.ResumeLayout(false);
+            this.splitContainerNotes.Panel1.ResumeLayout(false);
+            this.splitContainerNotes.Panel1.PerformLayout();
+            this.splitContainerNotes.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerNotes)).EndInit();
+            this.splitContainerNotes.ResumeLayout(false);
             this.toolStrip2.ResumeLayout(false);
             this.toolStrip2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewNotes)).EndInit();
@@ -426,7 +491,7 @@
         #endregion
 
         private System.Windows.Forms.DataGridView dataGridViewCollectors;
-        private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.SplitContainer splitContainerMain;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
@@ -439,7 +504,7 @@
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripButton toolStripButtonSave;
         private System.Windows.Forms.ToolStripButton toolStripButtonAdd;
-        private System.Windows.Forms.SplitContainer splitContainer2;
+        private System.Windows.Forms.SplitContainer splitContainerNotes;
         private System.Windows.Forms.TextBox textBoxComment;
         private System.Windows.Forms.DataGridView dataGridViewNotes;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
@@ -453,5 +518,9 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripButton toolStripButtonRemoveNote;
         private System.Windows.Forms.ToolStripButton toolStripButtonUndoNote;
+        private System.Windows.Forms.SplitContainer splitContainerGeneral;
+        private System.Windows.Forms.DataGridView dataGridViewAssignedDocuments;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.ToolStripButton toolStripButtonPrintAssignments;
     }
 }

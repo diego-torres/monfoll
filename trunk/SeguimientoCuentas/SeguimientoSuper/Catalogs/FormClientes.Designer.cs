@@ -35,6 +35,12 @@
             this.tabPageGeneral = new System.Windows.Forms.TabPage();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripButtonAssignSelection = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonAssignAll = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripButtonEscaleSelected = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonEscaleAll = new System.Windows.Forms.ToolStripButton();
             this.splitContainerGeneralDetails = new System.Windows.Forms.SplitContainer();
             this.label1 = new System.Windows.Forms.Label();
             this.labelDiaPago = new System.Windows.Forms.Label();
@@ -47,12 +53,22 @@
             this.labelRuta = new System.Windows.Forms.Label();
             this.labelCodigo = new System.Windows.Forms.Label();
             this.splitContainerAccounts = new System.Windows.Forms.SplitContainer();
+            this.dataGridViewAccounts = new System.Windows.Forms.DataGridView();
             this.label6 = new System.Windows.Forms.Label();
             this.dataGridViewPayments = new System.Windows.Forms.DataGridView();
             this.label7 = new System.Windows.Forms.Label();
             this.tabPageNotes = new System.Windows.Forms.TabPage();
+            this.splitContainerNotes = new System.Windows.Forms.SplitContainer();
+            this.textBoxNote = new System.Windows.Forms.TextBox();
+            this.labelSysID = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.dataGridViewCusNotes = new System.Windows.Forms.DataGridView();
             this.toolStrip3 = new System.Windows.Forms.ToolStrip();
-            this.dataGridViewAccounts = new System.Windows.Forms.DataGridView();
+            this.toolStripButtonSaveCusNote = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonNewCusNote = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripButtonRemoveCusNote = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonRestoreNota = new System.Windows.Forms.ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMain)).BeginInit();
             this.splitContainerMain.Panel1.SuspendLayout();
             this.splitContainerMain.Panel2.SuspendLayout();
@@ -69,9 +85,15 @@
             this.splitContainerAccounts.Panel1.SuspendLayout();
             this.splitContainerAccounts.Panel2.SuspendLayout();
             this.splitContainerAccounts.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAccounts)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewPayments)).BeginInit();
             this.tabPageNotes.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAccounts)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerNotes)).BeginInit();
+            this.splitContainerNotes.Panel1.SuspendLayout();
+            this.splitContainerNotes.Panel2.SuspendLayout();
+            this.splitContainerNotes.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewCusNotes)).BeginInit();
+            this.toolStrip3.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainerMain
@@ -133,7 +155,13 @@
             // toolStrip1
             // 
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripButton1});
+            this.toolStripButton1,
+            this.toolStripSeparator1,
+            this.toolStripButtonAssignSelection,
+            this.toolStripButtonAssignAll,
+            this.toolStripSeparator2,
+            this.toolStripButtonEscaleSelected,
+            this.toolStripButtonEscaleAll});
             this.toolStrip1.Location = new System.Drawing.Point(3, 3);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(527, 25);
@@ -148,6 +176,55 @@
             this.toolStripButton1.Name = "toolStripButton1";
             this.toolStripButton1.Size = new System.Drawing.Size(23, 22);
             this.toolStripButton1.Text = "Imprimir Cuenta";
+            this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripButtonAssignSelection
+            // 
+            this.toolStripButtonAssignSelection.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonAssignSelection.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonAssignSelection.Image")));
+            this.toolStripButtonAssignSelection.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonAssignSelection.Name = "toolStripButtonAssignSelection";
+            this.toolStripButtonAssignSelection.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonAssignSelection.Text = "Asignar Selección";
+            this.toolStripButtonAssignSelection.Click += new System.EventHandler(this.toolStripButtonAssignSelection_Click);
+            // 
+            // toolStripButtonAssignAll
+            // 
+            this.toolStripButtonAssignAll.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonAssignAll.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonAssignAll.Image")));
+            this.toolStripButtonAssignAll.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonAssignAll.Name = "toolStripButtonAssignAll";
+            this.toolStripButtonAssignAll.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonAssignAll.Text = "Asignar Todo";
+            this.toolStripButtonAssignAll.Click += new System.EventHandler(this.toolStripButtonAssignAll_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripButtonEscaleSelected
+            // 
+            this.toolStripButtonEscaleSelected.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonEscaleSelected.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonEscaleSelected.Image")));
+            this.toolStripButtonEscaleSelected.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonEscaleSelected.Name = "toolStripButtonEscaleSelected";
+            this.toolStripButtonEscaleSelected.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonEscaleSelected.Text = "Escalar Selección";
+            // 
+            // toolStripButtonEscaleAll
+            // 
+            this.toolStripButtonEscaleAll.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonEscaleAll.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonEscaleAll.Image")));
+            this.toolStripButtonEscaleAll.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonEscaleAll.Name = "toolStripButtonEscaleAll";
+            this.toolStripButtonEscaleAll.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonEscaleAll.Text = "Escalar Todo";
             // 
             // splitContainerGeneralDetails
             // 
@@ -285,6 +362,22 @@
             this.splitContainerAccounts.SplitterDistance = 268;
             this.splitContainerAccounts.TabIndex = 0;
             // 
+            // dataGridViewAccounts
+            // 
+            this.dataGridViewAccounts.AllowUserToAddRows = false;
+            this.dataGridViewAccounts.AllowUserToDeleteRows = false;
+            this.dataGridViewAccounts.AllowUserToOrderColumns = true;
+            this.dataGridViewAccounts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewAccounts.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridViewAccounts.Location = new System.Drawing.Point(0, 28);
+            this.dataGridViewAccounts.Name = "dataGridViewAccounts";
+            this.dataGridViewAccounts.ReadOnly = true;
+            this.dataGridViewAccounts.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dataGridViewAccounts.Size = new System.Drawing.Size(268, 303);
+            this.dataGridViewAccounts.TabIndex = 1;
+            this.dataGridViewAccounts.SelectionChanged += new System.EventHandler(this.dataGridViewAccounts_SelectionChanged);
+            this.dataGridViewAccounts.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.dataGridViewAccounts_MouseDoubleClick);
+            // 
             // label6
             // 
             this.label6.BackColor = System.Drawing.SystemColors.ActiveCaption;
@@ -326,6 +419,7 @@
             // tabPageNotes
             // 
             this.tabPageNotes.Controls.Add(this.toolStrip3);
+            this.tabPageNotes.Controls.Add(this.splitContainerNotes);
             this.tabPageNotes.Location = new System.Drawing.Point(4, 25);
             this.tabPageNotes.Name = "tabPageNotes";
             this.tabPageNotes.Size = new System.Drawing.Size(533, 537);
@@ -333,30 +427,125 @@
             this.tabPageNotes.Text = "Notas";
             this.tabPageNotes.UseVisualStyleBackColor = true;
             // 
+            // splitContainerNotes
+            // 
+            this.splitContainerNotes.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainerNotes.Location = new System.Drawing.Point(0, 0);
+            this.splitContainerNotes.Name = "splitContainerNotes";
+            this.splitContainerNotes.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainerNotes.Panel1
+            // 
+            this.splitContainerNotes.Panel1.Controls.Add(this.textBoxNote);
+            this.splitContainerNotes.Panel1.Controls.Add(this.labelSysID);
+            this.splitContainerNotes.Panel1.Controls.Add(this.label8);
+            // 
+            // splitContainerNotes.Panel2
+            // 
+            this.splitContainerNotes.Panel2.Controls.Add(this.dataGridViewCusNotes);
+            this.splitContainerNotes.Size = new System.Drawing.Size(533, 537);
+            this.splitContainerNotes.SplitterDistance = 237;
+            this.splitContainerNotes.TabIndex = 1;
+            // 
+            // textBoxNote
+            // 
+            this.textBoxNote.Location = new System.Drawing.Point(38, 83);
+            this.textBoxNote.MaxLength = 250;
+            this.textBoxNote.Multiline = true;
+            this.textBoxNote.Name = "textBoxNote";
+            this.textBoxNote.Size = new System.Drawing.Size(359, 129);
+            this.textBoxNote.TabIndex = 2;
+            // 
+            // labelSysID
+            // 
+            this.labelSysID.AutoSize = true;
+            this.labelSysID.Location = new System.Drawing.Point(108, 44);
+            this.labelSysID.Name = "labelSysID";
+            this.labelSysID.Size = new System.Drawing.Size(0, 16);
+            this.labelSysID.TabIndex = 1;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(35, 44);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(67, 16);
+            this.label8.TabIndex = 0;
+            this.label8.Text = "ID Interno:";
+            // 
+            // dataGridViewCusNotes
+            // 
+            this.dataGridViewCusNotes.AllowUserToAddRows = false;
+            this.dataGridViewCusNotes.AllowUserToDeleteRows = false;
+            this.dataGridViewCusNotes.AllowUserToOrderColumns = true;
+            this.dataGridViewCusNotes.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewCusNotes.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridViewCusNotes.Location = new System.Drawing.Point(0, 0);
+            this.dataGridViewCusNotes.Name = "dataGridViewCusNotes";
+            this.dataGridViewCusNotes.ReadOnly = true;
+            this.dataGridViewCusNotes.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dataGridViewCusNotes.Size = new System.Drawing.Size(533, 296);
+            this.dataGridViewCusNotes.TabIndex = 0;
+            this.dataGridViewCusNotes.SelectionChanged += new System.EventHandler(this.dataGridViewCusNotes_SelectionChanged);
+            // 
             // toolStrip3
             // 
+            this.toolStrip3.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripButtonSaveCusNote,
+            this.toolStripButtonNewCusNote,
+            this.toolStripSeparator3,
+            this.toolStripButtonRemoveCusNote,
+            this.toolStripButtonRestoreNota});
             this.toolStrip3.Location = new System.Drawing.Point(0, 0);
             this.toolStrip3.Name = "toolStrip3";
             this.toolStrip3.Size = new System.Drawing.Size(533, 25);
             this.toolStrip3.TabIndex = 0;
             this.toolStrip3.Text = "toolStrip3";
             // 
-            // dataGridViewAccounts
+            // toolStripButtonSaveCusNote
             // 
-            this.dataGridViewAccounts.AllowUserToAddRows = false;
-            this.dataGridViewAccounts.AllowUserToDeleteRows = false;
-            this.dataGridViewAccounts.AllowUserToOrderColumns = true;
-            this.dataGridViewAccounts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewAccounts.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridViewAccounts.Location = new System.Drawing.Point(0, 28);
-            this.dataGridViewAccounts.MultiSelect = false;
-            this.dataGridViewAccounts.Name = "dataGridViewAccounts";
-            this.dataGridViewAccounts.ReadOnly = true;
-            this.dataGridViewAccounts.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewAccounts.Size = new System.Drawing.Size(268, 303);
-            this.dataGridViewAccounts.TabIndex = 1;
-            this.dataGridViewAccounts.SelectionChanged += new System.EventHandler(this.dataGridViewAccounts_SelectionChanged);
-            this.dataGridViewAccounts.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.dataGridViewAccounts_MouseDoubleClick);
+            this.toolStripButtonSaveCusNote.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonSaveCusNote.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonSaveCusNote.Image")));
+            this.toolStripButtonSaveCusNote.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonSaveCusNote.Name = "toolStripButtonSaveCusNote";
+            this.toolStripButtonSaveCusNote.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonSaveCusNote.Text = "Grabar";
+            this.toolStripButtonSaveCusNote.Click += new System.EventHandler(this.toolStripButtonSaveCusNote_Click);
+            // 
+            // toolStripButtonNewCusNote
+            // 
+            this.toolStripButtonNewCusNote.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonNewCusNote.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonNewCusNote.Image")));
+            this.toolStripButtonNewCusNote.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonNewCusNote.Name = "toolStripButtonNewCusNote";
+            this.toolStripButtonNewCusNote.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonNewCusNote.Text = "Nueva Nota";
+            this.toolStripButtonNewCusNote.Click += new System.EventHandler(this.toolStripButtonNewCusNote_Click);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripButtonRemoveCusNote
+            // 
+            this.toolStripButtonRemoveCusNote.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonRemoveCusNote.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonRemoveCusNote.Image")));
+            this.toolStripButtonRemoveCusNote.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonRemoveCusNote.Name = "toolStripButtonRemoveCusNote";
+            this.toolStripButtonRemoveCusNote.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonRemoveCusNote.Text = "Eliminar Nota";
+            this.toolStripButtonRemoveCusNote.Click += new System.EventHandler(this.toolStripButtonRemoveCusNote_Click);
+            // 
+            // toolStripButtonRestoreNota
+            // 
+            this.toolStripButtonRestoreNota.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonRestoreNota.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonRestoreNota.Image")));
+            this.toolStripButtonRestoreNota.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonRestoreNota.Name = "toolStripButtonRestoreNota";
+            this.toolStripButtonRestoreNota.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonRestoreNota.Text = "Restaurar Nota";
+            this.toolStripButtonRestoreNota.Click += new System.EventHandler(this.toolStripButtonRestoreNota_Click);
             // 
             // FormClientes
             // 
@@ -388,10 +577,18 @@
             this.splitContainerAccounts.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerAccounts)).EndInit();
             this.splitContainerAccounts.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAccounts)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewPayments)).EndInit();
             this.tabPageNotes.ResumeLayout(false);
             this.tabPageNotes.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAccounts)).EndInit();
+            this.splitContainerNotes.Panel1.ResumeLayout(false);
+            this.splitContainerNotes.Panel1.PerformLayout();
+            this.splitContainerNotes.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerNotes)).EndInit();
+            this.splitContainerNotes.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewCusNotes)).EndInit();
+            this.toolStrip3.ResumeLayout(false);
+            this.toolStrip3.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -422,5 +619,21 @@
         private System.Windows.Forms.ToolStripButton toolStripButton1;
         private System.Windows.Forms.DataGridView dataGridViewCustomers;
         private System.Windows.Forms.DataGridView dataGridViewAccounts;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripButton toolStripButtonAssignSelection;
+        private System.Windows.Forms.ToolStripButton toolStripButtonAssignAll;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripButton toolStripButtonEscaleSelected;
+        private System.Windows.Forms.ToolStripButton toolStripButtonEscaleAll;
+        private System.Windows.Forms.ToolStripButton toolStripButtonSaveCusNote;
+        private System.Windows.Forms.ToolStripButton toolStripButtonNewCusNote;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.ToolStripButton toolStripButtonRemoveCusNote;
+        private System.Windows.Forms.ToolStripButton toolStripButtonRestoreNota;
+        private System.Windows.Forms.SplitContainer splitContainerNotes;
+        private System.Windows.Forms.DataGridView dataGridViewCusNotes;
+        private System.Windows.Forms.Label labelSysID;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.TextBox textBoxNote;
     }
 }
