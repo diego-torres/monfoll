@@ -38,6 +38,8 @@ namespace SeguimientoSuper.Process
                 this.Close();
             }
 
+            this.Text = "Seguimiento - Documento por cobrar: " + account.Serie + "-" + account.Folio.ToString();
+
             LoadDates();
             LoadCustomer();
             LoadDocument();
@@ -176,6 +178,9 @@ namespace SeguimientoSuper.Process
                 FormMain fMain = (FormMain)this.MdiParent;
 
                 if (fMain.IsClientesOpen)
+                    fMain.RefreshAccountsInClientes();
+
+                if (fMain.IsCollectorsOpen)
                     fMain.RefreshAccountsInClientes();
 
                 adminPaqDirty = false;
@@ -324,6 +329,7 @@ namespace SeguimientoSuper.Process
         private void LoadPayments()
         {
             dataGridViewPayments.DataSource = account.Payments;
+            FixPaymentsColumns();
         }
 
         private void RefreshFollowUpGrid()
@@ -331,7 +337,41 @@ namespace SeguimientoSuper.Process
             dataGridViewFollowUp.DataSource = postgresAcct.FollowUp(account.DocId);
 
             dataGridViewFollowUp.Sort(dataGridViewFollowUp.Columns[0], ListSortDirection.Descending);
+            FixFollowUpColumns();
             LoadFollowUp(dataGridViewFollowUp.Rows[0]);
+        }
+
+        private void FixPaymentsColumns()
+        {
+            dataGridViewPayments.Columns["PaymentId"].Visible = false;
+            dataGridViewPayments.Columns["DocId"].Visible = false;
+
+            FixColumn(dataGridViewPayments.Columns["Concept"], 0, "Concepto", 230);
+            FixColumn(dataGridViewPayments.Columns["Amount"], 1, "Importe", 80);
+            FixColumn(dataGridViewPayments.Columns["DepositDate"], 2, "Fecha", 80);
+            FixColumn(dataGridViewPayments.Columns["Folio"], 3, "Folio", 60);
+            FixColumn(dataGridViewPayments.Columns["PaymentType"], 4, "Tipo", 250);
+            FixColumn(dataGridViewPayments.Columns["Account"], 5, "Cuenta", 200);
+
+            dataGridViewPayments.Columns["Amount"].DefaultCellStyle.Format = "c";
+        }
+
+        private void FixFollowUpColumns()
+        {
+            dataGridViewFollowUp.Columns["id_seguimiento"].Visible = false;
+            dataGridViewFollowUp.Columns["id_movimiento"].Visible = false;
+            dataGridViewFollowUp.Columns["system_based"].Visible = false;
+            dataGridViewFollowUp.Columns["ts_seguimiento"].Visible = false;
+
+            FixColumn(dataGridViewFollowUp.Columns["movimiento"], 0, "Movimiento", 200);
+            FixColumn(dataGridViewFollowUp.Columns["seguimiento"], 1, "Seguimiento", 400);
+        }
+
+        private void FixColumn(DataGridViewColumn column, int displayedIndex, string HeaderText, int width)
+        {
+            column.DisplayIndex = displayedIndex;
+            column.HeaderText = HeaderText;
+            column.Width = width;
         }
 
         private void LoadFollowUp(DataGridViewRow row)

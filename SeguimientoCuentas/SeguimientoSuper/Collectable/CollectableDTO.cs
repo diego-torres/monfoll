@@ -56,7 +56,7 @@ namespace SeguimientoSuper.Collectable
 
     public class Account : IComparable<Account>
     {
-        private int docId, route, folio;
+        private int docId, folio;
         private DateTime docDate, collectDate, dueDate, lastDownload;
         private string serie, collectType, currency, note, docType;
         private double amount, balance;
@@ -64,7 +64,6 @@ namespace SeguimientoSuper.Collectable
         private List<Payment> payments = new List<Payment>();
 
         public int DocId { get { return docId; } set { docId = value; } }
-        public int Route { get { return route; } set { route = value; } }
         public int Folio { get { return folio; } set { folio = value; } }
 
         public DateTime DocDate { get { return docDate; } set { docDate = value; } }
@@ -84,11 +83,6 @@ namespace SeguimientoSuper.Collectable
         public Company Company { get { return company; } set { company = value; } }
 
         public List<Payment> Payments { get { return payments; } set { payments = value; } }
-        public void AddPayment(Payment payment)
-        {
-            if (!payments.Contains(payment))
-                payments.Add(payment);
-        }
 
         public int CompareTo(Account obj)
         {

@@ -90,7 +90,7 @@ namespace SeguimientoSuper.Collectable
             
         }
 
-        public List<Account> DownloadCollectables(System.Windows.Forms.ToolStripStatusLabel statusBar)
+        public List<Account> DownloadCollectables()
         {
             List<Account> result = new List<Account>();
             cancelados.Clear();
@@ -172,8 +172,6 @@ namespace SeguimientoSuper.Collectable
                         dbResponse = AdminPaqLib.dbSkip(connDocos, TableNames.DOCUMENTOS, IndexNames.DOCUMENTOS_ID_DOCUMENTO01, 1);
                         continue;
                     }
-
-                    statusBar.Text = "Procesando por fecha del documento: " + sFechaDoco + " ...";
                 }
                 else 
                 {
@@ -182,8 +180,6 @@ namespace SeguimientoSuper.Collectable
                         dbResponse = AdminPaqLib.dbSkip(connDocos, TableNames.DOCUMENTOS, IndexNames.DOCUMENTOS_ID_DOCUMENTO01, 1);
                         continue;
                     }
-
-                    statusBar.Text = "Procesando por fecha de cobro: " + sFechaCobro + " ...";
                 }
 
                 fieldResponse = AdminPaqLib.dbFieldLong(connDocos, TableNames.DOCUMENTOS, 3, ref conceptId);

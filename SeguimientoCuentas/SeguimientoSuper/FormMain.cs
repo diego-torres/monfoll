@@ -25,10 +25,20 @@ namespace SeguimientoSuper
         private AboutBox about;
         private FormDownload fDownload;
         private Dictionary<int, FormFollowup> followups = new Dictionary<int, FormFollowup>();
+
+        private FormProcess fProcess;
         
         public FormMain()
         {
             InitializeComponent();
+        }
+
+        public bool IsProcessOpen
+        {
+            get
+            {
+                return !(fProcess == null || fProcess.IsDisposed);
+            }
         }
 
         public bool IsClientesOpen
@@ -37,6 +47,26 @@ namespace SeguimientoSuper
             {
                 return !(fClientes == null || fClientes.IsDisposed);
             }
+        }
+
+        public bool IsCollectorsOpen
+        {
+            get 
+            {
+                return !(fCobradores == null || fCobradores.IsDisposed);
+            }
+        }
+
+        public void RefreshProcessAccounts()
+        {
+            if (IsCollectorsOpen)
+                fProcess.Refresh();
+        }
+
+        public void RefreshAccountsInCollectors()
+        {
+            if (IsCollectorsOpen)
+                fCobradores.RefreshAccounts();
         }
 
         public void RefreshAccountsInClientes()
@@ -109,9 +139,7 @@ namespace SeguimientoSuper
 
         private void FormMain_Load(object sender, EventArgs e)
         {
-            mainStatus.Text = "Cargando información general de AdminPaq ...";
             api = new AdminPaqImp();
-            mainStatus.Text = "Listo";
         }
 
         private void acercaDeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -139,13 +167,21 @@ namespace SeguimientoSuper
         private void descargarToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ShowDownload();
-
-            List<Collectable.Account> adminPaqAccounts = api.DownloadCollectables(mainStatus);
-            mainStatus.Text = "Uploading accounts to databasel";
+            List<Collectable.Account> adminPaqAccounts = api.DownloadCollectables();
             Collectable.PostgresImpl.Account AccountInterface = new Collectable.PostgresImpl.Account();
             AccountInterface.UploadAccounts(adminPaqAccounts, api.Cancelados);
-            mainStatus.Text = "Listo";
             CloseDownload();
+        }
+
+        private void processToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!IsProcessOpen)
+            {
+                fProcess = new FormProcess();
+                fProcess.MdiParent = this;
+                // SET API
+            }
+            fProcess.Show();
         }
 
         

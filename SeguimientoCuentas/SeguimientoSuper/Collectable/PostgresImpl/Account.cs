@@ -30,6 +30,25 @@ namespace SeguimientoSuper.Collectable.PostgresImpl
             return ds.Tables[0];
         }
 
+        public DataTable ReadPayments(int accountId)
+        {
+            DataSet ds = new DataSet();
+            NpgsqlDataAdapter da;
+            string sqlString = "SELECT ID_ABONO, TIPO_PAGO, IMPORTE_PAGO, FOLIO, CONCEPTO, FECHA_DEPOSITO, CUENTA " +
+                "FROM CTRL_ABONO " +
+                "WHERE ID_DOCO = " + accountId.ToString() + ";";
+
+            if (conn == null || conn.State != ConnectionState.Open)
+                connect();
+
+            da = new NpgsqlDataAdapter(sqlString, conn);
+
+            ds.Reset();
+            da.Fill(ds);
+            conn.Close();
+            return ds.Tables[0];
+        }
+
         public void UploadAccounts(List<Collectable.Account> adminPaqAccounts, List<int> cancelled)
         {
             if (conn == null || conn.State != ConnectionState.Open)
@@ -362,8 +381,7 @@ namespace SeguimientoSuper.Collectable.PostgresImpl
             cmd.ExecuteNonQuery();
         }
 
-
-        internal void AddFollowUp(string followUpType, string descripcion, int docId)
+        public void AddFollowUp(string followUpType, string descripcion, int docId)
         {
             if (conn == null || conn.State != ConnectionState.Open)
                 connect();
@@ -405,7 +423,7 @@ namespace SeguimientoSuper.Collectable.PostgresImpl
             conn.Close();
         }
 
-        internal void UpdateFollowUp(string followUpType, string descripcion, int followUpId)
+        public void UpdateFollowUp(string followUpType, string descripcion, int followUpId)
         {
             if (conn == null || conn.State != ConnectionState.Open)
                 connect();
@@ -462,6 +480,25 @@ namespace SeguimientoSuper.Collectable.PostgresImpl
             cmd.Parameters.Add("@followUpId", NpgsqlTypes.NpgsqlDbType.Integer);
             cmd.Parameters["@followUpId"].Value = followUpId;
             
+            cmd.ExecuteNonQuery();
+            conn.Close();
+        }
+
+        public void Assign(int docId, int collectorId)
+        {
+            if (conn == null || conn.State != ConnectionState.Open)
+                connect();
+
+            string sqlString = "INSERT INTO ctrl_asignacion(id_cobrador, id_doco) "+
+                "VALUES(@cobrador, @documento);";
+
+            NpgsqlCommand cmd = new NpgsqlCommand(sqlString, conn);
+
+            cmd.Parameters.Add("@cobrador", NpgsqlTypes.NpgsqlDbType.Integer);
+            cmd.Parameters.Add("@documento", NpgsqlTypes.NpgsqlDbType.Integer);
+            cmd.Parameters["@cobrador"].Value = collectorId;
+            cmd.Parameters["@documento"].Value = docId;
+
             cmd.ExecuteNonQuery();
             conn.Close();
         }

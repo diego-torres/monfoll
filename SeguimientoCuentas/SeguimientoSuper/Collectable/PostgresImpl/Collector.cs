@@ -62,6 +62,28 @@ namespace SeguimientoSuper.Collectable.PostgresImpl
             conn.Close();
         }
 
+        public DataTable ReadAssignments(int collectorId)
+        {
+            DataSet ds = new DataSet();
+            NpgsqlDataAdapter da;
+            string sqlString = "SELECT ctrl_cuenta.id_doco, f_documento, f_vencimiento, f_cobro, ctrl_cuenta.id_cliente, cd_cliente, nombre_cliente, ruta, dia_pago, " +
+                "serie_doco, folio_doco, tipo_documento, tipo_cobro, facturado, saldo, moneda, observaciones, CURRENT_DATE - f_vencimiento AS dias_vencido " +
+                "FROM ctrl_cuenta INNER JOIN cat_cliente ON ctrl_cuenta.id_cliente = cat_cliente.id_cliente " +
+                "INNER JOIN ctrl_asignacion ON ctrl_asignacion.id_doco = ctrl_cuenta.id_doco " +
+                "WHERE ctrl_asignacion.id_cobrador = " + collectorId.ToString() + " " +
+                "AND ctrl_cuenta.id_doco NOT IN(SELECT id_doco FROM ctrl_seguimiento WHERE id_movimiento IN(9,10));";
+
+            if (conn == null || conn.State != ConnectionState.Open)
+                connect();
+
+            da = new NpgsqlDataAdapter(sqlString, conn);
+
+            ds.Reset();
+            da.Fill(ds);
+            conn.Close();
+            return ds.Tables[0];
+        }
+
         public DataTable ReadCollectors()
         {
             DataSet ds = new DataSet();
@@ -98,7 +120,7 @@ namespace SeguimientoSuper.Collectable.PostgresImpl
         public void UpdateLogCobrador(int logId, string log)
         {
             string sqlString = "UPDATE LOG_COBRADOR " +
-                "SET nota = @nota, " +
+                "SET nota = @nota " +
                 "WHERE id_log_cobrador = @id_nota";
 
             connect();

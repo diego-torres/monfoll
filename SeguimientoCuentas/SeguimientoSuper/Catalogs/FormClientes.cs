@@ -8,13 +8,15 @@ using System.Text;
 using System.Windows.Forms;
 using SeguimientoSuper.Collectable.PostgresImpl;
 using SeguimientoSuper.Collectable;
+using Microsoft.Reporting.WinForms;
 
 namespace SeguimientoSuper.Catalogs
 {
     public partial class FormClientes : Form
     {
         private Customer dbCustomer = new Customer();
-       
+        private SeguimientoSuper.Collectable.PostgresImpl.Account dbAccount = new Collectable.PostgresImpl.Account();
+        
         public FormClientes()
         {
             InitializeComponent();
@@ -29,6 +31,7 @@ namespace SeguimientoSuper.Catalogs
         private void FormClientes_Load(object sender, EventArgs e)
         {
             RefreshClientesGrid();
+            RefreshNotesGrid();
         }
 
         private void dataGridViewCustomers_SelectionChanged(object sender, EventArgs e)
@@ -41,6 +44,7 @@ namespace SeguimientoSuper.Catalogs
         {
             if (dataGridViewAccounts.CurrentRow == null) return;
             RefreshPaymentsGrid(int.Parse(dataGridViewAccounts.CurrentRow.Cells[0].Value.ToString()));
+            RefreshNotesGrid();
         }
 
         private void dataGridViewAccounts_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -98,7 +102,160 @@ namespace SeguimientoSuper.Catalogs
             
             parent.ShowFollowUp(account);
         }
+
+        private void toolStripButtonAssignAll_Click(object sender, EventArgs e)
+        {
+            AssignDocuments(false);
+        }
+
+        private void toolStripButtonAssignSelection_Click(object sender, EventArgs e)
+        {
+            AssignDocuments(true);
+        }
+
+
+        private void toolStripButton1_Click(object sender, EventArgs e)
+        {
+            List<Reports.Account> rAccounts = new List<Reports.Account>();
+
+            foreach (DataGridViewRow documentRow in dataGridViewAccounts.Rows)
+            {
+                Reports.Account ra = new Reports.Account();
+                ra.Name = labelNombre.Text;
+                ra.AgentCode = labelRuta.Text;
+                ra.Amount = double.Parse(documentRow.Cells["facturado"].Value.ToString());
+                ra.Balance = double.Parse(documentRow.Cells["saldo"].Value.ToString());
+                ra.CollectDate = DateTime.Parse(documentRow.Cells["f_cobro"].Value.ToString());
+                ra.CollectType = documentRow.Cells["tipo_cobro"].Value.ToString();
+                ra.CompanyCode = labelCodigo.Text;
+                ra.Currency = documentRow.Cells["moneda"].Value.ToString();
+                ra.DocDate = DateTime.Parse(documentRow.Cells["f_documento"].Value.ToString());
+                ra.DocId = int.Parse(documentRow.Cells["id_doco"].Value.ToString());
+                ra.DocType = documentRow.Cells["tipo_documento"].Value.ToString();
+                ra.DueDate = DateTime.Parse(documentRow.Cells["f_vencimiento"].Value.ToString());
+                ra.Folio = int.Parse(documentRow.Cells["folio_doco"].Value.ToString());
+                ra.Note = documentRow.Cells["observaciones"].Value.ToString();
+                ra.PaymentDay = labelDiaPago.Text;
+                ra.Serie = documentRow.Cells["serie_doco"].Value.ToString();
+
+                rAccounts.Add(ra);
+            }
+
+
+            Reports.ReportViewer rv = new Reports.ReportViewer();
+            rv.ReportAccounts = rAccounts;
+
+            rv.Show();
+        }
+
+        private void toolStripButtonNewCusNote_Click(object sender, EventArgs e)
+        {
+            labelSysID.Text = "[Nueva Nota]";
+            textBoxNote.Text = "";
+        }
+
+        private void toolStripButtonSaveCusNote_Click(object sender, EventArgs e)
+        {
+            if (string.Empty.Equals(labelSysID.Text))
+            {
+                MessageBox.Show("Seleccione una nota de la lista a ser editada o seleccione \"Nueva Nota\".", "ID Interno", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                return;
+            }
+
+            if (string.Empty.Equals(textBoxNote.Text.Trim()))
+            {
+                MessageBox.Show("El sistema no permite grabar notas vacías, por favor indique contenido.", "Contenido no válido", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                textBoxNote.Focus();
+                return;
+            }
+
+            if (labelSysID.Text.Equals("[Nueva Nota]"))
+            {
+                if (dataGridViewCustomers.CurrentRow == null)
+                {
+                    MessageBox.Show("No fue posible identificar el cliente seleccionado, intente de nuevo.", "Selección de cliente no detectada", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                    return;
+                }
+
+                int selectedCustomer = int.Parse(dataGridViewCustomers.CurrentRow.Cells[0].Value.ToString());
+
+                dbCustomer.AddNote(selectedCustomer, textBoxNote.Text);
+            }
+
+            else
+            {
+                int selectedNota = int.Parse(labelSysID.Text);
+                dbCustomer.UpdateNote(selectedNota, textBoxNote.Text);
+            }
+
+            RefreshNotesGrid();
+
+        }
+
+        private void toolStripButtonRemoveCusNote_Click(object sender, EventArgs e)
+        {
+            int selectedNota = int.Parse(labelSysID.Text);
+            dbCustomer.RemoveNote(selectedNota);
+            RefreshNotesGrid();
+        }
+
         # endregion
+
+        private void AssignDocuments(bool onlySelected)
+        {
+
+            DialogAssign assign = new DialogAssign();
+            assign.ShowDialog();
+
+            if (assign.DialogResult == DialogResult.Cancel || string.Empty.Equals(assign.comboBoxCollector.Text)) return;
+
+            int collectorId = int.Parse(assign.comboBoxCollector.SelectedValue.ToString());
+
+            foreach(DataGridViewRow row in dataGridViewAccounts.Rows)
+            {
+                if (onlySelected && !row.Selected) continue;
+
+                int docId = int.Parse(row.Cells["id_doco"].Value.ToString());
+                dbAccount.Assign(docId, collectorId);
+            }
+
+            MessageBox.Show("Las cuentas seleccionadas han sido asignadas a " + assign.comboBoxCollector.Text, "Asignación exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void RefreshNotesGrid()
+        {
+            if (dataGridViewCustomers.CurrentRow == null) return;
+
+            int selectedCustomer = int.Parse(dataGridViewCustomers.CurrentRow.Cells[0].Value.ToString());
+            dataGridViewCusNotes.DataSource = dbCustomer.ReadNotes(selectedCustomer);
+
+            FixNotesGrid();
+
+            if (dataGridViewCusNotes.RowCount == 0) {
+                labelSysID.Text = "";
+                textBoxNote.Text = "";
+            }
+
+        }
+
+        private void selectAciveNote()
+        {
+            if (dataGridViewCusNotes.CurrentRow == null)
+            {
+                labelSysID.Text = "";
+                textBoxNote.Text = "";
+                return;
+            }
+
+            labelSysID.Text = dataGridViewCusNotes.CurrentRow.Cells[0].Value.ToString();
+            textBoxNote.Text = dataGridViewCusNotes.CurrentRow.Cells[1].Value.ToString();
+        }
+
+        private void FixNotesGrid()
+        {
+            dataGridViewCusNotes.Columns["id_log_cliente"].Visible = false;
+            FixColumn(dataGridViewCusNotes.Columns["nota"], 0, "Nota", 400);
+        }
 
         private void RefreshClientesGrid()
         {
@@ -140,31 +297,76 @@ namespace SeguimientoSuper.Catalogs
         {
             dataGridViewAccounts.DataSource = dbCustomer.ReadAccounts(clientID);
 
-            /*dataGridViewClientes.Columns[0].Width = 50;
-            dataGridViewClientes.Columns[1].Width = 50;
-            dataGridViewClientes.Columns[2].Width = 250;
-            dataGridViewClientes.Columns[3].Width = 50;
-            dataGridViewClientes.Columns[4].Width = 150;
-
-            dataGridViewClientes.Columns[0].HeaderText = "ID";
-            dataGridViewClientes.Columns[1].HeaderText = "Código";
-            dataGridViewClientes.Columns[2].HeaderText = "Razón Social";
-            dataGridViewClientes.Columns[3].HeaderText = "Ruta";
-            dataGridViewClientes.Columns[4].HeaderText = "Dias de Pago";*/
+            FixAccountColumns();
 
             if (dataGridViewAccounts.Rows.Count > 0)
             {
                 dataGridViewAccounts.Sort(dataGridViewAccounts.Columns[0], ListSortDirection.Ascending);
                 RefreshPaymentsGrid(int.Parse(dataGridViewAccounts.Rows[0].Cells[0].Value.ToString()));
-                //LoadCustomer(dataGridViewClientes.Rows[0]);
             }
             else
                 dataGridViewPayments.DataSource = null;
         }
 
+        private void FixAccountColumns()
+        {
+
+            dataGridViewAccounts.Columns["id_cliente"].Visible = false;
+            dataGridViewAccounts.Columns["dia_pago"].Visible = false;
+            dataGridViewAccounts.Columns["tipo_documento"].Visible = false;
+            dataGridViewAccounts.Columns["ruta"].Visible = false;
+            dataGridViewAccounts.Columns["cd_cliente"].Visible = false;
+            dataGridViewAccounts.Columns["nombre_cliente"].Visible = false;
+
+            FixColumn(dataGridViewAccounts.Columns["id_doco"], 12, "DocId", 60);
+            FixColumn(dataGridViewAccounts.Columns["dias_vencido"], 0, "Vencido", 30);
+            FixColumn(dataGridViewAccounts.Columns["f_documento"], 1, "Fecha Documento", 80);
+            FixColumn(dataGridViewAccounts.Columns["f_vencimiento"], 2, "Fecha Vencimiento", 80);
+            FixColumn(dataGridViewAccounts.Columns["f_cobro"], 3, "Fecha Cobro", 80);
+
+            FixColumn(dataGridViewAccounts.Columns["serie_doco"], 4, "Serie", 40);
+            FixColumn(dataGridViewAccounts.Columns["folio_doco"], 5, "Doc #", 80);
+
+            FixColumn(dataGridViewAccounts.Columns["tipo_cobro"], 6, "Tipo Cobro", 150);
+            FixColumn(dataGridViewAccounts.Columns["facturado"], 7, "Total Facturado", 80);
+            FixColumn(dataGridViewAccounts.Columns["saldo"], 8, "Saldo", 80);
+            FixColumn(dataGridViewAccounts.Columns["moneda"], 9, "Moneda", 80);
+            FixColumn(dataGridViewAccounts.Columns["observaciones"], 10, "Observaciones", 150);
+
+
+            dataGridViewAccounts.Columns["f_cobro"].DefaultCellStyle.BackColor = Color.Beige;
+            dataGridViewAccounts.Columns["tipo_cobro"].DefaultCellStyle.BackColor = Color.Beige;
+            dataGridViewAccounts.Columns["observaciones"].DefaultCellStyle.BackColor = Color.Beige;
+
+            dataGridViewAccounts.Columns["facturado"].DefaultCellStyle.Format = "c";
+            dataGridViewAccounts.Columns["saldo"].DefaultCellStyle.Format = "c";
+        }
+
+        private void FixColumn(DataGridViewColumn column, int displayedIndex, string HeaderText, int width)
+        {
+            column.DisplayIndex = displayedIndex;
+            column.HeaderText = HeaderText;
+            column.Width = width;
+        }
+
         private void RefreshPaymentsGrid(int accountId)
         {
-            dataGridViewPayments.DataSource = dbCustomer.ReadPayments(accountId);
+            dataGridViewPayments.DataSource = dbAccount.ReadPayments(accountId);
+            FixPaymentsColumns();
+        }
+
+        private void FixPaymentsColumns()
+        {
+            dataGridViewPayments.Columns["id_abono"].Visible = false;
+
+            FixColumn(dataGridViewPayments.Columns["concepto"], 0, "Concepto", 130);
+            FixColumn(dataGridViewPayments.Columns["importe_pago"], 1, "Importe", 80);
+            FixColumn(dataGridViewPayments.Columns["fecha_deposito"], 2, "Fecha", 80);
+            FixColumn(dataGridViewPayments.Columns["folio"], 3, "Folio", 60);
+            FixColumn(dataGridViewPayments.Columns["tipo_pago"], 4, "Tipo", 120);
+            FixColumn(dataGridViewPayments.Columns["cuenta"], 5, "Cuenta", 100);
+
+            dataGridViewPayments.Columns["importe_pago"].DefaultCellStyle.Format = "c";
         }
 
         private void ClearCustomerSelection()
@@ -178,6 +380,16 @@ namespace SeguimientoSuper.Catalogs
             dataGridViewAccounts.DataSource = null;
             dataGridViewPayments.DataSource = null;
 
+        }
+
+        private void dataGridViewCusNotes_SelectionChanged(object sender, EventArgs e)
+        {
+            selectAciveNote();
+        }
+
+        private void toolStripButtonRestoreNota_Click(object sender, EventArgs e)
+        {
+            selectAciveNote();
         }
     }
 }
