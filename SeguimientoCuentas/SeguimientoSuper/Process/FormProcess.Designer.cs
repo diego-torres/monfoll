@@ -30,37 +30,32 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormProcess));
-            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabControlProcess = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.splitContainerNotAssigned = new System.Windows.Forms.SplitContainer();
+            this.dataGridViewNotAssignedAccounts = new System.Windows.Forms.DataGridView();
+            this.contextMenuStripAccountsGrid = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.applyFilterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.avoidValueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.dataGridViewNotAssignedPayments = new System.Windows.Forms.DataGridView();
+            this.statusStripNotAssigned = new System.Windows.Forms.StatusStrip();
+            this.NAtoolStripStatusFilter = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripNotAssigned = new System.Windows.Forms.ToolStrip();
             this.NAtoolStripButtonPrint = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.NAtoolStripButtonAssign = new System.Windows.Forms.ToolStripButton();
             this.NAtoolStripButtonEscale = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.NAtoolStripButtonClose = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.NAtoolStripButtonClearFilter = new System.Windows.Forms.ToolStripButton();
-            this.statusStripNotAssigned = new System.Windows.Forms.StatusStrip();
-            this.NAtoolStripStatusFilter = new System.Windows.Forms.ToolStripStatusLabel();
-            this.splitContainerNotAssigned = new System.Windows.Forms.SplitContainer();
-            this.dataGridViewNotAssignedAccounts = new System.Windows.Forms.DataGridView();
-            this.dataGridViewNotAssignedPayments = new System.Windows.Forms.DataGridView();
-            this.contextMenuStripAccountsGrid = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.applyFilterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.removeFilterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.avoidValueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripAssigned = new System.Windows.Forms.ToolStrip();
-            this.statusStripAssigned = new System.Windows.Forms.StatusStrip();
+            this.NAtoolStripButtonUpdate = new System.Windows.Forms.ToolStripButton();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
             this.splitContainerAssigned = new System.Windows.Forms.SplitContainer();
             this.dataGridViewAssignedAccounts = new System.Windows.Forms.DataGridView();
             this.dataGridViewAssignedFollowUp = new System.Windows.Forms.DataGridView();
-            this.NAtoolStripButtonUpdate = new System.Windows.Forms.ToolStripButton();
+            this.statusStripAssigned = new System.Windows.Forms.StatusStrip();
             this.assignedToolStripStatusFilter = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripAssigned = new System.Windows.Forms.ToolStrip();
             this.toolStripButtonPrintAssigned = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonRemoveAssignment = new System.Windows.Forms.ToolStripButton();
@@ -69,102 +64,110 @@
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonRemoveFilter = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonRefresh = new System.Windows.Forms.ToolStripButton();
-            this.toolStripEscalated = new System.Windows.Forms.ToolStrip();
-            this.statusStripEscalated = new System.Windows.Forms.StatusStrip();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
             this.splitContainerEscalated = new System.Windows.Forms.SplitContainer();
+            this.dataGridViewEscalatedAccounts = new System.Windows.Forms.DataGridView();
+            this.dataGridViewEscalatedLog = new System.Windows.Forms.DataGridView();
+            this.statusStripEscalated = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabelEscalated = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripEscalated = new System.Windows.Forms.ToolStrip();
             this.toolStripButtonPrintEscalated = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonEscalated = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonEscalatedRemoveFilter = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonEscalatedRefresh = new System.Windows.Forms.ToolStripButton();
-            this.dataGridViewEscalatedAccounts = new System.Windows.Forms.DataGridView();
-            this.dataGridViewEscalatedLog = new System.Windows.Forms.DataGridView();
-            this.toolStripClosed = new System.Windows.Forms.ToolStrip();
-            this.statusStripClosed = new System.Windows.Forms.StatusStrip();
-            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButton4 = new System.Windows.Forms.ToolStripButton();
-            this.toolStripStatusLabelClosed = new System.Windows.Forms.ToolStripStatusLabel();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
             this.splitContainerClosed = new System.Windows.Forms.SplitContainer();
             this.dataGridViewClosedAccounts = new System.Windows.Forms.DataGridView();
             this.dataGridViewClosedPayments = new System.Windows.Forms.DataGridView();
-            this.toolStripCancelled = new System.Windows.Forms.ToolStrip();
+            this.statusStripClosed = new System.Windows.Forms.StatusStrip();
+            this.toolStripStatusLabelClosed = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripClosed = new System.Windows.Forms.ToolStrip();
+            this.toolStripButtonPrintClosed = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripButtonReopen = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripButtonClosedRemoveFilter = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonClosedRefresh = new System.Windows.Forms.ToolStripButton();
+            this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.splitContainerCancelled = new System.Windows.Forms.SplitContainer();
+            this.dataGridViewCancelledAccounts = new System.Windows.Forms.DataGridView();
+            this.dataGridViewCancelledFollowUps = new System.Windows.Forms.DataGridView();
             this.statusStripCancelled = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabelCancelled = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripCancelled = new System.Windows.Forms.ToolStrip();
             this.toolStripButtonPrintCancelled = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonRemoveFilterCancelled = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonRefreshCancelled = new System.Windows.Forms.ToolStripButton();
-            this.splitContainerCancelled = new System.Windows.Forms.SplitContainer();
-            this.dataGridViewCancelledAccounts = new System.Windows.Forms.DataGridView();
-            this.dataGridViewCancelledFollowUps = new System.Windows.Forms.DataGridView();
-            this.tabControl1.SuspendLayout();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripButtonSetCollectDate = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
+            this.AssignedToolStripButtonSetCollectDate = new System.Windows.Forms.ToolStripButton();
+            this.EscalatedToolStripButtonSetCollectDate = new System.Windows.Forms.ToolStripButton();
+            this.tabControlProcess.SuspendLayout();
             this.tabPage1.SuspendLayout();
-            this.tabPage2.SuspendLayout();
-            this.tabPage3.SuspendLayout();
-            this.tabPage4.SuspendLayout();
-            this.tabPage5.SuspendLayout();
-            this.toolStripNotAssigned.SuspendLayout();
-            this.statusStripNotAssigned.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerNotAssigned)).BeginInit();
             this.splitContainerNotAssigned.Panel1.SuspendLayout();
             this.splitContainerNotAssigned.Panel2.SuspendLayout();
             this.splitContainerNotAssigned.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewNotAssignedAccounts)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewNotAssignedPayments)).BeginInit();
             this.contextMenuStripAccountsGrid.SuspendLayout();
-            this.toolStripAssigned.SuspendLayout();
-            this.statusStripAssigned.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewNotAssignedPayments)).BeginInit();
+            this.statusStripNotAssigned.SuspendLayout();
+            this.toolStripNotAssigned.SuspendLayout();
+            this.tabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerAssigned)).BeginInit();
             this.splitContainerAssigned.Panel1.SuspendLayout();
             this.splitContainerAssigned.Panel2.SuspendLayout();
             this.splitContainerAssigned.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAssignedAccounts)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAssignedFollowUp)).BeginInit();
-            this.toolStripEscalated.SuspendLayout();
-            this.statusStripEscalated.SuspendLayout();
+            this.statusStripAssigned.SuspendLayout();
+            this.toolStripAssigned.SuspendLayout();
+            this.tabPage3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerEscalated)).BeginInit();
             this.splitContainerEscalated.Panel1.SuspendLayout();
             this.splitContainerEscalated.Panel2.SuspendLayout();
             this.splitContainerEscalated.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewEscalatedAccounts)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewEscalatedLog)).BeginInit();
-            this.toolStripClosed.SuspendLayout();
-            this.statusStripClosed.SuspendLayout();
+            this.statusStripEscalated.SuspendLayout();
+            this.toolStripEscalated.SuspendLayout();
+            this.tabPage4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerClosed)).BeginInit();
             this.splitContainerClosed.Panel1.SuspendLayout();
             this.splitContainerClosed.Panel2.SuspendLayout();
             this.splitContainerClosed.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewClosedAccounts)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewClosedPayments)).BeginInit();
-            this.toolStripCancelled.SuspendLayout();
-            this.statusStripCancelled.SuspendLayout();
+            this.statusStripClosed.SuspendLayout();
+            this.toolStripClosed.SuspendLayout();
+            this.tabPage5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerCancelled)).BeginInit();
             this.splitContainerCancelled.Panel1.SuspendLayout();
             this.splitContainerCancelled.Panel2.SuspendLayout();
             this.splitContainerCancelled.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewCancelledAccounts)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewCancelledFollowUps)).BeginInit();
+            this.statusStripCancelled.SuspendLayout();
+            this.toolStripCancelled.SuspendLayout();
             this.SuspendLayout();
             // 
-            // tabControl1
+            // tabControlProcess
             // 
-            this.tabControl1.Controls.Add(this.tabPage1);
-            this.tabControl1.Controls.Add(this.tabPage2);
-            this.tabControl1.Controls.Add(this.tabPage3);
-            this.tabControl1.Controls.Add(this.tabPage4);
-            this.tabControl1.Controls.Add(this.tabPage5);
-            this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControl1.Location = new System.Drawing.Point(0, 0);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(813, 463);
-            this.tabControl1.TabIndex = 0;
+            this.tabControlProcess.Controls.Add(this.tabPage1);
+            this.tabControlProcess.Controls.Add(this.tabPage2);
+            this.tabControlProcess.Controls.Add(this.tabPage3);
+            this.tabControlProcess.Controls.Add(this.tabPage4);
+            this.tabControlProcess.Controls.Add(this.tabPage5);
+            this.tabControlProcess.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControlProcess.Location = new System.Drawing.Point(0, 0);
+            this.tabControlProcess.Name = "tabControlProcess";
+            this.tabControlProcess.SelectedIndex = 0;
+            this.tabControlProcess.Size = new System.Drawing.Size(813, 463);
+            this.tabControlProcess.TabIndex = 0;
             // 
             // tabPage1
             // 
@@ -178,145 +181,6 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Sin Asignar";
             this.tabPage1.UseVisualStyleBackColor = true;
-            // 
-            // tabPage2
-            // 
-            this.tabPage2.Controls.Add(this.splitContainerAssigned);
-            this.tabPage2.Controls.Add(this.statusStripAssigned);
-            this.tabPage2.Controls.Add(this.toolStripAssigned);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(805, 437);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Asignados";
-            this.tabPage2.UseVisualStyleBackColor = true;
-            // 
-            // tabPage3
-            // 
-            this.tabPage3.Controls.Add(this.splitContainerEscalated);
-            this.tabPage3.Controls.Add(this.statusStripEscalated);
-            this.tabPage3.Controls.Add(this.toolStripEscalated);
-            this.tabPage3.Location = new System.Drawing.Point(4, 22);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(805, 437);
-            this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "Escalados";
-            this.tabPage3.UseVisualStyleBackColor = true;
-            // 
-            // tabPage4
-            // 
-            this.tabPage4.Controls.Add(this.splitContainerClosed);
-            this.tabPage4.Controls.Add(this.statusStripClosed);
-            this.tabPage4.Controls.Add(this.toolStripClosed);
-            this.tabPage4.Location = new System.Drawing.Point(4, 22);
-            this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Size = new System.Drawing.Size(805, 437);
-            this.tabPage4.TabIndex = 3;
-            this.tabPage4.Text = "Cerrados";
-            this.tabPage4.UseVisualStyleBackColor = true;
-            // 
-            // tabPage5
-            // 
-            this.tabPage5.Controls.Add(this.splitContainerCancelled);
-            this.tabPage5.Controls.Add(this.statusStripCancelled);
-            this.tabPage5.Controls.Add(this.toolStripCancelled);
-            this.tabPage5.Location = new System.Drawing.Point(4, 22);
-            this.tabPage5.Name = "tabPage5";
-            this.tabPage5.Size = new System.Drawing.Size(805, 437);
-            this.tabPage5.TabIndex = 4;
-            this.tabPage5.Text = "Cancelados";
-            this.tabPage5.UseVisualStyleBackColor = true;
-            // 
-            // toolStripNotAssigned
-            // 
-            this.toolStripNotAssigned.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.NAtoolStripButtonPrint,
-            this.toolStripSeparator1,
-            this.NAtoolStripButtonAssign,
-            this.NAtoolStripButtonEscale,
-            this.NAtoolStripButtonClose,
-            this.toolStripSeparator2,
-            this.NAtoolStripButtonClearFilter,
-            this.NAtoolStripButtonUpdate});
-            this.toolStripNotAssigned.Location = new System.Drawing.Point(3, 3);
-            this.toolStripNotAssigned.Name = "toolStripNotAssigned";
-            this.toolStripNotAssigned.Size = new System.Drawing.Size(799, 25);
-            this.toolStripNotAssigned.TabIndex = 0;
-            this.toolStripNotAssigned.Text = "Imprimir";
-            // 
-            // NAtoolStripButtonPrint
-            // 
-            this.NAtoolStripButtonPrint.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.NAtoolStripButtonPrint.Image = ((System.Drawing.Image)(resources.GetObject("NAtoolStripButtonPrint.Image")));
-            this.NAtoolStripButtonPrint.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.NAtoolStripButtonPrint.Name = "NAtoolStripButtonPrint";
-            this.NAtoolStripButtonPrint.Size = new System.Drawing.Size(23, 22);
-            this.NAtoolStripButtonPrint.Text = "Imprimir";
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
-            // 
-            // NAtoolStripButtonAssign
-            // 
-            this.NAtoolStripButtonAssign.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.NAtoolStripButtonAssign.Image = ((System.Drawing.Image)(resources.GetObject("NAtoolStripButtonAssign.Image")));
-            this.NAtoolStripButtonAssign.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.NAtoolStripButtonAssign.Name = "NAtoolStripButtonAssign";
-            this.NAtoolStripButtonAssign.Size = new System.Drawing.Size(23, 22);
-            this.NAtoolStripButtonAssign.Text = "Asignar Selección";
-            // 
-            // NAtoolStripButtonEscale
-            // 
-            this.NAtoolStripButtonEscale.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.NAtoolStripButtonEscale.Image = ((System.Drawing.Image)(resources.GetObject("NAtoolStripButtonEscale.Image")));
-            this.NAtoolStripButtonEscale.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.NAtoolStripButtonEscale.Name = "NAtoolStripButtonEscale";
-            this.NAtoolStripButtonEscale.Size = new System.Drawing.Size(23, 22);
-            this.NAtoolStripButtonEscale.Text = "Escalar Selección";
-            this.NAtoolStripButtonEscale.Click += new System.EventHandler(this.NAtoolStripButtonEscale_Click);
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
-            // 
-            // NAtoolStripButtonClose
-            // 
-            this.NAtoolStripButtonClose.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.NAtoolStripButtonClose.Image = ((System.Drawing.Image)(resources.GetObject("NAtoolStripButtonClose.Image")));
-            this.NAtoolStripButtonClose.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.NAtoolStripButtonClose.Name = "NAtoolStripButtonClose";
-            this.NAtoolStripButtonClose.Size = new System.Drawing.Size(23, 22);
-            this.NAtoolStripButtonClose.Text = "Cerrar Selección";
-            // 
-            // NAtoolStripButtonClearFilter
-            // 
-            this.NAtoolStripButtonClearFilter.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.NAtoolStripButtonClearFilter.Image = ((System.Drawing.Image)(resources.GetObject("NAtoolStripButtonClearFilter.Image")));
-            this.NAtoolStripButtonClearFilter.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.NAtoolStripButtonClearFilter.Name = "NAtoolStripButtonClearFilter";
-            this.NAtoolStripButtonClearFilter.Size = new System.Drawing.Size(23, 22);
-            this.NAtoolStripButtonClearFilter.Text = "Limpiar Filtro";
-            // 
-            // statusStripNotAssigned
-            // 
-            this.statusStripNotAssigned.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.NAtoolStripStatusFilter});
-            this.statusStripNotAssigned.Location = new System.Drawing.Point(3, 412);
-            this.statusStripNotAssigned.Name = "statusStripNotAssigned";
-            this.statusStripNotAssigned.Size = new System.Drawing.Size(799, 22);
-            this.statusStripNotAssigned.TabIndex = 1;
-            this.statusStripNotAssigned.Text = "statusStrip1";
-            // 
-            // NAtoolStripStatusFilter
-            // 
-            this.NAtoolStripStatusFilter.Name = "NAtoolStripStatusFilter";
-            this.NAtoolStripStatusFilter.Size = new System.Drawing.Size(47, 17);
-            this.NAtoolStripStatusFilter.Text = "FILTRO:";
             // 
             // splitContainerNotAssigned
             // 
@@ -348,6 +212,31 @@
             this.dataGridViewNotAssignedAccounts.ReadOnly = true;
             this.dataGridViewNotAssignedAccounts.Size = new System.Drawing.Size(469, 384);
             this.dataGridViewNotAssignedAccounts.TabIndex = 0;
+            this.dataGridViewNotAssignedAccounts.SelectionChanged += new System.EventHandler(this.dataGridViewNotAssignedAccounts_SelectionChanged);
+            this.dataGridViewNotAssignedAccounts.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.dataGridViewNotAssignedAccounts_MouseDoubleClick);
+            this.dataGridViewNotAssignedAccounts.MouseDown += new System.Windows.Forms.MouseEventHandler(this.dataGridView_MouseDown);
+            // 
+            // contextMenuStripAccountsGrid
+            // 
+            this.contextMenuStripAccountsGrid.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.applyFilterToolStripMenuItem,
+            this.avoidValueToolStripMenuItem});
+            this.contextMenuStripAccountsGrid.Name = "contextMenuStripAccountsGrid";
+            this.contextMenuStripAccountsGrid.Size = new System.Drawing.Size(185, 48);
+            // 
+            // applyFilterToolStripMenuItem
+            // 
+            this.applyFilterToolStripMenuItem.Name = "applyFilterToolStripMenuItem";
+            this.applyFilterToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+            this.applyFilterToolStripMenuItem.Text = "Filtrar con este valor";
+            this.applyFilterToolStripMenuItem.Click += new System.EventHandler(this.applyFilterToolStripMenuItem_Click);
+            // 
+            // avoidValueToolStripMenuItem
+            // 
+            this.avoidValueToolStripMenuItem.Name = "avoidValueToolStripMenuItem";
+            this.avoidValueToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+            this.avoidValueToolStripMenuItem.Text = "Omitir este valor";
+            this.avoidValueToolStripMenuItem.Click += new System.EventHandler(this.avoidValueToolStripMenuItem_Click);
             // 
             // dataGridViewNotAssignedPayments
             // 
@@ -362,65 +251,123 @@
             this.dataGridViewNotAssignedPayments.Size = new System.Drawing.Size(326, 384);
             this.dataGridViewNotAssignedPayments.TabIndex = 0;
             // 
-            // contextMenuStripAccountsGrid
+            // statusStripNotAssigned
             // 
-            this.contextMenuStripAccountsGrid.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.applyFilterToolStripMenuItem,
-            this.avoidValueToolStripMenuItem,
+            this.statusStripNotAssigned.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.NAtoolStripStatusFilter});
+            this.statusStripNotAssigned.Location = new System.Drawing.Point(3, 412);
+            this.statusStripNotAssigned.Name = "statusStripNotAssigned";
+            this.statusStripNotAssigned.Size = new System.Drawing.Size(799, 22);
+            this.statusStripNotAssigned.TabIndex = 1;
+            this.statusStripNotAssigned.Text = "statusStrip1";
+            // 
+            // NAtoolStripStatusFilter
+            // 
+            this.NAtoolStripStatusFilter.Name = "NAtoolStripStatusFilter";
+            this.NAtoolStripStatusFilter.Size = new System.Drawing.Size(47, 17);
+            this.NAtoolStripStatusFilter.Text = "FILTRO:";
+            // 
+            // toolStripNotAssigned
+            // 
+            this.toolStripNotAssigned.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.NAtoolStripButtonPrint,
+            this.toolStripSeparator1,
+            this.NAtoolStripButtonAssign,
+            this.NAtoolStripButtonEscale,
+            this.NAtoolStripButtonClose,
             this.toolStripSeparator3,
-            this.removeFilterToolStripMenuItem});
-            this.contextMenuStripAccountsGrid.Name = "contextMenuStripAccountsGrid";
-            this.contextMenuStripAccountsGrid.Size = new System.Drawing.Size(185, 76);
+            this.toolStripButtonSetCollectDate,
+            this.toolStripSeparator2,
+            this.NAtoolStripButtonClearFilter,
+            this.NAtoolStripButtonUpdate});
+            this.toolStripNotAssigned.Location = new System.Drawing.Point(3, 3);
+            this.toolStripNotAssigned.Name = "toolStripNotAssigned";
+            this.toolStripNotAssigned.Size = new System.Drawing.Size(799, 25);
+            this.toolStripNotAssigned.TabIndex = 0;
+            this.toolStripNotAssigned.Text = "Imprimir";
             // 
-            // applyFilterToolStripMenuItem
+            // NAtoolStripButtonPrint
             // 
-            this.applyFilterToolStripMenuItem.Name = "applyFilterToolStripMenuItem";
-            this.applyFilterToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
-            this.applyFilterToolStripMenuItem.Text = "Filtrar con este valor";
+            this.NAtoolStripButtonPrint.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.NAtoolStripButtonPrint.Image = ((System.Drawing.Image)(resources.GetObject("NAtoolStripButtonPrint.Image")));
+            this.NAtoolStripButtonPrint.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.NAtoolStripButtonPrint.Name = "NAtoolStripButtonPrint";
+            this.NAtoolStripButtonPrint.Size = new System.Drawing.Size(23, 22);
+            this.NAtoolStripButtonPrint.Text = "Imprimir";
+            this.NAtoolStripButtonPrint.Click += new System.EventHandler(this.NAtoolStripButtonPrint_Click);
             // 
-            // removeFilterToolStripMenuItem
+            // toolStripSeparator1
             // 
-            this.removeFilterToolStripMenuItem.Name = "removeFilterToolStripMenuItem";
-            this.removeFilterToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
-            this.removeFilterToolStripMenuItem.Text = "Quitar del filtro";
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
             // 
-            // avoidValueToolStripMenuItem
+            // NAtoolStripButtonAssign
             // 
-            this.avoidValueToolStripMenuItem.Name = "avoidValueToolStripMenuItem";
-            this.avoidValueToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
-            this.avoidValueToolStripMenuItem.Text = "Omitir este valor";
+            this.NAtoolStripButtonAssign.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.NAtoolStripButtonAssign.Image = ((System.Drawing.Image)(resources.GetObject("NAtoolStripButtonAssign.Image")));
+            this.NAtoolStripButtonAssign.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.NAtoolStripButtonAssign.Name = "NAtoolStripButtonAssign";
+            this.NAtoolStripButtonAssign.Size = new System.Drawing.Size(23, 22);
+            this.NAtoolStripButtonAssign.Text = "Asignar Selección";
+            this.NAtoolStripButtonAssign.Click += new System.EventHandler(this.NAtoolStripButtonAssign_Click);
             // 
-            // toolStripSeparator3
+            // NAtoolStripButtonEscale
             // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(181, 6);
+            this.NAtoolStripButtonEscale.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.NAtoolStripButtonEscale.Image = ((System.Drawing.Image)(resources.GetObject("NAtoolStripButtonEscale.Image")));
+            this.NAtoolStripButtonEscale.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.NAtoolStripButtonEscale.Name = "NAtoolStripButtonEscale";
+            this.NAtoolStripButtonEscale.Size = new System.Drawing.Size(23, 22);
+            this.NAtoolStripButtonEscale.Text = "Escalar Selección";
+            this.NAtoolStripButtonEscale.Click += new System.EventHandler(this.NAtoolStripButtonEscale_Click);
             // 
-            // toolStripAssigned
+            // NAtoolStripButtonClose
             // 
-            this.toolStripAssigned.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripButtonPrintAssigned,
-            this.toolStripSeparator4,
-            this.toolStripButtonRemoveAssignment,
-            this.toolStripButtonEscaleAssigned,
-            this.toolStripButtonCloseAssigned,
-            this.toolStripSeparator5,
-            this.toolStripButtonRemoveFilter,
-            this.toolStripButtonRefresh});
-            this.toolStripAssigned.Location = new System.Drawing.Point(3, 3);
-            this.toolStripAssigned.Name = "toolStripAssigned";
-            this.toolStripAssigned.Size = new System.Drawing.Size(799, 25);
-            this.toolStripAssigned.TabIndex = 0;
-            this.toolStripAssigned.Text = "toolStrip2";
+            this.NAtoolStripButtonClose.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.NAtoolStripButtonClose.Image = ((System.Drawing.Image)(resources.GetObject("NAtoolStripButtonClose.Image")));
+            this.NAtoolStripButtonClose.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.NAtoolStripButtonClose.Name = "NAtoolStripButtonClose";
+            this.NAtoolStripButtonClose.Size = new System.Drawing.Size(23, 22);
+            this.NAtoolStripButtonClose.Text = "Cerrar Selección";
+            this.NAtoolStripButtonClose.Click += new System.EventHandler(this.NAtoolStripButtonClose_Click);
             // 
-            // statusStripAssigned
+            // toolStripSeparator2
             // 
-            this.statusStripAssigned.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.assignedToolStripStatusFilter});
-            this.statusStripAssigned.Location = new System.Drawing.Point(3, 412);
-            this.statusStripAssigned.Name = "statusStripAssigned";
-            this.statusStripAssigned.Size = new System.Drawing.Size(799, 22);
-            this.statusStripAssigned.TabIndex = 1;
-            this.statusStripAssigned.Text = "statusStrip2";
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+            // 
+            // NAtoolStripButtonClearFilter
+            // 
+            this.NAtoolStripButtonClearFilter.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.NAtoolStripButtonClearFilter.Image = ((System.Drawing.Image)(resources.GetObject("NAtoolStripButtonClearFilter.Image")));
+            this.NAtoolStripButtonClearFilter.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.NAtoolStripButtonClearFilter.Name = "NAtoolStripButtonClearFilter";
+            this.NAtoolStripButtonClearFilter.Size = new System.Drawing.Size(23, 22);
+            this.NAtoolStripButtonClearFilter.Text = "Limpiar Filtro";
+            this.NAtoolStripButtonClearFilter.Click += new System.EventHandler(this.NAtoolStripButtonClearFilter_Click);
+            // 
+            // NAtoolStripButtonUpdate
+            // 
+            this.NAtoolStripButtonUpdate.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.NAtoolStripButtonUpdate.Image = ((System.Drawing.Image)(resources.GetObject("NAtoolStripButtonUpdate.Image")));
+            this.NAtoolStripButtonUpdate.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.NAtoolStripButtonUpdate.Name = "NAtoolStripButtonUpdate";
+            this.NAtoolStripButtonUpdate.Size = new System.Drawing.Size(23, 22);
+            this.NAtoolStripButtonUpdate.Text = "Actualizar";
+            this.NAtoolStripButtonUpdate.Click += new System.EventHandler(this.NAtoolStripButtonUpdate_Click);
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.splitContainerAssigned);
+            this.tabPage2.Controls.Add(this.statusStripAssigned);
+            this.tabPage2.Controls.Add(this.toolStripAssigned);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(805, 437);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "Asignados";
+            this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // splitContainerAssigned
             // 
@@ -452,6 +399,9 @@
             this.dataGridViewAssignedAccounts.ReadOnly = true;
             this.dataGridViewAssignedAccounts.Size = new System.Drawing.Size(452, 384);
             this.dataGridViewAssignedAccounts.TabIndex = 0;
+            this.dataGridViewAssignedAccounts.SelectionChanged += new System.EventHandler(this.dataGridViewAssignedAccounts_SelectionChanged);
+            this.dataGridViewAssignedAccounts.DoubleClick += new System.EventHandler(this.dataGridViewAssignedAccounts_DoubleClick);
+            this.dataGridViewAssignedAccounts.MouseDown += new System.Windows.Forms.MouseEventHandler(this.dataGridView_MouseDown);
             // 
             // dataGridViewAssignedFollowUp
             // 
@@ -466,20 +416,40 @@
             this.dataGridViewAssignedFollowUp.Size = new System.Drawing.Size(343, 384);
             this.dataGridViewAssignedFollowUp.TabIndex = 0;
             // 
-            // NAtoolStripButtonUpdate
+            // statusStripAssigned
             // 
-            this.NAtoolStripButtonUpdate.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.NAtoolStripButtonUpdate.Image = ((System.Drawing.Image)(resources.GetObject("NAtoolStripButtonUpdate.Image")));
-            this.NAtoolStripButtonUpdate.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.NAtoolStripButtonUpdate.Name = "NAtoolStripButtonUpdate";
-            this.NAtoolStripButtonUpdate.Size = new System.Drawing.Size(23, 22);
-            this.NAtoolStripButtonUpdate.Text = "Actualizar";
+            this.statusStripAssigned.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.assignedToolStripStatusFilter});
+            this.statusStripAssigned.Location = new System.Drawing.Point(3, 412);
+            this.statusStripAssigned.Name = "statusStripAssigned";
+            this.statusStripAssigned.Size = new System.Drawing.Size(799, 22);
+            this.statusStripAssigned.TabIndex = 1;
+            this.statusStripAssigned.Text = "statusStrip2";
             // 
             // assignedToolStripStatusFilter
             // 
             this.assignedToolStripStatusFilter.Name = "assignedToolStripStatusFilter";
             this.assignedToolStripStatusFilter.Size = new System.Drawing.Size(47, 17);
             this.assignedToolStripStatusFilter.Text = "FILTRO:";
+            // 
+            // toolStripAssigned
+            // 
+            this.toolStripAssigned.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripButtonPrintAssigned,
+            this.toolStripSeparator4,
+            this.toolStripButtonRemoveAssignment,
+            this.toolStripButtonEscaleAssigned,
+            this.toolStripButtonCloseAssigned,
+            this.toolStripSeparator5,
+            this.AssignedToolStripButtonSetCollectDate,
+            this.toolStripSeparator11,
+            this.toolStripButtonRemoveFilter,
+            this.toolStripButtonRefresh});
+            this.toolStripAssigned.Location = new System.Drawing.Point(3, 3);
+            this.toolStripAssigned.Name = "toolStripAssigned";
+            this.toolStripAssigned.Size = new System.Drawing.Size(799, 25);
+            this.toolStripAssigned.TabIndex = 0;
+            this.toolStripAssigned.Text = "toolStrip2";
             // 
             // toolStripButtonPrintAssigned
             // 
@@ -489,6 +459,7 @@
             this.toolStripButtonPrintAssigned.Name = "toolStripButtonPrintAssigned";
             this.toolStripButtonPrintAssigned.Size = new System.Drawing.Size(23, 22);
             this.toolStripButtonPrintAssigned.Text = "Imprimir";
+            this.toolStripButtonPrintAssigned.Click += new System.EventHandler(this.toolStripButtonPrintAssigned_Click);
             // 
             // toolStripSeparator4
             // 
@@ -503,6 +474,7 @@
             this.toolStripButtonRemoveAssignment.Name = "toolStripButtonRemoveAssignment";
             this.toolStripButtonRemoveAssignment.Size = new System.Drawing.Size(23, 22);
             this.toolStripButtonRemoveAssignment.Text = "Quitar Asignación";
+            this.toolStripButtonRemoveAssignment.Click += new System.EventHandler(this.toolStripButtonRemoveAssignment_Click);
             // 
             // toolStripButtonEscaleAssigned
             // 
@@ -512,6 +484,7 @@
             this.toolStripButtonEscaleAssigned.Name = "toolStripButtonEscaleAssigned";
             this.toolStripButtonEscaleAssigned.Size = new System.Drawing.Size(23, 22);
             this.toolStripButtonEscaleAssigned.Text = "Escalar";
+            this.toolStripButtonEscaleAssigned.Click += new System.EventHandler(this.toolStripButtonEscaleAssigned_Click);
             // 
             // toolStripButtonCloseAssigned
             // 
@@ -521,6 +494,7 @@
             this.toolStripButtonCloseAssigned.Name = "toolStripButtonCloseAssigned";
             this.toolStripButtonCloseAssigned.Size = new System.Drawing.Size(23, 22);
             this.toolStripButtonCloseAssigned.Text = "Cerrar";
+            this.toolStripButtonCloseAssigned.Click += new System.EventHandler(this.toolStripButtonCloseAssigned_Click);
             // 
             // toolStripSeparator5
             // 
@@ -535,6 +509,7 @@
             this.toolStripButtonRemoveFilter.Name = "toolStripButtonRemoveFilter";
             this.toolStripButtonRemoveFilter.Size = new System.Drawing.Size(23, 22);
             this.toolStripButtonRemoveFilter.Text = "Quitar Filtro";
+            this.toolStripButtonRemoveFilter.Click += new System.EventHandler(this.toolStripButtonRemoveFilter_Click);
             // 
             // toolStripButtonRefresh
             // 
@@ -544,31 +519,20 @@
             this.toolStripButtonRefresh.Name = "toolStripButtonRefresh";
             this.toolStripButtonRefresh.Size = new System.Drawing.Size(23, 22);
             this.toolStripButtonRefresh.Text = "Actualizar";
+            this.toolStripButtonRefresh.Click += new System.EventHandler(this.toolStripButtonRefresh_Click);
             // 
-            // toolStripEscalated
+            // tabPage3
             // 
-            this.toolStripEscalated.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripButtonPrintEscalated,
-            this.toolStripSeparator6,
-            this.toolStripButtonEscalated,
-            this.toolStripSeparator7,
-            this.toolStripButtonEscalatedRemoveFilter,
-            this.toolStripButtonEscalatedRefresh});
-            this.toolStripEscalated.Location = new System.Drawing.Point(3, 3);
-            this.toolStripEscalated.Name = "toolStripEscalated";
-            this.toolStripEscalated.Size = new System.Drawing.Size(799, 25);
-            this.toolStripEscalated.TabIndex = 0;
-            this.toolStripEscalated.Text = "toolStrip1";
-            // 
-            // statusStripEscalated
-            // 
-            this.statusStripEscalated.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripStatusLabelEscalated});
-            this.statusStripEscalated.Location = new System.Drawing.Point(3, 412);
-            this.statusStripEscalated.Name = "statusStripEscalated";
-            this.statusStripEscalated.Size = new System.Drawing.Size(799, 22);
-            this.statusStripEscalated.TabIndex = 1;
-            this.statusStripEscalated.Text = "statusStrip1";
+            this.tabPage3.Controls.Add(this.splitContainerEscalated);
+            this.tabPage3.Controls.Add(this.statusStripEscalated);
+            this.tabPage3.Controls.Add(this.toolStripEscalated);
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage3.Size = new System.Drawing.Size(805, 437);
+            this.tabPage3.TabIndex = 2;
+            this.tabPage3.Text = "Escalados";
+            this.tabPage3.UseVisualStyleBackColor = true;
             // 
             // splitContainerEscalated
             // 
@@ -587,58 +551,6 @@
             this.splitContainerEscalated.SplitterDistance = 441;
             this.splitContainerEscalated.TabIndex = 2;
             // 
-            // toolStripStatusLabelEscalated
-            // 
-            this.toolStripStatusLabelEscalated.Name = "toolStripStatusLabelEscalated";
-            this.toolStripStatusLabelEscalated.Size = new System.Drawing.Size(47, 17);
-            this.toolStripStatusLabelEscalated.Text = "FILTRO:";
-            // 
-            // toolStripButtonPrintEscalated
-            // 
-            this.toolStripButtonPrintEscalated.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonPrintEscalated.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonPrintEscalated.Image")));
-            this.toolStripButtonPrintEscalated.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonPrintEscalated.Name = "toolStripButtonPrintEscalated";
-            this.toolStripButtonPrintEscalated.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonPrintEscalated.Text = "Imprimir";
-            // 
-            // toolStripSeparator6
-            // 
-            this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(6, 25);
-            // 
-            // toolStripButtonEscalated
-            // 
-            this.toolStripButtonEscalated.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonEscalated.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonEscalated.Image")));
-            this.toolStripButtonEscalated.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonEscalated.Name = "toolStripButtonEscalated";
-            this.toolStripButtonEscalated.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonEscalated.Text = "Quitar de cuentas escaladas";
-            // 
-            // toolStripSeparator7
-            // 
-            this.toolStripSeparator7.Name = "toolStripSeparator7";
-            this.toolStripSeparator7.Size = new System.Drawing.Size(6, 25);
-            // 
-            // toolStripButtonEscalatedRemoveFilter
-            // 
-            this.toolStripButtonEscalatedRemoveFilter.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonEscalatedRemoveFilter.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonEscalatedRemoveFilter.Image")));
-            this.toolStripButtonEscalatedRemoveFilter.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonEscalatedRemoveFilter.Name = "toolStripButtonEscalatedRemoveFilter";
-            this.toolStripButtonEscalatedRemoveFilter.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonEscalatedRemoveFilter.Text = "Quitar filtro";
-            // 
-            // toolStripButtonEscalatedRefresh
-            // 
-            this.toolStripButtonEscalatedRefresh.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonEscalatedRefresh.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonEscalatedRefresh.Image")));
-            this.toolStripButtonEscalatedRefresh.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonEscalatedRefresh.Name = "toolStripButtonEscalatedRefresh";
-            this.toolStripButtonEscalatedRefresh.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonEscalatedRefresh.Text = "Actualizar";
-            // 
             // dataGridViewEscalatedAccounts
             // 
             this.dataGridViewEscalatedAccounts.AllowUserToAddRows = false;
@@ -652,6 +564,9 @@
             this.dataGridViewEscalatedAccounts.ReadOnly = true;
             this.dataGridViewEscalatedAccounts.Size = new System.Drawing.Size(441, 384);
             this.dataGridViewEscalatedAccounts.TabIndex = 0;
+            this.dataGridViewEscalatedAccounts.SelectionChanged += new System.EventHandler(this.dataGridViewEscalatedAccounts_SelectionChanged);
+            this.dataGridViewEscalatedAccounts.DoubleClick += new System.EventHandler(this.dataGridViewEscalatedAccounts_DoubleClick);
+            this.dataGridViewEscalatedAccounts.MouseDown += new System.Windows.Forms.MouseEventHandler(this.dataGridView_MouseDown);
             // 
             // dataGridViewEscalatedLog
             // 
@@ -666,82 +581,99 @@
             this.dataGridViewEscalatedLog.Size = new System.Drawing.Size(354, 384);
             this.dataGridViewEscalatedLog.TabIndex = 0;
             // 
-            // toolStripClosed
+            // statusStripEscalated
             // 
-            this.toolStripClosed.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripButton1,
-            this.toolStripSeparator8,
-            this.toolStripButton2,
-            this.toolStripSeparator9,
-            this.toolStripButton3,
-            this.toolStripButton4});
-            this.toolStripClosed.Location = new System.Drawing.Point(0, 0);
-            this.toolStripClosed.Name = "toolStripClosed";
-            this.toolStripClosed.Size = new System.Drawing.Size(805, 25);
-            this.toolStripClosed.TabIndex = 0;
-            this.toolStripClosed.Text = "toolStrip1";
+            this.statusStripEscalated.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripStatusLabelEscalated});
+            this.statusStripEscalated.Location = new System.Drawing.Point(3, 412);
+            this.statusStripEscalated.Name = "statusStripEscalated";
+            this.statusStripEscalated.Size = new System.Drawing.Size(799, 22);
+            this.statusStripEscalated.TabIndex = 1;
+            this.statusStripEscalated.Text = "statusStrip1";
             // 
-            // statusStripClosed
+            // toolStripStatusLabelEscalated
             // 
-            this.statusStripClosed.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripStatusLabelClosed});
-            this.statusStripClosed.Location = new System.Drawing.Point(0, 415);
-            this.statusStripClosed.Name = "statusStripClosed";
-            this.statusStripClosed.Size = new System.Drawing.Size(805, 22);
-            this.statusStripClosed.TabIndex = 1;
-            this.statusStripClosed.Text = "statusStrip1";
+            this.toolStripStatusLabelEscalated.Name = "toolStripStatusLabelEscalated";
+            this.toolStripStatusLabelEscalated.Size = new System.Drawing.Size(47, 17);
+            this.toolStripStatusLabelEscalated.Text = "FILTRO:";
             // 
-            // toolStripButton1
+            // toolStripEscalated
             // 
-            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
-            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButton1.Text = "toolStripButtonPrintClosed";
+            this.toolStripEscalated.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripButtonPrintEscalated,
+            this.toolStripSeparator6,
+            this.toolStripButtonEscalated,
+            this.EscalatedToolStripButtonSetCollectDate,
+            this.toolStripSeparator7,
+            this.toolStripButtonEscalatedRemoveFilter,
+            this.toolStripButtonEscalatedRefresh});
+            this.toolStripEscalated.Location = new System.Drawing.Point(3, 3);
+            this.toolStripEscalated.Name = "toolStripEscalated";
+            this.toolStripEscalated.Size = new System.Drawing.Size(799, 25);
+            this.toolStripEscalated.TabIndex = 0;
+            this.toolStripEscalated.Text = "toolStrip1";
             // 
-            // toolStripSeparator8
+            // toolStripButtonPrintEscalated
             // 
-            this.toolStripSeparator8.Name = "toolStripSeparator8";
-            this.toolStripSeparator8.Size = new System.Drawing.Size(6, 25);
+            this.toolStripButtonPrintEscalated.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonPrintEscalated.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonPrintEscalated.Image")));
+            this.toolStripButtonPrintEscalated.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonPrintEscalated.Name = "toolStripButtonPrintEscalated";
+            this.toolStripButtonPrintEscalated.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonPrintEscalated.Text = "Imprimir";
+            this.toolStripButtonPrintEscalated.Click += new System.EventHandler(this.toolStripButtonPrintEscalated_Click);
             // 
-            // toolStripButton2
+            // toolStripSeparator6
             // 
-            this.toolStripButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton2.Image")));
-            this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton2.Name = "toolStripButton2";
-            this.toolStripButton2.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButton2.Text = "toolStripButtonReopen";
+            this.toolStripSeparator6.Name = "toolStripSeparator6";
+            this.toolStripSeparator6.Size = new System.Drawing.Size(6, 25);
             // 
-            // toolStripSeparator9
+            // toolStripButtonEscalated
             // 
-            this.toolStripSeparator9.Name = "toolStripSeparator9";
-            this.toolStripSeparator9.Size = new System.Drawing.Size(6, 25);
+            this.toolStripButtonEscalated.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonEscalated.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonEscalated.Image")));
+            this.toolStripButtonEscalated.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonEscalated.Name = "toolStripButtonEscalated";
+            this.toolStripButtonEscalated.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonEscalated.Text = "Quitar de cuentas escaladas";
+            this.toolStripButtonEscalated.Click += new System.EventHandler(this.toolStripButtonEscalated_Click);
             // 
-            // toolStripButton3
+            // toolStripSeparator7
             // 
-            this.toolStripButton3.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton3.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton3.Image")));
-            this.toolStripButton3.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton3.Name = "toolStripButton3";
-            this.toolStripButton3.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButton3.Text = "toolStripButtonClosedRemoveFilter";
+            this.toolStripSeparator7.Name = "toolStripSeparator7";
+            this.toolStripSeparator7.Size = new System.Drawing.Size(6, 25);
             // 
-            // toolStripButton4
+            // toolStripButtonEscalatedRemoveFilter
             // 
-            this.toolStripButton4.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton4.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton4.Image")));
-            this.toolStripButton4.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton4.Name = "toolStripButton4";
-            this.toolStripButton4.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButton4.Text = "toolStripButtonClosedRefresh";
+            this.toolStripButtonEscalatedRemoveFilter.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonEscalatedRemoveFilter.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonEscalatedRemoveFilter.Image")));
+            this.toolStripButtonEscalatedRemoveFilter.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonEscalatedRemoveFilter.Name = "toolStripButtonEscalatedRemoveFilter";
+            this.toolStripButtonEscalatedRemoveFilter.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonEscalatedRemoveFilter.Text = "Quitar filtro";
+            this.toolStripButtonEscalatedRemoveFilter.Click += new System.EventHandler(this.toolStripButtonEscalatedRemoveFilter_Click);
             // 
-            // toolStripStatusLabelClosed
+            // toolStripButtonEscalatedRefresh
             // 
-            this.toolStripStatusLabelClosed.Name = "toolStripStatusLabelClosed";
-            this.toolStripStatusLabelClosed.Size = new System.Drawing.Size(47, 17);
-            this.toolStripStatusLabelClosed.Text = "FILTRO:";
+            this.toolStripButtonEscalatedRefresh.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonEscalatedRefresh.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonEscalatedRefresh.Image")));
+            this.toolStripButtonEscalatedRefresh.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonEscalatedRefresh.Name = "toolStripButtonEscalatedRefresh";
+            this.toolStripButtonEscalatedRefresh.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonEscalatedRefresh.Text = "Actualizar";
+            this.toolStripButtonEscalatedRefresh.Click += new System.EventHandler(this.toolStripButtonEscalatedRefresh_Click);
+            // 
+            // tabPage4
+            // 
+            this.tabPage4.Controls.Add(this.splitContainerClosed);
+            this.tabPage4.Controls.Add(this.statusStripClosed);
+            this.tabPage4.Controls.Add(this.toolStripClosed);
+            this.tabPage4.Location = new System.Drawing.Point(4, 22);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Size = new System.Drawing.Size(805, 437);
+            this.tabPage4.TabIndex = 3;
+            this.tabPage4.Text = "Cerrados";
+            this.tabPage4.UseVisualStyleBackColor = true;
             // 
             // splitContainerClosed
             // 
@@ -773,6 +705,9 @@
             this.dataGridViewClosedAccounts.ReadOnly = true;
             this.dataGridViewClosedAccounts.Size = new System.Drawing.Size(436, 390);
             this.dataGridViewClosedAccounts.TabIndex = 0;
+            this.dataGridViewClosedAccounts.SelectionChanged += new System.EventHandler(this.dataGridViewClosedAccounts_SelectionChanged);
+            this.dataGridViewClosedAccounts.DoubleClick += new System.EventHandler(this.dataGridViewClosedAccounts_DoubleClick);
+            this.dataGridViewClosedAccounts.MouseDown += new System.Windows.Forms.MouseEventHandler(this.dataGridView_MouseDown);
             // 
             // dataGridViewClosedPayments
             // 
@@ -787,66 +722,98 @@
             this.dataGridViewClosedPayments.Size = new System.Drawing.Size(365, 390);
             this.dataGridViewClosedPayments.TabIndex = 0;
             // 
-            // toolStripCancelled
+            // statusStripClosed
             // 
-            this.toolStripCancelled.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripButtonPrintCancelled,
-            this.toolStripSeparator10,
-            this.toolStripButtonRemoveFilterCancelled,
-            this.toolStripButtonRefreshCancelled});
-            this.toolStripCancelled.Location = new System.Drawing.Point(0, 0);
-            this.toolStripCancelled.Name = "toolStripCancelled";
-            this.toolStripCancelled.Size = new System.Drawing.Size(805, 25);
-            this.toolStripCancelled.TabIndex = 0;
-            this.toolStripCancelled.Text = "toolStrip1";
+            this.statusStripClosed.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripStatusLabelClosed});
+            this.statusStripClosed.Location = new System.Drawing.Point(0, 415);
+            this.statusStripClosed.Name = "statusStripClosed";
+            this.statusStripClosed.Size = new System.Drawing.Size(805, 22);
+            this.statusStripClosed.TabIndex = 1;
+            this.statusStripClosed.Text = "statusStrip1";
             // 
-            // statusStripCancelled
+            // toolStripStatusLabelClosed
             // 
-            this.statusStripCancelled.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripStatusLabelCancelled});
-            this.statusStripCancelled.Location = new System.Drawing.Point(0, 415);
-            this.statusStripCancelled.Name = "statusStripCancelled";
-            this.statusStripCancelled.Size = new System.Drawing.Size(805, 22);
-            this.statusStripCancelled.TabIndex = 1;
-            this.statusStripCancelled.Text = "statusStrip1";
+            this.toolStripStatusLabelClosed.Name = "toolStripStatusLabelClosed";
+            this.toolStripStatusLabelClosed.Size = new System.Drawing.Size(47, 17);
+            this.toolStripStatusLabelClosed.Text = "FILTRO:";
             // 
-            // toolStripStatusLabelCancelled
+            // toolStripClosed
             // 
-            this.toolStripStatusLabelCancelled.Name = "toolStripStatusLabelCancelled";
-            this.toolStripStatusLabelCancelled.Size = new System.Drawing.Size(47, 17);
-            this.toolStripStatusLabelCancelled.Text = "FILTRO:";
+            this.toolStripClosed.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripButtonPrintClosed,
+            this.toolStripSeparator8,
+            this.toolStripButtonReopen,
+            this.toolStripSeparator9,
+            this.toolStripButtonClosedRemoveFilter,
+            this.toolStripButtonClosedRefresh});
+            this.toolStripClosed.Location = new System.Drawing.Point(0, 0);
+            this.toolStripClosed.Name = "toolStripClosed";
+            this.toolStripClosed.Size = new System.Drawing.Size(805, 25);
+            this.toolStripClosed.TabIndex = 0;
+            this.toolStripClosed.Text = "toolStrip1";
             // 
-            // toolStripButtonPrintCancelled
+            // toolStripButtonPrintClosed
             // 
-            this.toolStripButtonPrintCancelled.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonPrintCancelled.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonPrintCancelled.Image")));
-            this.toolStripButtonPrintCancelled.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonPrintCancelled.Name = "toolStripButtonPrintCancelled";
-            this.toolStripButtonPrintCancelled.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonPrintCancelled.Text = "Imprimir";
+            this.toolStripButtonPrintClosed.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonPrintClosed.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonPrintClosed.Image")));
+            this.toolStripButtonPrintClosed.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonPrintClosed.Name = "toolStripButtonPrintClosed";
+            this.toolStripButtonPrintClosed.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonPrintClosed.Text = "Imprimir";
+            this.toolStripButtonPrintClosed.Click += new System.EventHandler(this.toolStripButtonPrintClosed_Click);
             // 
-            // toolStripSeparator10
+            // toolStripSeparator8
             // 
-            this.toolStripSeparator10.Name = "toolStripSeparator10";
-            this.toolStripSeparator10.Size = new System.Drawing.Size(6, 25);
+            this.toolStripSeparator8.Name = "toolStripSeparator8";
+            this.toolStripSeparator8.Size = new System.Drawing.Size(6, 25);
             // 
-            // toolStripButtonRemoveFilterCancelled
+            // toolStripButtonReopen
             // 
-            this.toolStripButtonRemoveFilterCancelled.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonRemoveFilterCancelled.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonRemoveFilterCancelled.Image")));
-            this.toolStripButtonRemoveFilterCancelled.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonRemoveFilterCancelled.Name = "toolStripButtonRemoveFilterCancelled";
-            this.toolStripButtonRemoveFilterCancelled.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonRemoveFilterCancelled.Text = "Quitar Filtro";
+            this.toolStripButtonReopen.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonReopen.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonReopen.Image")));
+            this.toolStripButtonReopen.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonReopen.Name = "toolStripButtonReopen";
+            this.toolStripButtonReopen.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonReopen.Text = "Abrir (Cuenta disponible)";
+            this.toolStripButtonReopen.Click += new System.EventHandler(this.toolStripButtonReopen_Click);
             // 
-            // toolStripButtonRefreshCancelled
+            // toolStripSeparator9
             // 
-            this.toolStripButtonRefreshCancelled.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonRefreshCancelled.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonRefreshCancelled.Image")));
-            this.toolStripButtonRefreshCancelled.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonRefreshCancelled.Name = "toolStripButtonRefreshCancelled";
-            this.toolStripButtonRefreshCancelled.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonRefreshCancelled.Text = "Refrescar";
+            this.toolStripSeparator9.Name = "toolStripSeparator9";
+            this.toolStripSeparator9.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripButtonClosedRemoveFilter
+            // 
+            this.toolStripButtonClosedRemoveFilter.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonClosedRemoveFilter.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonClosedRemoveFilter.Image")));
+            this.toolStripButtonClosedRemoveFilter.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonClosedRemoveFilter.Name = "toolStripButtonClosedRemoveFilter";
+            this.toolStripButtonClosedRemoveFilter.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonClosedRemoveFilter.Text = "Quitar Filtro";
+            this.toolStripButtonClosedRemoveFilter.Click += new System.EventHandler(this.toolStripButtonClosedRemoveFilter_Click);
+            // 
+            // toolStripButtonClosedRefresh
+            // 
+            this.toolStripButtonClosedRefresh.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonClosedRefresh.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonClosedRefresh.Image")));
+            this.toolStripButtonClosedRefresh.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonClosedRefresh.Name = "toolStripButtonClosedRefresh";
+            this.toolStripButtonClosedRefresh.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonClosedRefresh.Text = "Actualizar";
+            this.toolStripButtonClosedRefresh.Click += new System.EventHandler(this.toolStripButtonClosedRefresh_Click);
+            // 
+            // tabPage5
+            // 
+            this.tabPage5.Controls.Add(this.splitContainerCancelled);
+            this.tabPage5.Controls.Add(this.statusStripCancelled);
+            this.tabPage5.Controls.Add(this.toolStripCancelled);
+            this.tabPage5.Location = new System.Drawing.Point(4, 22);
+            this.tabPage5.Name = "tabPage5";
+            this.tabPage5.Size = new System.Drawing.Size(805, 437);
+            this.tabPage5.TabIndex = 4;
+            this.tabPage5.Text = "Cancelados";
+            this.tabPage5.UseVisualStyleBackColor = true;
             // 
             // splitContainerCancelled
             // 
@@ -878,6 +845,9 @@
             this.dataGridViewCancelledAccounts.ReadOnly = true;
             this.dataGridViewCancelledAccounts.Size = new System.Drawing.Size(467, 390);
             this.dataGridViewCancelledAccounts.TabIndex = 0;
+            this.dataGridViewCancelledAccounts.SelectionChanged += new System.EventHandler(this.dataGridViewCancelledAccounts_SelectionChanged);
+            this.dataGridViewCancelledAccounts.DoubleClick += new System.EventHandler(this.dataGridViewCancelledAccounts_DoubleClick);
+            this.dataGridViewCancelledAccounts.MouseDown += new System.Windows.Forms.MouseEventHandler(this.dataGridView_MouseDown);
             // 
             // dataGridViewCancelledFollowUps
             // 
@@ -892,85 +862,189 @@
             this.dataGridViewCancelledFollowUps.Size = new System.Drawing.Size(334, 390);
             this.dataGridViewCancelledFollowUps.TabIndex = 0;
             // 
+            // statusStripCancelled
+            // 
+            this.statusStripCancelled.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripStatusLabelCancelled});
+            this.statusStripCancelled.Location = new System.Drawing.Point(0, 415);
+            this.statusStripCancelled.Name = "statusStripCancelled";
+            this.statusStripCancelled.Size = new System.Drawing.Size(805, 22);
+            this.statusStripCancelled.TabIndex = 1;
+            this.statusStripCancelled.Text = "statusStrip1";
+            // 
+            // toolStripStatusLabelCancelled
+            // 
+            this.toolStripStatusLabelCancelled.Name = "toolStripStatusLabelCancelled";
+            this.toolStripStatusLabelCancelled.Size = new System.Drawing.Size(47, 17);
+            this.toolStripStatusLabelCancelled.Text = "FILTRO:";
+            // 
+            // toolStripCancelled
+            // 
+            this.toolStripCancelled.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripButtonPrintCancelled,
+            this.toolStripSeparator10,
+            this.toolStripButtonRemoveFilterCancelled,
+            this.toolStripButtonRefreshCancelled});
+            this.toolStripCancelled.Location = new System.Drawing.Point(0, 0);
+            this.toolStripCancelled.Name = "toolStripCancelled";
+            this.toolStripCancelled.Size = new System.Drawing.Size(805, 25);
+            this.toolStripCancelled.TabIndex = 0;
+            this.toolStripCancelled.Text = "toolStrip1";
+            // 
+            // toolStripButtonPrintCancelled
+            // 
+            this.toolStripButtonPrintCancelled.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonPrintCancelled.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonPrintCancelled.Image")));
+            this.toolStripButtonPrintCancelled.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonPrintCancelled.Name = "toolStripButtonPrintCancelled";
+            this.toolStripButtonPrintCancelled.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonPrintCancelled.Text = "Imprimir";
+            this.toolStripButtonPrintCancelled.Click += new System.EventHandler(this.toolStripButtonPrintCancelled_Click);
+            // 
+            // toolStripSeparator10
+            // 
+            this.toolStripSeparator10.Name = "toolStripSeparator10";
+            this.toolStripSeparator10.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripButtonRemoveFilterCancelled
+            // 
+            this.toolStripButtonRemoveFilterCancelled.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonRemoveFilterCancelled.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonRemoveFilterCancelled.Image")));
+            this.toolStripButtonRemoveFilterCancelled.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonRemoveFilterCancelled.Name = "toolStripButtonRemoveFilterCancelled";
+            this.toolStripButtonRemoveFilterCancelled.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonRemoveFilterCancelled.Text = "Quitar Filtro";
+            this.toolStripButtonRemoveFilterCancelled.Click += new System.EventHandler(this.toolStripButtonRemoveFilterCancelled_Click);
+            // 
+            // toolStripButtonRefreshCancelled
+            // 
+            this.toolStripButtonRefreshCancelled.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonRefreshCancelled.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonRefreshCancelled.Image")));
+            this.toolStripButtonRefreshCancelled.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonRefreshCancelled.Name = "toolStripButtonRefreshCancelled";
+            this.toolStripButtonRefreshCancelled.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonRefreshCancelled.Text = "Refrescar";
+            this.toolStripButtonRefreshCancelled.Click += new System.EventHandler(this.toolStripButtonRefreshCancelled_Click);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripButtonSetCollectDate
+            // 
+            this.toolStripButtonSetCollectDate.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonSetCollectDate.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonSetCollectDate.Image")));
+            this.toolStripButtonSetCollectDate.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonSetCollectDate.Name = "toolStripButtonSetCollectDate";
+            this.toolStripButtonSetCollectDate.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonSetCollectDate.Text = "Asignar Fecha de Cobro";
+            this.toolStripButtonSetCollectDate.Click += new System.EventHandler(this.toolStripButtonSetCollectDate_Click);
+            // 
+            // toolStripSeparator11
+            // 
+            this.toolStripSeparator11.Name = "toolStripSeparator11";
+            this.toolStripSeparator11.Size = new System.Drawing.Size(6, 25);
+            // 
+            // AssignedToolStripButtonSetCollectDate
+            // 
+            this.AssignedToolStripButtonSetCollectDate.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.AssignedToolStripButtonSetCollectDate.Image = ((System.Drawing.Image)(resources.GetObject("AssignedToolStripButtonSetCollectDate.Image")));
+            this.AssignedToolStripButtonSetCollectDate.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.AssignedToolStripButtonSetCollectDate.Name = "AssignedToolStripButtonSetCollectDate";
+            this.AssignedToolStripButtonSetCollectDate.Size = new System.Drawing.Size(23, 22);
+            this.AssignedToolStripButtonSetCollectDate.Text = "Asignar Fecha de Cobro";
+            this.AssignedToolStripButtonSetCollectDate.Click += new System.EventHandler(this.AssignedToolStripButtonSetCollectDate_Click);
+            // 
+            // EscalatedToolStripButtonSetCollectDate
+            // 
+            this.EscalatedToolStripButtonSetCollectDate.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.EscalatedToolStripButtonSetCollectDate.Image = ((System.Drawing.Image)(resources.GetObject("EscalatedToolStripButtonSetCollectDate.Image")));
+            this.EscalatedToolStripButtonSetCollectDate.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.EscalatedToolStripButtonSetCollectDate.Name = "EscalatedToolStripButtonSetCollectDate";
+            this.EscalatedToolStripButtonSetCollectDate.Size = new System.Drawing.Size(23, 22);
+            this.EscalatedToolStripButtonSetCollectDate.Text = "Asignar Fecha de Cobro";
+            this.EscalatedToolStripButtonSetCollectDate.Click += new System.EventHandler(this.EscalatedToolStripButtonSetCollectDate_Click);
+            // 
             // FormProcess
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(813, 463);
-            this.Controls.Add(this.tabControl1);
+            this.Controls.Add(this.tabControlProcess);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormProcess";
             this.Text = "FormProcess";
             this.Load += new System.EventHandler(this.FormProcess_Load);
-            this.tabControl1.ResumeLayout(false);
+            this.tabControlProcess.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
-            this.tabPage2.ResumeLayout(false);
-            this.tabPage2.PerformLayout();
-            this.tabPage3.ResumeLayout(false);
-            this.tabPage3.PerformLayout();
-            this.tabPage4.ResumeLayout(false);
-            this.tabPage4.PerformLayout();
-            this.tabPage5.ResumeLayout(false);
-            this.tabPage5.PerformLayout();
-            this.toolStripNotAssigned.ResumeLayout(false);
-            this.toolStripNotAssigned.PerformLayout();
-            this.statusStripNotAssigned.ResumeLayout(false);
-            this.statusStripNotAssigned.PerformLayout();
             this.splitContainerNotAssigned.Panel1.ResumeLayout(false);
             this.splitContainerNotAssigned.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerNotAssigned)).EndInit();
             this.splitContainerNotAssigned.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewNotAssignedAccounts)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewNotAssignedPayments)).EndInit();
             this.contextMenuStripAccountsGrid.ResumeLayout(false);
-            this.toolStripAssigned.ResumeLayout(false);
-            this.toolStripAssigned.PerformLayout();
-            this.statusStripAssigned.ResumeLayout(false);
-            this.statusStripAssigned.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewNotAssignedPayments)).EndInit();
+            this.statusStripNotAssigned.ResumeLayout(false);
+            this.statusStripNotAssigned.PerformLayout();
+            this.toolStripNotAssigned.ResumeLayout(false);
+            this.toolStripNotAssigned.PerformLayout();
+            this.tabPage2.ResumeLayout(false);
+            this.tabPage2.PerformLayout();
             this.splitContainerAssigned.Panel1.ResumeLayout(false);
             this.splitContainerAssigned.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerAssigned)).EndInit();
             this.splitContainerAssigned.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAssignedAccounts)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAssignedFollowUp)).EndInit();
-            this.toolStripEscalated.ResumeLayout(false);
-            this.toolStripEscalated.PerformLayout();
-            this.statusStripEscalated.ResumeLayout(false);
-            this.statusStripEscalated.PerformLayout();
+            this.statusStripAssigned.ResumeLayout(false);
+            this.statusStripAssigned.PerformLayout();
+            this.toolStripAssigned.ResumeLayout(false);
+            this.toolStripAssigned.PerformLayout();
+            this.tabPage3.ResumeLayout(false);
+            this.tabPage3.PerformLayout();
             this.splitContainerEscalated.Panel1.ResumeLayout(false);
             this.splitContainerEscalated.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerEscalated)).EndInit();
             this.splitContainerEscalated.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewEscalatedAccounts)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewEscalatedLog)).EndInit();
-            this.toolStripClosed.ResumeLayout(false);
-            this.toolStripClosed.PerformLayout();
-            this.statusStripClosed.ResumeLayout(false);
-            this.statusStripClosed.PerformLayout();
+            this.statusStripEscalated.ResumeLayout(false);
+            this.statusStripEscalated.PerformLayout();
+            this.toolStripEscalated.ResumeLayout(false);
+            this.toolStripEscalated.PerformLayout();
+            this.tabPage4.ResumeLayout(false);
+            this.tabPage4.PerformLayout();
             this.splitContainerClosed.Panel1.ResumeLayout(false);
             this.splitContainerClosed.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerClosed)).EndInit();
             this.splitContainerClosed.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewClosedAccounts)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewClosedPayments)).EndInit();
-            this.toolStripCancelled.ResumeLayout(false);
-            this.toolStripCancelled.PerformLayout();
-            this.statusStripCancelled.ResumeLayout(false);
-            this.statusStripCancelled.PerformLayout();
+            this.statusStripClosed.ResumeLayout(false);
+            this.statusStripClosed.PerformLayout();
+            this.toolStripClosed.ResumeLayout(false);
+            this.toolStripClosed.PerformLayout();
+            this.tabPage5.ResumeLayout(false);
+            this.tabPage5.PerformLayout();
             this.splitContainerCancelled.Panel1.ResumeLayout(false);
             this.splitContainerCancelled.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerCancelled)).EndInit();
             this.splitContainerCancelled.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewCancelledAccounts)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewCancelledFollowUps)).EndInit();
+            this.statusStripCancelled.ResumeLayout(false);
+            this.statusStripCancelled.PerformLayout();
+            this.toolStripCancelled.ResumeLayout(false);
+            this.toolStripCancelled.PerformLayout();
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabControl tabControlProcess;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.TabPage tabPage3;
@@ -992,8 +1066,6 @@
         private System.Windows.Forms.ContextMenuStrip contextMenuStripAccountsGrid;
         private System.Windows.Forms.ToolStripMenuItem applyFilterToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem avoidValueToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
-        private System.Windows.Forms.ToolStripMenuItem removeFilterToolStripMenuItem;
         private System.Windows.Forms.SplitContainer splitContainerAssigned;
         private System.Windows.Forms.DataGridView dataGridViewAssignedAccounts;
         private System.Windows.Forms.DataGridView dataGridViewAssignedFollowUp;
@@ -1023,12 +1095,12 @@
         private System.Windows.Forms.DataGridView dataGridViewEscalatedLog;
         private System.Windows.Forms.StatusStrip statusStripClosed;
         private System.Windows.Forms.ToolStrip toolStripClosed;
-        private System.Windows.Forms.ToolStripButton toolStripButton1;
+        private System.Windows.Forms.ToolStripButton toolStripButtonPrintClosed;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
-        private System.Windows.Forms.ToolStripButton toolStripButton2;
+        private System.Windows.Forms.ToolStripButton toolStripButtonReopen;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
-        private System.Windows.Forms.ToolStripButton toolStripButton3;
-        private System.Windows.Forms.ToolStripButton toolStripButton4;
+        private System.Windows.Forms.ToolStripButton toolStripButtonClosedRemoveFilter;
+        private System.Windows.Forms.ToolStripButton toolStripButtonClosedRefresh;
         private System.Windows.Forms.SplitContainer splitContainerClosed;
         private System.Windows.Forms.DataGridView dataGridViewClosedAccounts;
         private System.Windows.Forms.DataGridView dataGridViewClosedPayments;
@@ -1043,5 +1115,10 @@
         private System.Windows.Forms.SplitContainer splitContainerCancelled;
         private System.Windows.Forms.DataGridView dataGridViewCancelledAccounts;
         private System.Windows.Forms.DataGridView dataGridViewCancelledFollowUps;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.ToolStripButton toolStripButtonSetCollectDate;
+        private System.Windows.Forms.ToolStripButton AssignedToolStripButtonSetCollectDate;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator11;
+        private System.Windows.Forms.ToolStripButton EscalatedToolStripButtonSetCollectDate;
     }
 }

@@ -108,6 +108,7 @@
             // 
             // splitContainerMain
             // 
+            this.splitContainerMain.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.splitContainerMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainerMain.Location = new System.Drawing.Point(0, 0);
             this.splitContainerMain.Margin = new System.Windows.Forms.Padding(4);
@@ -137,7 +138,7 @@
             this.toolStripButtonSave});
             this.toolStripMainMenu.Location = new System.Drawing.Point(0, 0);
             this.toolStripMainMenu.Name = "toolStripMainMenu";
-            this.toolStripMainMenu.Size = new System.Drawing.Size(1257, 25);
+            this.toolStripMainMenu.Size = new System.Drawing.Size(1255, 25);
             this.toolStripMainMenu.TabIndex = 5;
             this.toolStripMainMenu.Text = "toolStrip1";
             // 
@@ -163,8 +164,9 @@
             // labelDueDays
             // 
             this.labelDueDays.AutoSize = true;
-            this.labelDueDays.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.labelDueDays.BackColor = System.Drawing.Color.White;
             this.labelDueDays.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelDueDays.ForeColor = System.Drawing.Color.Black;
             this.labelDueDays.Location = new System.Drawing.Point(383, 44);
             this.labelDueDays.Name = "labelDueDays";
             this.labelDueDays.Size = new System.Drawing.Size(75, 37);
@@ -469,7 +471,8 @@
             this.dateTimePickerCollectDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
             this.dateTimePickerCollectDate.Location = new System.Drawing.Point(171, 82);
             this.dateTimePickerCollectDate.Name = "dateTimePickerCollectDate";
-            this.dateTimePickerCollectDate.Size = new System.Drawing.Size(98, 22);
+            this.dateTimePickerCollectDate.ShowCheckBox = true;
+            this.dateTimePickerCollectDate.Size = new System.Drawing.Size(120, 22);
             this.dateTimePickerCollectDate.TabIndex = 5;
             this.dateTimePickerCollectDate.ValueChanged += new System.EventHandler(this.AdminPaq_ValueChanged);
             // 
@@ -529,7 +532,7 @@
             this.tabControlDetails.Location = new System.Drawing.Point(0, 0);
             this.tabControlDetails.Name = "tabControlDetails";
             this.tabControlDetails.SelectedIndex = 0;
-            this.tabControlDetails.Size = new System.Drawing.Size(1257, 428);
+            this.tabControlDetails.Size = new System.Drawing.Size(1255, 426);
             this.tabControlDetails.TabIndex = 0;
             // 
             // tabPage1
@@ -538,7 +541,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 25);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(1249, 399);
+            this.tabPage1.Size = new System.Drawing.Size(1247, 397);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Seguimiento";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -563,8 +566,8 @@
             this.splitContainerFollowUp.Panel2.Controls.Add(this.labelFollowUpId);
             this.splitContainerFollowUp.Panel2.Controls.Add(this.label2);
             this.splitContainerFollowUp.Panel2.Controls.Add(this.toolStripFollowUP);
-            this.splitContainerFollowUp.Size = new System.Drawing.Size(1243, 393);
-            this.splitContainerFollowUp.SplitterDistance = 659;
+            this.splitContainerFollowUp.Size = new System.Drawing.Size(1241, 391);
+            this.splitContainerFollowUp.SplitterDistance = 657;
             this.splitContainerFollowUp.TabIndex = 0;
             // 
             // dataGridViewFollowUp
@@ -578,7 +581,7 @@
             this.dataGridViewFollowUp.Name = "dataGridViewFollowUp";
             this.dataGridViewFollowUp.ReadOnly = true;
             this.dataGridViewFollowUp.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewFollowUp.Size = new System.Drawing.Size(659, 393);
+            this.dataGridViewFollowUp.Size = new System.Drawing.Size(657, 391);
             this.dataGridViewFollowUp.TabIndex = 0;
             this.dataGridViewFollowUp.SelectionChanged += new System.EventHandler(this.dataGridViewFollowUp_SelectionChanged);
             // 
@@ -720,7 +723,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(1249, 402);
+            this.tabPage2.Size = new System.Drawing.Size(1247, 400);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Abonos";
             this.tabPage2.UseVisualStyleBackColor = true;

@@ -449,14 +449,14 @@ namespace SeguimientoSuper.Catalogs
             
 
             FixColumn(dataGridViewAssignedDocuments.Columns["id_doco"], 15, "DocId", 60);
-            FixColumn(dataGridViewAssignedDocuments.Columns["dias_vencido"], 0, "Vencido", 30);
+            FixColumn(dataGridViewAssignedDocuments.Columns["dias_vencido"], 0, "Dias Vencimiento", 80);
             FixColumn(dataGridViewAssignedDocuments.Columns["f_documento"], 1, "Fecha Documento", 80);
             FixColumn(dataGridViewAssignedDocuments.Columns["f_vencimiento"], 2, "Fecha Vencimiento", 80);
             FixColumn(dataGridViewAssignedDocuments.Columns["f_cobro"], 3, "Fecha Cobro", 80);
 
             FixColumn(dataGridViewAssignedDocuments.Columns["serie_doco"], 4, "Serie", 40);
             FixColumn(dataGridViewAssignedDocuments.Columns["folio_doco"], 5, "Doc #", 80);
-            FixColumn(dataGridViewAssignedDocuments.Columns["tipo_documento"], 6, "Doc #", 150);
+            FixColumn(dataGridViewAssignedDocuments.Columns["tipo_documento"], 6, "Tipo Doc", 150);
 
             FixColumn(dataGridViewAssignedDocuments.Columns["cd_cliente"], 7, "# Cliente", 80);
             FixColumn(dataGridViewAssignedDocuments.Columns["nombre_cliente"], 8, "Nombre del Cliente", 180);

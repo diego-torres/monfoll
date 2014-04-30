@@ -1686,6 +1686,7 @@
                 <TablixMember>
                   <Group Name="Details" />
                   <Visibility>
+                    <Hidden>true</Hidden>
                     <ToggleItem>Name</ToggleItem>
                   </Visibility>
                 </TablixMember>
@@ -1735,7 +1736,7 @@
         </TablixRowHierarchy>
         <DataSetName>DataSet1</DataSetName>
         <Height>2.4cm</Height>
-        <Width>38.50667cm</Width>
+        <Width>38.50665cm</Width>
         <Style>
           <Border>
             <Style>None</Style>

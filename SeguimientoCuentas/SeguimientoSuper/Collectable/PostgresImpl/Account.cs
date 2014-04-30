@@ -10,6 +10,109 @@ namespace SeguimientoSuper.Collectable.PostgresImpl
     public class Account : CommonBase
     {
 
+        public void SetCollectDate(int docId, DateTime collectDate)
+        {
+            if (conn == null || conn.State != ConnectionState.Open)
+                connect();
+
+            string sqlString = "UPDATE ctrl_cuenta " +
+                "SET F_COBRO = @f_cobro " +
+                "WHERE ID_DOCO = @id";
+
+            NpgsqlCommand cmd = new NpgsqlCommand(sqlString, conn);
+
+            cmd.Parameters.Add("@f_cobro", NpgsqlTypes.NpgsqlDbType.Date);
+            cmd.Parameters.Add("@id", NpgsqlTypes.NpgsqlDbType.Integer);
+
+            cmd.Parameters["@f_cobro"].Value = collectDate;
+            cmd.Parameters["@id"].Value = docId;
+
+            cmd.ExecuteNonQuery();
+
+            conn.Close();
+        }
+
+        public void ReOpen(int docId)
+        {
+            if (conn == null || conn.State != ConnectionState.Open)
+                connect();
+
+            string sqlString = "DELETE FROM ctrl_seguimiento " +
+                "WHERE id_doco = @docId AND id_movimiento = 9;";
+
+            NpgsqlCommand cmd = new NpgsqlCommand(sqlString, conn);
+
+            cmd.Parameters.Add("@docId", NpgsqlTypes.NpgsqlDbType.Integer);
+            cmd.Parameters["@docId"].Value = docId;
+
+            cmd.ExecuteNonQuery();
+
+            sqlString = "INSERT INTO ctrl_seguimiento(id_movimiento, id_doco, descripcion) " +
+                "VALUES(11, @documento, 'Cuenta Abierta.');";
+            cmd = new NpgsqlCommand(sqlString, conn);
+
+            cmd.Parameters.Add("@documento", NpgsqlTypes.NpgsqlDbType.Integer);
+            cmd.Parameters["@documento"].Value = docId;
+
+            cmd.ExecuteNonQuery();
+
+            conn.Close();
+        }
+
+        public void Unescale(int docId)
+        {
+            if (conn == null || conn.State != ConnectionState.Open)
+                connect();
+
+            string sqlString = "DELETE FROM ctrl_seguimiento " +
+                "WHERE id_doco = @docId AND id_movimiento = 4;";
+
+            NpgsqlCommand cmd = new NpgsqlCommand(sqlString, conn);
+
+            cmd.Parameters.Add("@docId", NpgsqlTypes.NpgsqlDbType.Integer);
+            cmd.Parameters["@docId"].Value = docId;
+
+            cmd.ExecuteNonQuery();
+
+            sqlString = "INSERT INTO ctrl_seguimiento(id_movimiento, id_doco, descripcion) " +
+                "VALUES(13, @documento, 'Cuenta desescalada.');";
+            cmd = new NpgsqlCommand(sqlString, conn);
+
+            cmd.Parameters.Add("@documento", NpgsqlTypes.NpgsqlDbType.Integer);
+            cmd.Parameters["@documento"].Value = docId;
+
+            cmd.ExecuteNonQuery();
+
+            conn.Close();
+        }
+
+        public void Unassign(int docId)
+        {
+            if (conn == null || conn.State != ConnectionState.Open)
+                connect();
+
+            string sqlString = "DELETE FROM ctrl_asignacion " +
+                "WHERE id_doco = @docId;";
+
+            NpgsqlCommand cmd = new NpgsqlCommand(sqlString, conn);
+
+            cmd.Parameters.Add("@docId", NpgsqlTypes.NpgsqlDbType.Integer);
+            cmd.Parameters["@docId"].Value = docId;
+
+            cmd.ExecuteNonQuery();
+
+            sqlString = "INSERT INTO ctrl_seguimiento(id_movimiento, id_doco, descripcion) " +
+                "VALUES(12, @documento, 'Cuenta deasignada.');";
+            cmd = new NpgsqlCommand(sqlString, conn);
+
+            cmd.Parameters.Add("@documento", NpgsqlTypes.NpgsqlDbType.Integer);
+            cmd.Parameters["@documento"].Value = docId;
+
+            cmd.ExecuteNonQuery();
+
+            conn.Close();
+        }
+
         public DataTable Cancelled()
         {
             DataSet ds = new DataSet();
@@ -118,8 +221,9 @@ namespace SeguimientoSuper.Collectable.PostgresImpl
         {
             DataSet ds = new DataSet();
             NpgsqlDataAdapter da;
+
             string sqlString = "SELECT id_seguimiento, ctrl_seguimiento.id_movimiento, cat_movimiento.descripcion AS movimiento, " +
-                "system_based, ctrl_seguimiento.descripcion as seguimiento, ts_seguimiento " +
+                "system_based, ctrl_seguimiento.descripcion as seguimiento, ts_seguimiento AT TIME ZONE '00' AS ts_seguimiento " +
                 "FROM ctrl_seguimiento INNER JOIN cat_movimiento ON ctrl_seguimiento.id_movimiento = cat_movimiento.id_movimiento " +
                 "WHERE id_doco = " + docId.ToString() + ";";
 
@@ -184,11 +288,31 @@ namespace SeguimientoSuper.Collectable.PostgresImpl
             conn.Close();
         }
 
+        public void CloseAccount(int docId)
+        {
+            if (conn == null || conn.State != ConnectionState.Open)
+                connect();
+
+            string sqlString = "INSERT INTO ctrl_seguimiento(id_movimiento, id_doco, descripcion) " +
+                    "VALUES(9, @documento, 'Documento cerrado por supervisor');";
+
+            NpgsqlCommand cmd = new NpgsqlCommand(sqlString, conn);
+
+            cmd.Parameters.Add("@documento", NpgsqlTypes.NpgsqlDbType.Integer);
+            cmd.Parameters["@documento"].Value = docId;
+
+            cmd.ExecuteNonQuery();
+            conn.Close();
+        }
+
         private void CancelAccount(int docId)
         {
             if (DocumentExists(docId))
             {
                 if (IsCancelled(docId)) return;
+
+                if (conn == null || conn.State != ConnectionState.Open)
+                    connect();
 
                 string sqlString = "INSERT INTO ctrl_seguimiento(id_movimiento, id_doco, descripcion) " +
                     "VALUES(10, @docId, 'Documento cancelado en AdminPaq');";
@@ -253,6 +377,9 @@ namespace SeguimientoSuper.Collectable.PostgresImpl
 
         private void UpdatePayment(Payment payment)
         {
+            if (conn == null || conn.State != ConnectionState.Open)
+                connect();
+
             string sqlString = "UPDATE ctrl_abono " +
                 "SET ID_DOCO = @id_doc, " +
                 "TIPO_PAGO = @tipo_pago, " +
@@ -335,6 +462,9 @@ namespace SeguimientoSuper.Collectable.PostgresImpl
 
         private void UpdateCompany(Company adminPaqCompany)
         {
+            if (conn == null || conn.State != ConnectionState.Open)
+                connect();
+
             string sqlString = "UPDATE cat_cliente " +
                 "SET cd_cliente = @codigo, " +
                 "nombre_cliente = @nombre_cliente, " +
@@ -361,6 +491,9 @@ namespace SeguimientoSuper.Collectable.PostgresImpl
 
         private void AddCompany(Company adminPaqCompany)
         {
+            if (conn == null || conn.State != ConnectionState.Open)
+                connect();
+
             string sqlString = "INSERT INTO cat_cliente (id_cliente, cd_cliente, nombre_cliente, ruta, dia_pago) " +
                 "VALUES(@id, @codigo, @nombre_cliente,  @agente,  @dia_pago)";
 
@@ -447,6 +580,9 @@ namespace SeguimientoSuper.Collectable.PostgresImpl
 
         private void AddAccount(Collectable.Account adminPaqAccount)
         {
+            if (conn == null || conn.State != ConnectionState.Open)
+                connect();
+
             string sqlString = "INSERT INTO ctrl_cuenta (ID_DOCO, F_DOCUMENTO, F_VENCIMIENTO, F_COBRO, ID_CLIENTE, SERIE_DOCO, FOLIO_DOCO, TIPO_DOCUMENTO, TIPO_COBRO, FACTURADO, " +
                 "SALDO, MONEDA, OBSERVACIONES)" +
                 "VALUES( @id, @f_documento, @f_vencimiento, @f_cobro, @id_cliente, @serie_doco, @folio_doco, @tipo_documento, @tipo_cobro, @facturado, @saldo, " +
