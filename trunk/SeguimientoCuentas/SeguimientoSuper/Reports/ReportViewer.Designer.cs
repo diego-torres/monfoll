@@ -53,7 +53,7 @@
             this.Controls.Add(this.reportViewer1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "ReportViewer";
-            this.Text = "ReportViewer";
+            this.Text = "Reporte de Cuentas por Cobrar";
             this.Load += new System.EventHandler(this.ReportViewer_Load);
             this.ResumeLayout(false);
 

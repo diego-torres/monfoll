@@ -178,6 +178,7 @@ namespace SeguimientoSuper
             if (!IsProcessOpen)
             {
                 fProcess = new FormProcess();
+                fProcess.API = api;
                 fProcess.MdiParent = this;
             }
             fProcess.Show();

@@ -352,7 +352,7 @@ namespace SeguimientoSuper.Catalogs
             dataGridViewAccounts.Columns["nombre_cliente"].Visible = false;
 
             FixColumn(dataGridViewAccounts.Columns["id_doco"], 12, "DocId", 60);
-            FixColumn(dataGridViewAccounts.Columns["dias_vencido"], 0, "Vencido", 30);
+            FixColumn(dataGridViewAccounts.Columns["dias_vencido"], 0, "Dias Vencimiento", 80);
             FixColumn(dataGridViewAccounts.Columns["f_documento"], 1, "Fecha Documento", 80);
             FixColumn(dataGridViewAccounts.Columns["f_vencimiento"], 2, "Fecha Vencimiento", 80);
             FixColumn(dataGridViewAccounts.Columns["f_cobro"], 3, "Fecha Cobro", 80);

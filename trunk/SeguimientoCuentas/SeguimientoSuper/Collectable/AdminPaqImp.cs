@@ -33,6 +33,62 @@ namespace SeguimientoSuper.Collectable
             InitializeSDK();
         }
 
+        public void SetCollectDate(int docId, DateTime collectDate)
+        {
+            int connection, dbResponse;
+            string key, command;
+
+            Empresa configuredCompany = ConfiguredCompany();
+
+            if (configuredCompany == null)
+            {
+                ErrLogger.Log("Wrong Company configuration.");
+                return;
+            }
+
+            connection = AdminPaqLib.dbLogIn("", configuredCompany.Ruta);
+            if (connection == 0)
+            {
+                ErrLogger.Log("Unable to open connection to documents table for company [" + configuredCompany.Nombre + "]");
+                return;
+            }
+
+            key = docId.ToString().PadLeft(11);
+            dbResponse = AdminPaqLib.dbGet(connection, TableNames.DOCUMENTOS, IndexNames.PRIMARY_KEY, key);
+
+            if (dbResponse == 0)
+            {
+                string sCollectDate = collectDate.ToString("yyyyMMdd");
+                command = string.Format("UPDATE {0}(CFECHAEX01=\"{1}\");",
+                    TableNames.DOCUMENTOS, sCollectDate);
+
+                dbResponse = AdminPaqLib.dbCmdExec(connection, command);
+                if (dbResponse != 0)
+                {
+                    dbResponse = AdminPaqLib.dbCmdExec(connection, "ROLLBACK;");
+                    AdminPaqLib.dbLogOut(connection);
+                    throw new Exception("No se pudo actualizar el registro");
+                }
+                else
+                {
+                    dbResponse = AdminPaqLib.dbCmdExec(connection, "COMMIT;");
+                    if (dbResponse != 0)
+                    {
+                        dbResponse = AdminPaqLib.dbCmdExec(connection, "ROLLBACK;");
+                        AdminPaqLib.dbLogOut(connection);
+                        throw new Exception("No se pudo confirmar la actualización del registro.");
+                    }
+                }
+            }
+            else
+            {
+                AdminPaqLib.dbLogOut(connection);
+                throw new Exception("El registro del documento se encuentra bloqueado por otro usuario.");
+            }
+
+            AdminPaqLib.dbLogOut(connection);
+        }
+
         public void UpdateCollectable(Account account)
         {
             int connection, dbResponse;
@@ -58,9 +114,19 @@ namespace SeguimientoSuper.Collectable
 
             if (dbResponse == 0)
             {
-                string sCollectDate = account.CollectDate.ToString("yyyyMMdd");
-                command = string.Format("UPDATE {0}(CFECHAEX01=\"{1}\",CTEXTOEX01=\"{2}\",CTEXTOEX02=\"{3}\");", 
-                    TableNames.DOCUMENTOS, sCollectDate, account.CollectType, account.Note);
+                if (account.CollectDate.Ticks > 0)
+                {
+                    string sCollectDate = account.CollectDate.ToString("yyyyMMdd");
+                    command = string.Format("UPDATE {0}(CFECHAEX01=\"{1}\",CTEXTOEX01=\"{2}\",CTEXTOEX02=\"{3}\");",
+                        TableNames.DOCUMENTOS, sCollectDate, account.CollectType, account.Note);
+                }
+                else
+                {
+                    command = string.Format("UPDATE {0}(CTEXTOEX01=\"{1}\",CTEXTOEX02=\"{2}\");",
+                        TableNames.DOCUMENTOS, account.CollectType, account.Note);
+                }
+
+                
 
                 dbResponse = AdminPaqLib.dbCmdExec(connection, command);
                 if (dbResponse != 0)
@@ -149,7 +215,7 @@ namespace SeguimientoSuper.Collectable
                     cancelados.Add(docId);
                     dbResponse = AdminPaqLib.dbSkip(connDocos, TableNames.DOCUMENTOS, IndexNames.DOCUMENTOS_ID_DOCUMENTO01, 1);
                     continue;
-                } 
+                }
 
                 fieldResponse = AdminPaqLib.dbFieldDouble(connDocos, TableNames.DOCUMENTOS, 44, ref saldoPendiente);
 
@@ -200,7 +266,10 @@ namespace SeguimientoSuper.Collectable
 
                 Account account = new Account();
                 account.DocDate = DateTime.ParseExact(sFechaDoco, IndexNames.DATE_FORMAT_PATTERN, CultureInfo.InvariantCulture);
-                account.CollectDate = DateTime.ParseExact(sFechaCobro, IndexNames.DATE_FORMAT_PATTERN, CultureInfo.InvariantCulture);
+
+                if (!string.Empty.Equals(sFechaCobro.Trim()) && !"18991230".Equals(sFechaCobro.Trim()))
+                    account.CollectDate = DateTime.ParseExact(sFechaCobro, IndexNames.DATE_FORMAT_PATTERN, CultureInfo.InvariantCulture);
+
                 account.Balance = saldoPendiente;
                 account.DocType = concept.Name;
 

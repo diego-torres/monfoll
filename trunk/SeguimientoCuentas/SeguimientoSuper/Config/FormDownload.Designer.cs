@@ -40,6 +40,7 @@
             this.label1.Size = new System.Drawing.Size(313, 24);
             this.label1.TabIndex = 0;
             this.label1.Text = "Descargando datos de AdminPaq ...";
+            this.label1.UseWaitCursor = true;
             // 
             // FormDownload
             // 
@@ -51,6 +52,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "FormDownload";
             this.Text = "FormDownload";
+            this.UseWaitCursor = true;
             this.ResumeLayout(false);
             this.PerformLayout();
 

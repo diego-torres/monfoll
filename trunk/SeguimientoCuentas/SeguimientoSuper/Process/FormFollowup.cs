@@ -166,7 +166,11 @@ namespace SeguimientoSuper.Process
 
         private bool SaveAdminPaq()
         {
-            account.CollectDate = dateTimePickerCollectDate.Value;
+            if (dateTimePickerCollectDate.Checked)
+                account.CollectDate = dateTimePickerCollectDate.Value;
+            else
+                account.CollectDate = new DateTime(0);
+
             account.CollectType = textBoxCollectType.Text;
             account.Note = textBoxNote.Text;
             try
@@ -299,7 +303,19 @@ namespace SeguimientoSuper.Process
         {
             this.labelDocDate.Text = account.DocDate.ToShortDateString();
             this.labelDueDate.Text = account.DueDate.ToShortDateString();
-            this.dateTimePickerCollectDate.Value = account.CollectDate;
+            if (account.CollectDate.Ticks > 0)
+            {
+                this.dateTimePickerCollectDate.Value = account.CollectDate;
+                this.dateTimePickerCollectDate.Format = DateTimePickerFormat.Short;
+                dateTimePickerCollectDate.Checked = true;
+            }
+            else
+            {
+                dateTimePickerCollectDate.CustomFormat = " ";
+                dateTimePickerCollectDate.Checked = false;
+            }
+                
+                
 
             DateTime now = DateTime.Now;
             TimeSpan elapsed = now.Subtract(account.DueDate);
@@ -361,10 +377,11 @@ namespace SeguimientoSuper.Process
             dataGridViewFollowUp.Columns["id_seguimiento"].Visible = false;
             dataGridViewFollowUp.Columns["id_movimiento"].Visible = false;
             dataGridViewFollowUp.Columns["system_based"].Visible = false;
-            dataGridViewFollowUp.Columns["ts_seguimiento"].Visible = false;
+            //dataGridViewFollowUp.Columns["ts_seguimiento"].Visible = false;
 
-            FixColumn(dataGridViewFollowUp.Columns["movimiento"], 0, "Movimiento", 200);
-            FixColumn(dataGridViewFollowUp.Columns["seguimiento"], 1, "Seguimiento", 400);
+            FixColumn(dataGridViewFollowUp.Columns["movimiento"], 0, "Movimiento", 120);
+            FixColumn(dataGridViewFollowUp.Columns["seguimiento"], 1, "Seguimiento", 350);
+            FixColumn(dataGridViewFollowUp.Columns["ts_seguimiento"], 2, "Fecha", 150);
         }
 
         private void FixColumn(DataGridViewColumn column, int displayedIndex, string HeaderText, int width)
