@@ -1,0 +1,42 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="SeguimientoGerente.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="server" Type="System.String" Scope="User">
+      <Value Profile="(Default)">localhost</Value>
+    </Setting>
+    <Setting Name="port" Type="System.String" Scope="User">
+      <Value Profile="(Default)">5432</Value>
+    </Setting>
+    <Setting Name="user" Type="System.String" Scope="User">
+      <Value Profile="(Default)">monfoll</Value>
+    </Setting>
+    <Setting Name="password" Type="System.String" Scope="User">
+      <Value Profile="(Default)">monfoll</Value>
+    </Setting>
+    <Setting Name="database" Type="System.String" Scope="User">
+      <Value Profile="(Default)">monfoll</Value>
+    </Setting>
+    <Setting Name="empresa" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="fecha_inicio" Type="System.DateTime" Scope="User">
+      <Value Profile="(Default)">2013-01-01</Value>
+    </Setting>
+    <Setting Name="fecha_fin" Type="System.DateTime" Scope="User">
+      <Value Profile="(Default)">2014-04-18</Value>
+    </Setting>
+    <Setting Name="fecha_doco" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="con_saldo" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="facturas" Type="System.String" Scope="User">
+      <Value Profile="(Default)">2101,2103,10</Value>
+    </Setting>
+    <Setting Name="abonos" Type="System.String" Scope="User">
+      <Value Profile="(Default)">10,1000,1001,1002,1003</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
