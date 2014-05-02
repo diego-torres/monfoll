@@ -12,3 +12,5 @@ INSERT INTO CAT_MOVIMIENTO(descripcion, system_based) VALUES('Cancelado', true);
 INSERT INTO CAT_MOVIMIENTO(descripcion, system_based) VALUES('Re-abierto', true);
 INSERT INTO CAT_MOVIMIENTO(descripcion, system_based) VALUES('Deasignado', true);
 INSERT INTO CAT_MOVIMIENTO(descripcion, system_based) VALUES('Desescalado', true);
+INSERT INTO CAT_MOVIMIENTO(descripcion, system_based) VALUES('Incobrable', true);
+INSERT INTO CAT_MOVIMIENTO(descripcion, system_based) VALUES('Recuperada', true);
