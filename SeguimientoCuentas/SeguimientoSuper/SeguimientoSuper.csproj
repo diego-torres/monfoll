@@ -103,6 +103,7 @@
     <Compile Include="Collectable\PostgresImpl\Collector.cs" />
     <Compile Include="Collectable\PostgresImpl\CommonBase.cs" />
     <Compile Include="Collectable\PostgresImpl\Customer.cs" />
+    <Compile Include="Collectable\PostgresImpl\Enterprise.cs" />
     <Compile Include="Config\FormConfig.cs">
       <SubType>Form</SubType>
     </Compile>

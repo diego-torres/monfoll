@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using SeguimientoSuper.Collectable.PostgresImpl;
 using SeguimientoSuper.Catalogs;
 using SeguimientoSuper.Collectable;
+using SeguimientoSuper.Properties;
 
 namespace SeguimientoSuper.Process
 {
@@ -692,6 +693,7 @@ namespace SeguimientoSuper.Process
         {
             Collectable.Account account = new Collectable.Account();
             account.DocId = int.Parse(dgv.CurrentRow.Cells["id_doco"].Value.ToString());
+            account.ApId = int.Parse(dgv.CurrentRow.Cells["ap_id"].Value.ToString());
             account.DocDate = DateTime.Parse(dgv.CurrentRow.Cells["f_documento"].Value.ToString());
             account.DueDate = DateTime.Parse(dgv.CurrentRow.Cells["f_vencimiento"].Value.ToString());
             account.CollectDate = DateTime.Parse(dgv.CurrentRow.Cells["f_cobro"].Value.ToString());
@@ -710,9 +712,16 @@ namespace SeguimientoSuper.Process
             company.Name = dgv.CurrentRow.Cells["nombre_cliente"].Value.ToString();
             company.AgentCode = dgv.CurrentRow.Cells["ruta"].Value.ToString();
             company.PaymentDay = dgv.CurrentRow.Cells["dia_pago"].Value.ToString();
+            company.EnterpriseId = ConfiguredCompanyId();
             account.Company = company;
 
             return account;
+        }
+
+        private int ConfiguredCompanyId()
+        {
+            Settings set = Settings.Default;
+            return set.empresa;
         }
 
         private void FormatFollowUpGridView(DataGridView dgv)
@@ -745,6 +754,7 @@ namespace SeguimientoSuper.Process
         private void FormatAccountsGridView(DataGridView dgv)
         {
             dgv.Columns["id_cliente"].Visible = false;
+            dgv.Columns["id_doco"].Visible = false;
             
             FixColumn(dgv.Columns["dias_vencido"], 0, "Dias Vencimiento", 80);
             FixColumn(dgv.Columns["f_documento"], 1, "Fecha Documento", 80);
@@ -765,7 +775,7 @@ namespace SeguimientoSuper.Process
             FixColumn(dgv.Columns["saldo"], 13, "Saldo", 80);
             FixColumn(dgv.Columns["moneda"], 14, "Moneda", 80);
             FixColumn(dgv.Columns["observaciones"], 15, "Observaciones", 150);
-            FixColumn(dgv.Columns["id_doco"], 16, "DocId", 60);
+            FixColumn(dgv.Columns["ap_id"], 16, "DocId", 60);
 
 
             dgv.Columns["f_cobro"].DefaultCellStyle.BackColor = Color.Beige;

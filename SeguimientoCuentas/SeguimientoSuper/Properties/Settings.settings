@@ -33,7 +33,7 @@
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="facturas" Type="System.String" Scope="User">
-      <Value Profile="(Default)">2101,2103,10</Value>
+      <Value Profile="(Default)">2101,2103</Value>
     </Setting>
     <Setting Name="abonos" Type="System.String" Scope="User">
       <Value Profile="(Default)">10,1000,1001,1002,1003</Value>

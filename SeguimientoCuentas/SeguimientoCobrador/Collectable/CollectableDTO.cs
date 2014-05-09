@@ -32,17 +32,13 @@ namespace SeguimientoCobrador.Collectable
         public const int RUTA_EMPRESA = 3;
 
         // FIELD PROPERTIES FOR OBJECT
-        private long id;
+        private int id;
         private string nombre, ruta, alias, resultadoSemanal, tendencia;
 
-        public long Id { get { return id; } set { id = value; } }
+        public int Id { get { return id; } set { id = value; } }
         public string Nombre { get { return nombre; } set { nombre = value; } }
         public string Ruta { get { return ruta; } set { ruta = value; } }
-        public string Alias { get { return alias; } set { alias = value; } }
-        
-        public string ResultadoSemanal { get { return resultadoSemanal; } set { resultadoSemanal = value; } }
-        public string Tendencia { get { return tendencia; } set { tendencia = value; } }
-
+       
         public int CompareTo(Empresa obj)
         {
             if (this.id < obj.id)

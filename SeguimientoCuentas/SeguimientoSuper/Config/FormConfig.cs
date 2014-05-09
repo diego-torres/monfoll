@@ -126,7 +126,7 @@ namespace SeguimientoSuper.Config
             
 
             List<Collectable.Account> adminPaqAccounts = api.DownloadCollectables();
-            AccountInterface.UploadAccounts(adminPaqAccounts, api.Cancelados);
+            AccountInterface.UploadAccounts(adminPaqAccounts, api.Cancelados, api.Conceptos);
             parent.CloseDownload();
             this.Close();
         }
@@ -136,12 +136,12 @@ namespace SeguimientoSuper.Config
             switch (tabControl1.SelectedIndex)
             {
                 case 0:
-                    if (!ConfirmNSaveDBConfig())
-                        tabControl1.SelectedIndex = 1;
-                    break;
-                case 1:
                     if (!ConfirmNSaveAdminPaqConfig())
                         tabControl1.SelectedIndex = 0;
+                    break;
+                case 1:
+                    if (!ConfirmNSaveDBConfig())
+                        tabControl1.SelectedIndex = 1;
                     break;
             }
         }
@@ -195,6 +195,8 @@ namespace SeguimientoSuper.Config
 
         private bool ConfirmNSaveDBConfig()
         {
+            if (!ValidateDBConfig()) return false;
+
             if (!dbConfigDirty) return true;
 
             DialogResult confirm = MessageBox.Show("¿Desea guardar los cambios realizados a la configuración de base de datos de cuentas por cobrar?",

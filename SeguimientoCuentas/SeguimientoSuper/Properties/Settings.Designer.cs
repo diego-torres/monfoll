@@ -145,7 +145,7 @@ namespace SeguimientoSuper.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("2101,2103,10")]
+        [global::System.Configuration.DefaultSettingValueAttribute("2101,2103")]
         public string facturas {
             get {
                 return ((string)(this["facturas"]));

@@ -10,6 +10,8 @@ using System.Windows.Forms;
 using SeguimientoCobrador.Collectable;
 using SeguimientoCobrador.Config;
 using SeguimientoCobrador.Process;
+using SeguimientoCobrador.Collectable.PostgresImpl;
+using CommonAdminPaq;
 
 namespace SeguimientoCobrador
 {
@@ -36,7 +38,7 @@ namespace SeguimientoCobrador
             }
         }
 
-        public void ShowFollowUp(Account account)
+        public void ShowFollowUp(SeguimientoCobrador.Collectable.Account account)
         {
             FormFollowup currentFollowing;
             bool following = followups.TryGetValue(account.DocId, out currentFollowing); 

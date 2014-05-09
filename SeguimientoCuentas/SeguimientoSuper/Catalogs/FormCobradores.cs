@@ -70,6 +70,12 @@ namespace SeguimientoSuper.Catalogs
             collectorDirty = true;
         }
 
+        private int ConfiguredCompanyId()
+        {
+            Settings set = Settings.Default;
+            return set.empresa;
+        }
+
         private void dataGridViewAssignedDocuments_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             if (dataGridViewAssignedDocuments.CurrentRow == null) return;
@@ -100,6 +106,7 @@ namespace SeguimientoSuper.Catalogs
             company.Name = dataGridViewAssignedDocuments.CurrentRow.Cells["nombre_cliente"].Value.ToString();
             company.AgentCode = dataGridViewAssignedDocuments.CurrentRow.Cells["ruta"].Value.ToString();
             company.PaymentDay = dataGridViewAssignedDocuments.CurrentRow.Cells["dia_pago"].Value.ToString();
+            company.EnterpriseId = ConfiguredCompanyId();
             account.Company = company;
 
             int accountId = int.Parse(dataGridViewAssignedDocuments.CurrentRow.Cells["id_doco"].Value.ToString());
