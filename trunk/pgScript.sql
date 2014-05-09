@@ -1,10 +1,32 @@
+DROP TABLE IF EXISTS cat_empresa CASCADE;
+CREATE TABLE IF NOT EXISTS cat_empresa
+(
+	id_empresa INTEGER NOT NULL PRIMARY KEY,
+	nombre_empresa VARCHAR(150),
+	ruta VARCHAR(253)
+);
+
+DROP TABLE IF EXISTS cat_concepto;
+CREATE TABLE IF NOT EXISTS cat_concepto
+(
+	id_concepto SERIAL PRIMARY KEY,
+	ap_id INTEGER NOT NULL,
+	id_empresa INTEGER NOT NULL REFERENCES cat_empresa(id_empresa) ON DELETE CASCADE,
+	codigo_concepto VARCHAR(50),
+	nombre_concepto VARCHAR(150),
+	razon VARCHAR(50)
+);
+
 DROP TABLE IF EXISTS cat_cliente CASCADE;
 CREATE TABLE IF NOT EXISTS cat_cliente (
-	id_cliente INTEGER NOT NULL PRIMARY KEY,
+	id_cliente SERIAL PRIMARY KEY,
+	ap_id INTEGER NOT NULL,
+	id_empresa INTEGER NOT NULL REFERENCES cat_empresa(id_empresa) ON DELETE CASCADE,
 	cd_cliente VARCHAR(6),
 	nombre_cliente VARCHAR(150),
 	ruta VARCHAR(20),
-	dia_pago VARCHAR(50)
+	dia_pago VARCHAR(50),
+	es_local BOOLEAN DEFAULT TRUE
 );
 
 GRANT ALL ON cat_cliente TO monfoll;
@@ -21,7 +43,9 @@ GRANT ALL ON log_cliente_id_log_cliente_seq TO monfoll;
 
 DROP TABLE IF EXISTS ctrl_cuenta CASCADE;
 CREATE TABLE IF NOT EXISTS ctrl_cuenta (
-	id_doco INTEGER NOT NULL PRIMARY KEY,
+	id_doco SERIAL PRIMARY KEY,
+	ap_id INTEGER NOT NULL,
+	enterprise_id INTEGER NOT NULL,
 	f_documento DATE,
 	f_vencimiento DATE,
 	f_cobro DATE,

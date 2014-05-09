@@ -13,7 +13,8 @@ namespace SeguimientoSuper.Collectable.PostgresImpl
         {
             DataSet ds = new DataSet();
             NpgsqlDataAdapter da;
-            string sqlString = "SELECT ID_CLIENTE, CD_CLIENTE, NOMBRE_CLIENTE, RUTA, DIA_PAGO " +
+            string sqlString = "SELECT ID_CLIENTE, CD_CLIENTE, NOMBRE_CLIENTE, RUTA, DIA_PAGO, " +
+                "CASE WHEN cat_cliente.es_local THEN 'Local' ELSE 'Foráneo' END AS area " + 
                 "FROM CAT_CLIENTE;";
 
             if (conn == null || conn.State != ConnectionState.Open)

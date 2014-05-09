@@ -11,6 +11,8 @@ using SeguimientoSuper.Catalogs;
 using SeguimientoSuper.Collectable;
 using SeguimientoSuper.Config;
 using SeguimientoSuper.Process;
+using SeguimientoSuper.Collectable.PostgresImpl;
+using CommonAdminPaq;
 
 namespace SeguimientoSuper
 {
@@ -75,7 +77,7 @@ namespace SeguimientoSuper
                 fClientes.RefreshAccounts();
         }
 
-        public void ShowFollowUp(Account account)
+        public void ShowFollowUp(SeguimientoSuper.Collectable.Account account)
         {
             FormFollowup currentFollowing;
             bool following = followups.TryGetValue(account.DocId, out currentFollowing); 
@@ -140,6 +142,18 @@ namespace SeguimientoSuper
         private void FormMain_Load(object sender, EventArgs e)
         {
             api = new AdminPaqImp();
+            Enterprise dbEnterprise = new Enterprise();
+            foreach (Empresa enterprise in api.Empresas)
+            {
+                try 
+                {
+                    dbEnterprise.SaveEnterprise(enterprise);
+                }
+                catch (Exception ex) 
+                {
+                    ErrLogger.Log(ex.Message);
+                }
+            }
         }
 
         private void acercaDeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -169,7 +183,7 @@ namespace SeguimientoSuper
             ShowDownload();
             List<Collectable.Account> adminPaqAccounts = api.DownloadCollectables();
             Collectable.PostgresImpl.Account AccountInterface = new Collectable.PostgresImpl.Account();
-            AccountInterface.UploadAccounts(adminPaqAccounts, api.Cancelados);
+            AccountInterface.UploadAccounts(adminPaqAccounts, api.Cancelados, api.Conceptos);
             CloseDownload();
         }
 

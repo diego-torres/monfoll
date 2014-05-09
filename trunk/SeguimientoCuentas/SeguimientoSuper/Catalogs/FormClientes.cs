@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using SeguimientoSuper.Collectable.PostgresImpl;
 using SeguimientoSuper.Collectable;
 using Microsoft.Reporting.WinForms;
+using SeguimientoSuper.Properties;
 
 namespace SeguimientoSuper.Catalogs
 {
@@ -47,6 +48,12 @@ namespace SeguimientoSuper.Catalogs
             RefreshNotesGrid();
         }
 
+        private int ConfiguredCompanyId()
+        {
+            Settings set = Settings.Default;
+            return set.empresa;
+        }
+
         private void dataGridViewAccounts_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             if (dataGridViewAccounts.CurrentRow == null) return;
@@ -58,7 +65,7 @@ namespace SeguimientoSuper.Catalogs
                 "WHERE CTRL_CUENTA.ID_CLIENTE = " + customerId.ToString() + ";";*/
             
             Collectable.Account account = new Collectable.Account();
-            account.DocId = int.Parse(dataGridViewAccounts.CurrentRow.Cells["id_doco"].Value.ToString());
+            account.ApId = int.Parse(dataGridViewAccounts.CurrentRow.Cells["id_doco"].Value.ToString());
             account.DocDate = DateTime.Parse(dataGridViewAccounts.CurrentRow.Cells["f_documento"].Value.ToString());
             account.DueDate = DateTime.Parse(dataGridViewAccounts.CurrentRow.Cells["f_vencimiento"].Value.ToString());
             account.CollectDate = DateTime.Parse(dataGridViewAccounts.CurrentRow.Cells["f_cobro"].Value.ToString());
@@ -77,6 +84,7 @@ namespace SeguimientoSuper.Catalogs
             company.Name = dataGridViewAccounts.CurrentRow.Cells["nombre_cliente"].Value.ToString();
             company.AgentCode = dataGridViewAccounts.CurrentRow.Cells["ruta"].Value.ToString();
             company.PaymentDay = dataGridViewAccounts.CurrentRow.Cells["dia_pago"].Value.ToString();
+            company.EnterpriseId = ConfiguredCompanyId();
             account.Company = company;
 
             foreach (DataGridViewRow paymentRow in dataGridViewPayments.Rows)
