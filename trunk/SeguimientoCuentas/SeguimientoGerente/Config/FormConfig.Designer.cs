@@ -93,8 +93,8 @@
             // 
             // tabControl1
             // 
-            this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Margin = new System.Windows.Forms.Padding(4);
@@ -250,7 +250,7 @@
             this.radioButtonAllDocuments.AutoSize = true;
             this.radioButtonAllDocuments.Location = new System.Drawing.Point(143, 21);
             this.radioButtonAllDocuments.Name = "radioButtonAllDocuments";
-            this.radioButtonAllDocuments.Size = new System.Drawing.Size(55, 17);
+            this.radioButtonAllDocuments.Size = new System.Drawing.Size(66, 20);
             this.radioButtonAllDocuments.TabIndex = 1;
             this.radioButtonAllDocuments.Text = "Todos";
             this.radioButtonAllDocuments.UseVisualStyleBackColor = true;
@@ -263,7 +263,7 @@
             this.radioButtonWithAmount.Location = new System.Drawing.Point(14, 21);
             this.radioButtonWithAmount.MinimumSize = new System.Drawing.Size(100, 0);
             this.radioButtonWithAmount.Name = "radioButtonWithAmount";
-            this.radioButtonWithAmount.Size = new System.Drawing.Size(100, 17);
+            this.radioButtonWithAmount.Size = new System.Drawing.Size(100, 20);
             this.radioButtonWithAmount.TabIndex = 0;
             this.radioButtonWithAmount.TabStop = true;
             this.radioButtonWithAmount.Text = "Con Saldo";
@@ -291,7 +291,7 @@
             this.radioButtonUseDocDate.Checked = true;
             this.radioButtonUseDocDate.Location = new System.Drawing.Point(153, 106);
             this.radioButtonUseDocDate.Name = "radioButtonUseDocDate";
-            this.radioButtonUseDocDate.Size = new System.Drawing.Size(130, 17);
+            this.radioButtonUseDocDate.Size = new System.Drawing.Size(158, 20);
             this.radioButtonUseDocDate.TabIndex = 5;
             this.radioButtonUseDocDate.TabStop = true;
             this.radioButtonUseDocDate.Text = "Fecha del Documento";
@@ -304,7 +304,7 @@
             this.radioButtonUseCollectDate.Location = new System.Drawing.Point(6, 106);
             this.radioButtonUseCollectDate.MinimumSize = new System.Drawing.Size(100, 0);
             this.radioButtonUseCollectDate.Name = "radioButtonUseCollectDate";
-            this.radioButtonUseCollectDate.Size = new System.Drawing.Size(101, 17);
+            this.radioButtonUseCollectDate.Size = new System.Drawing.Size(123, 20);
             this.radioButtonUseCollectDate.TabIndex = 4;
             this.radioButtonUseCollectDate.Text = "Fecha de Cobro";
             this.radioButtonUseCollectDate.UseVisualStyleBackColor = true;

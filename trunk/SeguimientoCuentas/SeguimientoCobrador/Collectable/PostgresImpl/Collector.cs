@@ -67,7 +67,8 @@ namespace SeguimientoCobrador.Collectable.PostgresImpl
             DataSet ds = new DataSet();
             NpgsqlDataAdapter da;
             string sqlString = "SELECT ctrl_cuenta.id_doco, f_documento, f_vencimiento, f_cobro, ctrl_cuenta.id_cliente, cd_cliente, nombre_cliente, ruta, dia_pago, " +
-                "serie_doco, folio_doco, tipo_documento, tipo_cobro, facturado, saldo, moneda, observaciones, CURRENT_DATE - f_vencimiento AS dias_vencido " +
+                "CASE WHEN cat_cliente.es_local THEN 'Local' ELSE 'Foráneo' END AS area, " +
+                "serie_doco, folio_doco, tipo_documento, tipo_cobro, facturado, saldo, moneda, observaciones " +
                 "FROM ctrl_cuenta INNER JOIN cat_cliente ON ctrl_cuenta.id_cliente = cat_cliente.id_cliente " +
                 "INNER JOIN ctrl_asignacion ON ctrl_asignacion.id_doco = ctrl_cuenta.id_doco " +
                 "WHERE ctrl_asignacion.id_cobrador = " + collectorId.ToString() + " " +
@@ -81,6 +82,17 @@ namespace SeguimientoCobrador.Collectable.PostgresImpl
             ds.Reset();
             da.Fill(ds);
             conn.Close();
+
+            ds.Tables[0].Columns.Add("dias_vencido", typeof(int));
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                DateTime now = DateTime.Now;
+                DateTime dueDate = DateTime.Parse(row["f_vencimiento"].ToString());
+                TimeSpan elapsed = now.Subtract(dueDate);
+
+                row["dias_vencido"] = int.Parse(elapsed.TotalDays.ToString("0"));
+            }
+
             return ds.Tables[0];
         }
 

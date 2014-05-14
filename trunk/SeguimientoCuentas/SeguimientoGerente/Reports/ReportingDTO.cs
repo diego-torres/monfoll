@@ -11,5 +11,8 @@ namespace SeguimientoGerente.Reports
         public string Name { get { return this.Company.Name; } set { this.Company.Name = value; } }
         public string PaymentDay { get { return this.Company.PaymentDay; } set { this.Company.PaymentDay = value; } }
         public string AgentCode { get { return this.Company.AgentCode; } set { this.Company.AgentCode = value; } }
+
+        public double Dolares { get; set; }
+        public double TotalDolares { get; set; }
     }
 }

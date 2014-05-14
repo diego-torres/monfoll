@@ -32,7 +32,7 @@ namespace SeguimientoSuper.Config
         {
             bindingSourceEmpresas.DataSource = api.Empresas;
             comboBoxEmpresas.DataSource = bindingSourceEmpresas;
-            
+
             comboBoxEmpresas.DisplayMember = "Nombre";
             comboBoxEmpresas.ValueMember = "Id";
 
@@ -75,7 +75,7 @@ namespace SeguimientoSuper.Config
         {
             if (listBoxConceptosFactura.SelectedItems.Count == 0) return;
 
-            for (int i = listBoxConceptosFactura.SelectedIndices.Count - 1; i >= 0; i-- )
+            for (int i = listBoxConceptosFactura.SelectedIndices.Count - 1; i >= 0; i--)
             {
                 listBoxConceptosFactura.Items.RemoveAt(listBoxConceptosFactura.SelectedIndices[i]);
             }
@@ -113,7 +113,7 @@ namespace SeguimientoSuper.Config
 
         private void toolStripButtonDownload_Click(object sender, EventArgs e)
         {
-            if (!ConfirmNSaveAdminPaqConfig()) 
+            if (!ConfirmNSaveAdminPaqConfig())
             {
                 MessageBox.Show("Operación de descarga cancelada por el usuario", "Descarga cancelada", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
@@ -123,7 +123,7 @@ namespace SeguimientoSuper.Config
             dbConfigDirty = false;
             FormMain parent = (FormMain)MdiParent;
             parent.ShowDownload();
-            
+
 
             List<Collectable.Account> adminPaqAccounts = api.DownloadCollectables();
             AccountInterface.UploadAccounts(adminPaqAccounts, api.Cancelados, api.Conceptos);
@@ -163,7 +163,7 @@ namespace SeguimientoSuper.Config
 
         private void toolStripButtonCheckDB_Click(object sender, EventArgs e)
         {
-            if(ValidateDBConfig())
+            if (ValidateDBConfig())
                 MessageBox.Show("La configuración de la base de datos es válida", "Conexión exitosa", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
         }
 
@@ -178,10 +178,10 @@ namespace SeguimientoSuper.Config
         {
             if (!adminPaqConfigDirty) return true;
 
-            DialogResult confirm = MessageBox.Show("¿Desea guardar los cambios realizados a la configuración de descarga de cuentas de AdminPaq?", 
+            DialogResult confirm = MessageBox.Show("¿Desea guardar los cambios realizados a la configuración de descarga de cuentas de AdminPaq?",
                 "¿Guardar cambios?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
 
-            switch(confirm)
+            switch (confirm)
             {
                 case DialogResult.Yes:
                     SaveAdminPaqConfig();

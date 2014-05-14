@@ -31,7 +31,7 @@ namespace SeguimientoSuper.Collectable
         public int IdEmpresa { get; set; }
         public string Codigo { get; set; }
         public string Nombre { get; set; }
-        public string  Razon { get; set; }
+        public string Razon { get; set; }
     }
 
     public class Empresa : IComparable<Empresa>

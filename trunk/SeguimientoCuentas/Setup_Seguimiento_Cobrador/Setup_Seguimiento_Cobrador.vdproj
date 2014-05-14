@@ -63,6 +63,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_AF082C7A6D2B434987C4815C87497266"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_CA6ED95C973AE09F9A2BD6EA46474B00"
         "OwnerKey" = "8:_CBD746E024C846E983358CB540402D8F"
         "MsmSig" = "8:_UNDEFINED"
@@ -94,13 +100,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_FF373F1B58C739A24EC041E7AD71C1B6"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_CBD746E024C846E983358CB540402D8F"
+        "OwnerKey" = "8:_606C6B608062EC2E579DE8F168AB403C"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -112,7 +112,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_606C6B608062EC2E579DE8F168AB403C"
+        "OwnerKey" = "8:_CBD746E024C846E983358CB540402D8F"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -139,6 +139,12 @@
         "OwnerKey" = "8:_CA6ED95C973AE09F9A2BD6EA46474B00"
         "MsmSig" = "8:_UNDEFINED"
         }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_FF373F1B58C739A24EC041E7AD71C1B6"
+        "MsmSig" = "8:_UNDEFINED"
+        }
     }
     "Configurations"
     {
@@ -157,6 +163,14 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+            }
         }
         "Release"
         {
@@ -173,6 +187,14 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+            }
         }
     }
     "Deployable"
@@ -357,6 +379,26 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_AF082C7A6D2B434987C4815C87497266"
+            {
+            "SourcePath" = "8:..\\SeguimientoCobrador\\Reports\\ReportCustomerAccounts.rdlc"
+            "TargetName" = "8:ReportCustomerAccounts.rdlc"
+            "Tag" = "8:"
+            "Folder" = "8:_1CFB09DE725F40AB9AC16F6B28B81A43"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_CA6ED95C973AE09F9A2BD6EA46474B00"
             {
             "AssemblyRegister" = "3:1"
@@ -466,6 +508,17 @@
             "Property" = "8:TARGETDIR"
                 "Folders"
                 {
+                    "{9EF0B969-E518-4E46-987F-47570745A589}:_1CFB09DE725F40AB9AC16F6B28B81A43"
+                    {
+                    "Name" = "8:Reports"
+                    "AlwaysCreate" = "11:FALSE"
+                    "Condition" = "8:"
+                    "Transitive" = "11:FALSE"
+                    "Property" = "8:_DAD09F0402374A0C832033C329CC7A0F"
+                        "Folders"
+                        {
+                        }
+                    }
                 }
             }
             "{1525181F-901A-416C-8A58-119130FE478E}:_E9BF252B329B4CA1A9F9AF1C78F5D9B7"
@@ -495,15 +548,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Seguimiento Cobrador"
-        "ProductCode" = "8:{D05172D7-1C78-4BD9-A7A4-03D399AD240C}"
-        "PackageCode" = "8:{175C8D5B-08CC-41DA-A506-E8F69D28442A}"
+        "ProductCode" = "8:{53568BEF-D227-46CD-BEBA-431D975BB156}"
+        "PackageCode" = "8:{99541E23-53AA-4EBE-8E8E-F13DAB49E3EF}"
         "UpgradeCode" = "8:{623FCAD3-E1F4-4931-9B47-D7B15E642E9E}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.0"
+        "ProductVersion" = "8:1.2.0"
         "Manufacturer" = "8:Inspiracode"
         "ARPHELPTELEPHONE" = "8:656 642-3887"
         "ARPHELPLINK" = "8:"
@@ -618,7 +671,7 @@
         {
             "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_D63EDB71711848D583FC69A80AE17493"
             {
-            "Name" = "8:Shortcut to Primary output from SeguimientoCobrador (Active)"
+            "Name" = "8:Seguimiento Cobrador"
             "Arguments" = "8:"
             "Description" = "8:"
             "ShowCmd" = "3:1"
@@ -632,7 +685,7 @@
             }
             "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_F07FB2226A7B442C81EB177AE9B0863A"
             {
-            "Name" = "8:Shortcut to Primary output from SeguimientoCobrador (Active)"
+            "Name" = "8:Seguimiento Cobrador"
             "Arguments" = "8:"
             "Description" = "8:"
             "ShowCmd" = "3:1"
@@ -1045,7 +1098,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_CBD746E024C846E983358CB540402D8F"
             {
-            "SourcePath" = "8:..\\SeguimientoCobrador\\obj\\x86\\Debug\\SeguimientoCobrador.exe"
+            "SourcePath" = "8:..\\SeguimientoCobrador\\obj\\x86\\Release\\SeguimientoCobrador.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_C4B8D213C94D4A44A3E2D0D352F8DEF9"

@@ -32,7 +32,7 @@ namespace SeguimientoGerente.Config
         {
             bindingSourceEmpresas.DataSource = api.Empresas;
             comboBoxEmpresas.DataSource = bindingSourceEmpresas;
-            
+
             comboBoxEmpresas.DisplayMember = "Nombre";
             comboBoxEmpresas.ValueMember = "Id";
 
@@ -75,7 +75,7 @@ namespace SeguimientoGerente.Config
         {
             if (listBoxConceptosFactura.SelectedItems.Count == 0) return;
 
-            for (int i = listBoxConceptosFactura.SelectedIndices.Count - 1; i >= 0; i-- )
+            for (int i = listBoxConceptosFactura.SelectedIndices.Count - 1; i >= 0; i--)
             {
                 listBoxConceptosFactura.Items.RemoveAt(listBoxConceptosFactura.SelectedIndices[i]);
             }
@@ -113,7 +113,7 @@ namespace SeguimientoGerente.Config
 
         private void toolStripButtonDownload_Click(object sender, EventArgs e)
         {
-            if (!ConfirmNSaveAdminPaqConfig()) 
+            if (!ConfirmNSaveAdminPaqConfig())
             {
                 MessageBox.Show("Operación de descarga cancelada por el usuario", "Descarga cancelada", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
@@ -123,10 +123,10 @@ namespace SeguimientoGerente.Config
             dbConfigDirty = false;
             FormMain parent = (FormMain)MdiParent;
             parent.ShowDownload();
-            
+
 
             List<Collectable.Account> adminPaqAccounts = api.DownloadCollectables();
-            AccountInterface.UploadAccounts(adminPaqAccounts, api.Cancelados);
+            AccountInterface.UploadAccounts(adminPaqAccounts, api.Cancelados, api.Conceptos);
             parent.CloseDownload();
             this.Close();
         }
@@ -136,12 +136,12 @@ namespace SeguimientoGerente.Config
             switch (tabControl1.SelectedIndex)
             {
                 case 0:
-                    if (!ConfirmNSaveDBConfig())
-                        tabControl1.SelectedIndex = 1;
-                    break;
-                case 1:
                     if (!ConfirmNSaveAdminPaqConfig())
                         tabControl1.SelectedIndex = 0;
+                    break;
+                case 1:
+                    if (!ConfirmNSaveDBConfig())
+                        tabControl1.SelectedIndex = 1;
                     break;
             }
         }
@@ -163,7 +163,7 @@ namespace SeguimientoGerente.Config
 
         private void toolStripButtonCheckDB_Click(object sender, EventArgs e)
         {
-            if(ValidateDBConfig())
+            if (ValidateDBConfig())
                 MessageBox.Show("La configuración de la base de datos es válida", "Conexión exitosa", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
         }
 
@@ -178,10 +178,10 @@ namespace SeguimientoGerente.Config
         {
             if (!adminPaqConfigDirty) return true;
 
-            DialogResult confirm = MessageBox.Show("¿Desea guardar los cambios realizados a la configuración de descarga de cuentas de AdminPaq?", 
+            DialogResult confirm = MessageBox.Show("¿Desea guardar los cambios realizados a la configuración de descarga de cuentas de AdminPaq?",
                 "¿Guardar cambios?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
 
-            switch(confirm)
+            switch (confirm)
             {
                 case DialogResult.Yes:
                     SaveAdminPaqConfig();
@@ -195,6 +195,8 @@ namespace SeguimientoGerente.Config
 
         private bool ConfirmNSaveDBConfig()
         {
+            if (!ValidateDBConfig()) return false;
+
             if (!dbConfigDirty) return true;
 
             DialogResult confirm = MessageBox.Show("¿Desea guardar los cambios realizados a la configuración de base de datos de cuentas por cobrar?",

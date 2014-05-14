@@ -13,9 +13,11 @@ namespace SeguimientoCobrador.Collectable
         private AdminPaqLib lib;
         private IList<Empresa> empresas = new List<Empresa>();
         private List<int> cancelados = new List<int>();
+        private Dictionary<int, Concepto> conceptos = new Dictionary<int, Concepto>();
 
         public IList<Empresa> Empresas { get { return empresas; } set { empresas = value; } }
         public List<int> Cancelados { get { return cancelados; } }
+        public Dictionary<int, Concepto> Conceptos { get { return conceptos; } }
 
         public AdminPaqImp()
         {
@@ -109,7 +111,7 @@ namespace SeguimientoCobrador.Collectable
                 return;
             }
 
-            key = account.DocId.ToString().PadLeft(11);
+            key = account.ApId.ToString().PadLeft(11);
             dbResponse = AdminPaqLib.dbGet(connection, TableNames.DOCUMENTOS, IndexNames.PRIMARY_KEY, key);
 
             if (dbResponse == 0)
@@ -126,7 +128,7 @@ namespace SeguimientoCobrador.Collectable
                         TableNames.DOCUMENTOS, account.CollectType, account.Note);
                 }
 
-                
+
 
                 dbResponse = AdminPaqLib.dbCmdExec(connection, command);
                 if (dbResponse != 0)
@@ -135,7 +137,7 @@ namespace SeguimientoCobrador.Collectable
                     AdminPaqLib.dbLogOut(connection);
                     throw new Exception("No se pudo actualizar el registro");
                 }
-                else 
+                else
                 {
                     dbResponse = AdminPaqLib.dbCmdExec(connection, "COMMIT;");
                     if (dbResponse != 0)
@@ -146,17 +148,17 @@ namespace SeguimientoCobrador.Collectable
                     }
                 }
             }
-            else 
+            else
             {
                 AdminPaqLib.dbLogOut(connection);
                 throw new Exception("El registro del documento se encuentra bloqueado por otro usuario.");
             }
 
             AdminPaqLib.dbLogOut(connection);
-            
+
         }
 
-        private void FillPayments(Account account, string filePath, string[] conceptosAbono) 
+        private void FillPayments(Account account, string filePath, string[] conceptosAbono)
         {
             int connPayments, dbResponse, fqResponse;
             string key;
@@ -171,12 +173,12 @@ namespace SeguimientoCobrador.Collectable
                 return;
             }
 
-            key = account.DocId.ToString().PadLeft(11);
+            key = account.ApId.ToString().PadLeft(11);
             dbResponse = AdminPaqLib.dbGetNoLock(connPayments, TableNames.ABONOS_CARGOS, IndexNames.ABONOS_DOCUMENTOS, key);
             while (dbResponse == 0)
             {
                 fqResponse = AdminPaqLib.dbFieldLong(connPayments, TableNames.ABONOS_CARGOS, 2, ref docId);
-                if (docId != account.DocId) break;
+                if (docId != account.ApId) break;
 
                 fqResponse = AdminPaqLib.dbFieldLong(connPayments, TableNames.ABONOS_CARGOS, 1, ref docId);
                 fqResponse = AdminPaqLib.dbFieldDouble(connPayments, TableNames.ABONOS_CARGOS, 3, ref amount);
@@ -215,7 +217,7 @@ namespace SeguimientoCobrador.Collectable
             key = docId.ToString().PadLeft(11);
             dbResponse = AdminPaqLib.dbGetNoLock(connPayment, TableNames.DOCUMENTOS, IndexNames.PRIMARY_KEY, key);
 
-            if (dbResponse == 0) 
+            if (dbResponse == 0)
             {
                 fqResponse = AdminPaqLib.dbFieldLong(connPayment, TableNames.DOCUMENTOS, 3, ref idPaymentConcept);
                 DocumentConcept concept = GetDocumentConcept(idPaymentConcept, filePath);
@@ -224,6 +226,18 @@ namespace SeguimientoCobrador.Collectable
 
                 isAbono = conceptosAbono.Contains(concept.Code);
                 if (!isAbono) return;
+
+                if (!conceptos.ContainsKey(idPaymentConcept))
+                {
+                    Concepto concepto = new Concepto();
+                    concepto.APId = idPaymentConcept;
+                    concepto.Codigo = concept.Code;
+                    concepto.Nombre = concept.Name;
+                    concepto.IdEmpresa = ConfiguredCompany().Id;
+                    concepto.Razon = "PAGO";
+
+                    conceptos.Add(idPaymentConcept, concepto);
+                }
 
                 Payment payment = new Payment();
                 payment.Concept = concept.Name;
@@ -237,7 +251,7 @@ namespace SeguimientoCobrador.Collectable
                 fqResponse = AdminPaqLib.dbFieldLong(connPayment, TableNames.DOCUMENTOS, 5, ref folio);
                 payment.Folio = folio;
 
-                fqResponse = AdminPaqLib.dbFieldChar(connPayment, TableNames.DOCUMENTOS, 56, sbDepositDate, 9);
+                fqResponse = AdminPaqLib.dbFieldChar(connPayment, TableNames.DOCUMENTOS, 6, sbDepositDate, 9);
                 sDepositDate = sbDepositDate.ToString().Substring(0, 8).Trim();
                 if (!string.Empty.Equals(sDepositDate))
                     payment.DepositDate = DateTime.ParseExact(sDepositDate, IndexNames.DATE_FORMAT_PATTERN, CultureInfo.InvariantCulture);
@@ -252,7 +266,7 @@ namespace SeguimientoCobrador.Collectable
 
         private void FillCompany(Company company, string filePath)
         {
-            int connCompany, dbResponse, fqResponse, agentId=0;
+            int connCompany, dbResponse, fqResponse, agentId = 0, ubicacion = 0;
             StringBuilder sbCompanyCode = new StringBuilder(31);
             StringBuilder sbPaymentDay = new StringBuilder(51);
             string key;
@@ -264,7 +278,7 @@ namespace SeguimientoCobrador.Collectable
                 return;
             }
 
-            key = company.Id.ToString().PadLeft(11);
+            key = company.ApId.ToString().PadLeft(11);
             dbResponse = AdminPaqLib.dbGetNoLock(connCompany, TableNames.CLIENTES_PROVEEDORES, IndexNames.PRIMARY_KEY, key);
 
             if (dbResponse == 0)
@@ -275,6 +289,10 @@ namespace SeguimientoCobrador.Collectable
                 company.PaymentDay = sbPaymentDay.ToString().Substring(0, 50).Trim();
                 fqResponse = AdminPaqLib.dbFieldLong(connCompany, TableNames.CLIENTES_PROVEEDORES, 37, ref agentId);
                 company.AgentCode = AgentCode(agentId, filePath);
+                fqResponse = AdminPaqLib.dbFieldLong(connCompany, TableNames.CLIENTES_PROVEEDORES, 14, ref ubicacion);
+
+                /*FORANEO=2/LOCAL=1*/
+                company.EsLocal = ubicacion == 1;
             }
 
             AdminPaqLib.dbLogOut(connCompany);
@@ -311,7 +329,7 @@ namespace SeguimientoCobrador.Collectable
         {
             int connCurrency, dbResponse, fqResponse;
             StringBuilder sbCurrencyName = new StringBuilder(61);
-            string key, sCurrencyName=String.Empty;
+            string key, sCurrencyName = String.Empty;
 
             connCurrency = AdminPaqLib.dbLogIn("", filePath);
             if (connCurrency == 0)
@@ -350,7 +368,7 @@ namespace SeguimientoCobrador.Collectable
             key = docId.ToString().PadLeft(11);
             dbResponse = AdminPaqLib.dbGetNoLock(connDocos, TableNames.CONCEPTOS_DOCUMENTOS, IndexNames.PRIMARY_KEY, key);
 
-            if (dbResponse == 0) 
+            if (dbResponse == 0)
             {
                 fqResponse = AdminPaqLib.dbFieldChar(connDocos, TableNames.CONCEPTOS_DOCUMENTOS, 2, sConceptCode, 31);
                 conceptCode = sConceptCode.ToString().Substring(0, 30).Trim();

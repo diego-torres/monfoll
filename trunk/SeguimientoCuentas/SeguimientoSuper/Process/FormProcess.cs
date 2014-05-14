@@ -19,7 +19,7 @@ namespace SeguimientoSuper.Process
 
         private SeguimientoSuper.Collectable.PostgresImpl.Account dbAccount = new SeguimientoSuper.Collectable.PostgresImpl.Account();
 
-        private DataTable dtUnassigned, dtAssigned, dtEscalated, dtClosed, dtCancelled;
+        private DataTable dtUnassigned, dtAssigned, dtEscalated, dtClosed, dtCancelled, dtUncollectable;
 
         public AdminPaqImp API { get { return api; } set { api = value; } }
 
@@ -51,6 +51,11 @@ namespace SeguimientoSuper.Process
             dtCancelled = dbAccount.Cancelled();
             dataGridViewCancelledAccounts.DataSource = dtCancelled;
             FormatAccountsGridView(dataGridViewCancelledAccounts);
+
+            dtUncollectable = dbAccount.Uncollectable();
+            dataGridViewUncollectableAccounts.DataSource = dtUncollectable;
+            FormatAccountsGridView(dataGridViewUncollectableAccounts);
+
         }
 
         # region ESCALATORS
@@ -100,6 +105,12 @@ namespace SeguimientoSuper.Process
         #endregion
 
         # region PRINT_BUTTONS
+
+
+        private void toolStripButtonPrintUncollectable_Click(object sender, EventArgs e)
+        {
+            ShowReportFromGrid(dataGridViewUncollectableAccounts);
+        }
 
         private void toolStripButtonPrintCancelled_Click(object sender, EventArgs e)
         {
@@ -170,6 +181,37 @@ namespace SeguimientoSuper.Process
 
         # region CLOSERS
 
+
+        private void toolStripButtonUncollectable_Click(object sender, EventArgs e)
+        {
+            List<int> selectedIds = SelectedIds(dataGridViewEscalatedAccounts);
+
+            foreach (int id in selectedIds)
+            {
+                dbAccount.Uncollectable(id);
+            }
+
+            MessageBox.Show("Las cuentas seleccionadas han sido marcadas como incobrables.", "Cuentas cerradas", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            RefreshEscalated();
+            RefreshUncollectable();
+        }
+
+        private void toolStripButtonRemoveUncollectable_Click(object sender, EventArgs e)
+        {
+            List<int> selectedIds = SelectedIds(dataGridViewUncollectableAccounts);
+
+            foreach (int id in selectedIds)
+            {
+                dbAccount.Collectable(id);
+            }
+
+            MessageBox.Show("Las cuentas seleccionadas han sido recuperadas", "Desasignación exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            RefreshEscalated();
+            RefreshUncollectable();
+        }
+
         private void toolStripButtonCloseAssigned_Click(object sender, EventArgs e)
         {
             List<int> selectedIds = SelectedIds(dataGridViewAssignedAccounts);
@@ -221,6 +263,14 @@ namespace SeguimientoSuper.Process
 
         # region FILTER_REMOVERS
 
+        private void toolStripButtonRemoveUncollectableFilter_Click(object sender, EventArgs e)
+        {
+            dtUncollectable = dbAccount.Uncollectable();
+            dtUncollectable.DefaultView.RowFilter = string.Empty;
+            dataGridViewUncollectableAccounts.DataSource = dtUncollectable;
+            toolStripStatusLabelUncollectable.Text = "FILTRO";
+        }
+
         private void toolStripButtonRemoveFilterCancelled_Click(object sender, EventArgs e)
         {
             dtCancelled = dbAccount.Cancelled();
@@ -264,6 +314,10 @@ namespace SeguimientoSuper.Process
         # endregion
 
         # region REFRESH_BUTTONS
+        private void toolStripButtonUpdateUncollectable_Click(object sender, EventArgs e)
+        {
+            RefreshUncollectable();
+        }
         private void toolStripButtonRefreshCancelled_Click(object sender, EventArgs e)
         {
             RefreshCancelled();
@@ -291,6 +345,14 @@ namespace SeguimientoSuper.Process
         #endregion
 
         #region ACTIVATE_ACCOUNT_GRID
+
+        private void dataGridViewUncollectableAccounts_SelectionChanged(object sender, EventArgs e)
+        {
+            if (dataGridViewUncollectableAccounts.CurrentRow == null) return;
+            int docId = int.Parse(dataGridViewUncollectableAccounts.CurrentRow.Cells["id_doco"].Value.ToString());
+            dataGridViewUncollectableFollowUp.DataSource = dbAccount.FollowUp(docId);
+            FormatFollowUpGridView(dataGridViewUncollectableFollowUp);
+        }
 
         private void dataGridViewCancelledAccounts_SelectionChanged(object sender, EventArgs e)
         {
@@ -335,6 +397,25 @@ namespace SeguimientoSuper.Process
         #endregion
 
         #region FOLLOW_UP_ACCOUNT
+
+
+        private void dataGridViewUncollectableAccounts_DoubleClick(object sender, EventArgs e)
+        {
+            if (dataGridViewUncollectableAccounts.CurrentRow == null) return;
+            FormMain parent = (FormMain)this.MdiParent;
+            Collectable.Account account = AccountFromGrid(dataGridViewUncollectableAccounts);
+
+            DataTable dtPayments = dbAccount.ReadPayments(account.DocId);
+
+            foreach (DataRow paymentRow in dtPayments.Rows)
+            {
+                Payment payment = PaymentFromDataRow(paymentRow);
+                payment.DocId = account.DocId;
+                account.Payments.Add(payment);
+            }
+
+            parent.ShowFollowUp(account);
+        }
 
         private void dataGridViewCancelledAccounts_DoubleClick(object sender, EventArgs e)
         {
@@ -474,6 +555,11 @@ namespace SeguimientoSuper.Process
                     dtSender = dtCancelled;
                     status = toolStripStatusLabelCancelled;
                     break;
+                case 5:
+                    dgvSender = dataGridViewUncollectableAccounts;
+                    dtSender = dtUncollectable;
+                    status = toolStripStatusLabelUncollectable;
+                    break;
                 default:
                     return;
             }
@@ -529,6 +615,11 @@ namespace SeguimientoSuper.Process
                     dgvSender = dataGridViewCancelledAccounts;
                     dtSender = dtCancelled;
                     status = toolStripStatusLabelCancelled;
+                    break;
+                case 5:
+                    dgvSender = dataGridViewUncollectableAccounts;
+                    dtSender = dtUncollectable;
+                    status = toolStripStatusLabelUncollectable;
                     break;
                 default:
                     return;
@@ -615,6 +706,15 @@ namespace SeguimientoSuper.Process
         #endregion
 
         # region GRID_REFRESHERS
+        private void RefreshUncollectable()
+        {
+            string prevFilter = dtUncollectable.DefaultView.RowFilter;
+            dtUncollectable = dbAccount.Uncollectable();
+            dtUncollectable.DefaultView.RowFilter = prevFilter;
+            dataGridViewUncollectableAccounts.DataSource = dtUncollectable;
+            FormatAccountsGridView(dataGridViewUncollectableAccounts);
+        }
+
         private void RefreshUnassigned()
         {
             string prevFilter = dtUnassigned.DefaultView.RowFilter;
@@ -755,28 +855,28 @@ namespace SeguimientoSuper.Process
         {
             dgv.Columns["id_cliente"].Visible = false;
             dgv.Columns["id_doco"].Visible = false;
-            
-            FixColumn(dgv.Columns["dias_vencido"], 0, "Dias Vencimiento", 80);
-            FixColumn(dgv.Columns["f_documento"], 1, "Fecha Documento", 80);
-            FixColumn(dgv.Columns["f_vencimiento"], 2, "Fecha Vencimiento", 80);
+            dgv.Columns["ap_id"].Visible = false;
+
+            FixColumn(dgv.Columns["f_documento"], 0, "Fecha Documento", 80);
+            FixColumn(dgv.Columns["f_vencimiento"], 1, "Fecha Vencimiento", 80);
+            FixColumn(dgv.Columns["dias_vencido"], 2, "Dias Vencimiento", 80);
             FixColumn(dgv.Columns["f_cobro"], 3, "Fecha Cobro", 80);
 
-            FixColumn(dgv.Columns["serie_doco"], 4, "Serie", 40);
-            FixColumn(dgv.Columns["folio_doco"], 5, "Doc #", 80);
-            FixColumn(dgv.Columns["tipo_documento"], 6, "Tipo Doc", 150);
+            FixColumn(dgv.Columns["ruta"], 4, "Ruta", 80);
+            FixColumn(dgv.Columns["serie_doco"], 5, "Serie", 40);
+            FixColumn(dgv.Columns["folio_doco"], 6, "Doc #", 80);
 
             FixColumn(dgv.Columns["cd_cliente"], 7, "# Cliente", 80);
             FixColumn(dgv.Columns["nombre_cliente"], 8, "Nombre del Cliente", 180);
-            FixColumn(dgv.Columns["ruta"], 9, "Ruta", 80);
-            FixColumn(dgv.Columns["dia_pago"], 10, "Ruta", 120);
 
-            FixColumn(dgv.Columns["tipo_cobro"], 11, "Tipo Cobro", 150);
-            FixColumn(dgv.Columns["facturado"], 12, "Total Facturado", 80);
-            FixColumn(dgv.Columns["saldo"], 13, "Saldo", 80);
-            FixColumn(dgv.Columns["moneda"], 14, "Moneda", 80);
-            FixColumn(dgv.Columns["observaciones"], 15, "Observaciones", 150);
-            FixColumn(dgv.Columns["ap_id"], 16, "DocId", 60);
+            FixColumn(dgv.Columns["tipo_cobro"], 9, "Tipo Cobro", 150);
+            FixColumn(dgv.Columns["facturado"], 10, "Total Facturado", 80);
+            FixColumn(dgv.Columns["saldo"], 11, "Saldo", 80);
+            FixColumn(dgv.Columns["moneda"], 12, "Moneda", 80);
+            FixColumn(dgv.Columns["observaciones"], 13, "Observaciones", 150);
 
+            FixColumn(dgv.Columns["tipo_documento"], 14, "Tipo Doc", 150);
+            FixColumn(dgv.Columns["dia_pago"], 15, "Dia de Pago", 120);
 
             dgv.Columns["f_cobro"].DefaultCellStyle.BackColor = Color.Beige;
             dgv.Columns["tipo_cobro"].DefaultCellStyle.BackColor = Color.Beige;
@@ -788,6 +888,7 @@ namespace SeguimientoSuper.Process
 
         private void FixColumn(DataGridViewColumn column, int displayedIndex, string HeaderText, int width)
         {
+            if (column == null) return;
             column.DisplayIndex = displayedIndex;
             column.HeaderText = HeaderText;
             column.Width = width;
@@ -831,12 +932,26 @@ namespace SeguimientoSuper.Process
                 Reports.Account ra = new Reports.Account();
                 ra.Name = documentRow.Cells["nombre_cliente"].Value.ToString();
                 ra.AgentCode = documentRow.Cells["ruta"].Value.ToString();
-                ra.Amount = double.Parse(documentRow.Cells["facturado"].Value.ToString());
-                ra.Balance = double.Parse(documentRow.Cells["saldo"].Value.ToString());
+                
+                ra.Currency = documentRow.Cells["moneda"].Value.ToString();
+                if (ra.Currency.ToUpper().Contains("PESO"))
+                {
+                    ra.Balance = double.Parse(documentRow.Cells["saldo"].Value.ToString());
+                    ra.Amount = double.Parse(documentRow.Cells["facturado"].Value.ToString());
+                    ra.Dolares = 0;
+                    ra.TotalDolares = 0;
+                }
+                else
+                {
+                    ra.Balance = 0;
+                    ra.Amount = 0;
+                    ra.Dolares = double.Parse(documentRow.Cells["saldo"].Value.ToString());
+                    ra.TotalDolares = double.Parse(documentRow.Cells["facturado"].Value.ToString());
+                }
+
                 ra.CollectDate = DateTime.Parse(documentRow.Cells["f_cobro"].Value.ToString());
                 ra.CollectType = documentRow.Cells["tipo_cobro"].Value.ToString();
                 ra.CompanyCode = documentRow.Cells["cd_cliente"].Value.ToString();
-                ra.Currency = documentRow.Cells["moneda"].Value.ToString();
                 ra.DocDate = DateTime.Parse(documentRow.Cells["f_documento"].Value.ToString());
                 ra.DocId = int.Parse(documentRow.Cells["id_doco"].Value.ToString());
                 ra.DocType = documentRow.Cells["tipo_documento"].Value.ToString();

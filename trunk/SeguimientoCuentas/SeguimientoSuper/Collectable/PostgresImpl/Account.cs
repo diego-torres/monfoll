@@ -10,6 +10,82 @@ namespace SeguimientoSuper.Collectable.PostgresImpl
     public class Account : CommonBase
     {
 
+        public DataTable Uncollectable()
+        {
+            DataSet ds = new DataSet();
+            NpgsqlDataAdapter da;
+            string sqlString = "SELECT ctrl_cuenta.id_doco, ctrl_cuenta.ap_id, f_documento, f_vencimiento, f_cobro, ctrl_cuenta.id_cliente, cd_cliente, nombre_cliente, ruta, dia_pago, " +
+                "serie_doco, folio_doco, tipo_documento, tipo_cobro, facturado, saldo, moneda, observaciones " +
+                "FROM ctrl_cuenta INNER JOIN cat_cliente ON ctrl_cuenta.id_cliente = cat_cliente.id_cliente " +
+                "WHERE ctrl_cuenta.id_doco IN(SELECT id_doco FROM ctrl_seguimiento WHERE id_movimiento=14);";
+
+            if (conn == null || conn.State != ConnectionState.Open)
+                connect();
+
+            da = new NpgsqlDataAdapter(sqlString, conn);
+
+            ds.Reset();
+            da.Fill(ds);
+            conn.Close();
+
+            ds.Tables[0].Columns.Add("dias_vencido", typeof(int));
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                DateTime now = DateTime.Now;
+                DateTime dueDate = DateTime.Parse(row["f_vencimiento"].ToString());
+                TimeSpan elapsed = now.Subtract(dueDate);
+
+                row["dias_vencido"] = int.Parse( elapsed.TotalDays.ToString("0") );
+            }
+
+
+            return ds.Tables[0];
+        }
+
+        public void Uncollectable(int docId)
+        {
+            if (conn == null || conn.State != ConnectionState.Open)
+                connect();
+
+            string sqlString = "INSERT INTO ctrl_seguimiento(id_movimiento, id_doco, descripcion) " +
+                    "VALUES(14, @documento, 'Documento marcado incobrable por gerencia.');";
+
+            NpgsqlCommand cmd = new NpgsqlCommand(sqlString, conn);
+
+            cmd.Parameters.Add("@documento", NpgsqlTypes.NpgsqlDbType.Integer);
+            cmd.Parameters["@documento"].Value = docId;
+
+            cmd.ExecuteNonQuery();
+            conn.Close();
+        }
+
+        public void Collectable(int docId)
+        {
+            if (conn == null || conn.State != ConnectionState.Open)
+                connect();
+
+            string sqlString = "DELETE FROM ctrl_seguimiento " +
+                "WHERE id_doco = @docId AND id_movimiento = 14;";
+
+            NpgsqlCommand cmd = new NpgsqlCommand(sqlString, conn);
+
+            cmd.Parameters.Add("@docId", NpgsqlTypes.NpgsqlDbType.Integer);
+            cmd.Parameters["@docId"].Value = docId;
+
+            cmd.ExecuteNonQuery();
+
+            sqlString = "INSERT INTO ctrl_seguimiento(id_movimiento, id_doco, descripcion) " +
+                "VALUES(15, @documento, 'Cuenta Recuperada de incobrables.');";
+            cmd = new NpgsqlCommand(sqlString, conn);
+
+            cmd.Parameters.Add("@documento", NpgsqlTypes.NpgsqlDbType.Integer);
+            cmd.Parameters["@documento"].Value = docId;
+
+            cmd.ExecuteNonQuery();
+
+            conn.Close();
+        }
+
         public void SetCollectDate(int docId, DateTime collectDate)
         {
             if (conn == null || conn.State != ConnectionState.Open)
@@ -118,8 +194,8 @@ namespace SeguimientoSuper.Collectable.PostgresImpl
             DataSet ds = new DataSet();
             NpgsqlDataAdapter da;
             string sqlString = "SELECT ctrl_cuenta.id_doco, ctrl_cuenta.ap_id, f_documento, f_vencimiento, f_cobro, ctrl_cuenta.id_cliente, cd_cliente, nombre_cliente, ruta, dia_pago, " +
-                "CASE WHEN cat_cliente.es_local THEN 'Local' ELSE 'Foráneo' END AS area, " + 
-                "serie_doco, folio_doco, tipo_documento, tipo_cobro, facturado, saldo, moneda, observaciones, CURRENT_DATE - f_vencimiento AS dias_vencido " +
+                "CASE WHEN cat_cliente.es_local THEN 'Local' ELSE 'Foráneo' END AS area, " +
+                "serie_doco, folio_doco, tipo_documento, tipo_cobro, facturado, saldo, moneda, observaciones " +
                 "FROM ctrl_cuenta INNER JOIN cat_cliente ON ctrl_cuenta.id_cliente = cat_cliente.id_cliente " +
                 "WHERE ctrl_cuenta.id_doco IN(SELECT id_doco FROM ctrl_seguimiento WHERE id_movimiento=10);";
 
@@ -131,6 +207,17 @@ namespace SeguimientoSuper.Collectable.PostgresImpl
             ds.Reset();
             da.Fill(ds);
             conn.Close();
+
+            ds.Tables[0].Columns.Add("dias_vencido", typeof(int));
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                DateTime now = DateTime.Now;
+                DateTime dueDate = DateTime.Parse(row["f_vencimiento"].ToString());
+                TimeSpan elapsed = now.Subtract(dueDate);
+
+                row["dias_vencido"] = int.Parse(elapsed.TotalDays.ToString("0"));
+            }
+
             return ds.Tables[0];
         }
 
@@ -139,8 +226,8 @@ namespace SeguimientoSuper.Collectable.PostgresImpl
             DataSet ds = new DataSet();
             NpgsqlDataAdapter da;
             string sqlString = "SELECT ctrl_cuenta.id_doco, ctrl_cuenta.ap_id, f_documento, f_vencimiento, f_cobro, ctrl_cuenta.id_cliente, cd_cliente, nombre_cliente, ruta, dia_pago, " +
-                "CASE WHEN cat_cliente.es_local THEN 'Local' ELSE 'Foráneo' END AS area, " + 
-                "serie_doco, folio_doco, tipo_documento, tipo_cobro, facturado, saldo, moneda, observaciones, CURRENT_DATE - f_vencimiento AS dias_vencido " +
+                "CASE WHEN cat_cliente.es_local THEN 'Local' ELSE 'Foráneo' END AS area, " +
+                "serie_doco, folio_doco, tipo_documento, tipo_cobro, facturado, saldo, moneda, observaciones " +
                 "FROM ctrl_cuenta INNER JOIN cat_cliente ON ctrl_cuenta.id_cliente = cat_cliente.id_cliente " +
                 "WHERE ctrl_cuenta.id_doco IN(SELECT id_doco FROM ctrl_seguimiento WHERE id_movimiento=9);";
 
@@ -152,6 +239,17 @@ namespace SeguimientoSuper.Collectable.PostgresImpl
             ds.Reset();
             da.Fill(ds);
             conn.Close();
+
+            ds.Tables[0].Columns.Add("dias_vencido", typeof(int));
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                DateTime now = DateTime.Now;
+                DateTime dueDate = DateTime.Parse(row["f_vencimiento"].ToString());
+                TimeSpan elapsed = now.Subtract(dueDate);
+
+                row["dias_vencido"] = int.Parse(elapsed.TotalDays.ToString("0"));
+            }
+
             return ds.Tables[0];
         }
 
@@ -160,8 +258,8 @@ namespace SeguimientoSuper.Collectable.PostgresImpl
             DataSet ds = new DataSet();
             NpgsqlDataAdapter da;
             string sqlString = "SELECT ctrl_cuenta.id_doco, ctrl_cuenta.ap_id, f_documento, f_vencimiento, f_cobro, ctrl_cuenta.id_cliente, cd_cliente, nombre_cliente, ruta, dia_pago, " +
-                "CASE WHEN cat_cliente.es_local THEN 'Local' ELSE 'Foráneo' END AS area, " + 
-                "serie_doco, folio_doco, tipo_documento, tipo_cobro, facturado, saldo, moneda, observaciones, CURRENT_DATE - f_vencimiento AS dias_vencido " +
+                "CASE WHEN cat_cliente.es_local THEN 'Local' ELSE 'Foráneo' END AS area, " +
+                "serie_doco, folio_doco, tipo_documento, tipo_cobro, facturado, saldo, moneda, observaciones " +
                 "FROM ctrl_cuenta INNER JOIN cat_cliente ON ctrl_cuenta.id_cliente = cat_cliente.id_cliente " +
                 "WHERE ctrl_cuenta.id_doco IN(SELECT id_doco FROM ctrl_seguimiento WHERE id_movimiento=4);";
 
@@ -173,6 +271,17 @@ namespace SeguimientoSuper.Collectable.PostgresImpl
             ds.Reset();
             da.Fill(ds);
             conn.Close();
+
+            ds.Tables[0].Columns.Add("dias_vencido", typeof(int));
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                DateTime now = DateTime.Now;
+                DateTime dueDate = DateTime.Parse(row["f_vencimiento"].ToString());
+                TimeSpan elapsed = now.Subtract(dueDate);
+
+                row["dias_vencido"] = int.Parse(elapsed.TotalDays.ToString("0"));
+            }
+
             return ds.Tables[0];
         }
 
@@ -181,9 +290,8 @@ namespace SeguimientoSuper.Collectable.PostgresImpl
             DataSet ds = new DataSet();
             NpgsqlDataAdapter da;
             string sqlString = "SELECT ctrl_cuenta.id_doco, ctrl_cuenta.ap_id, f_documento, f_vencimiento, f_cobro, ctrl_cuenta.id_cliente, cd_cliente, nombre_cliente, ruta, dia_pago, " +
-                "CASE WHEN cat_cliente.es_local THEN 'Local' ELSE 'Foráneo' END AS area, " + 
-                "serie_doco, folio_doco, tipo_documento, tipo_cobro, facturado, saldo, moneda, observaciones, CURRENT_DATE - f_vencimiento AS dias_vencido, " +
-                "nombre_cobrador " +
+                "CASE WHEN cat_cliente.es_local THEN 'Local' ELSE 'Foráneo' END AS area, " +
+                "serie_doco, folio_doco, tipo_documento, tipo_cobro, facturado, saldo, moneda, observaciones, nombre_cobrador " +
                 "FROM ctrl_cuenta INNER JOIN cat_cliente ON ctrl_cuenta.id_cliente = cat_cliente.id_cliente " +
                 "INNER JOIN ctrl_asignacion ON ctrl_cuenta.id_doco = ctrl_asignacion.id_doco " +
                 "INNER JOIN cat_cobrador ON ctrl_asignacion.id_cobrador = cat_cobrador.id_cobrador " +
@@ -197,6 +305,17 @@ namespace SeguimientoSuper.Collectable.PostgresImpl
             ds.Reset();
             da.Fill(ds);
             conn.Close();
+
+            ds.Tables[0].Columns.Add("dias_vencido", typeof(int));
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                DateTime now = DateTime.Now;
+                DateTime dueDate = DateTime.Parse(row["f_vencimiento"].ToString());
+                TimeSpan elapsed = now.Subtract(dueDate);
+
+                row["dias_vencido"] = int.Parse(elapsed.TotalDays.ToString("0"));
+            }
+
             return ds.Tables[0];
         }
 
@@ -205,8 +324,8 @@ namespace SeguimientoSuper.Collectable.PostgresImpl
             DataSet ds = new DataSet();
             NpgsqlDataAdapter da;
             string sqlString = "SELECT ctrl_cuenta.id_doco, ctrl_cuenta.ap_id, f_documento, f_vencimiento, f_cobro, ctrl_cuenta.id_cliente, cd_cliente, nombre_cliente, ruta, dia_pago, " +
-                "CASE WHEN cat_cliente.es_local THEN 'Local' ELSE 'Foráneo' END AS area, " + 
-                "serie_doco, folio_doco, tipo_documento, tipo_cobro, facturado, saldo, moneda, observaciones, CURRENT_DATE - f_vencimiento AS dias_vencido " +
+                "CASE WHEN cat_cliente.es_local THEN 'Local' ELSE 'Foráneo' END AS area, " +
+                "serie_doco, folio_doco, tipo_documento, tipo_cobro, facturado, saldo, moneda, observaciones " +
                 "FROM ctrl_cuenta INNER JOIN cat_cliente ON ctrl_cuenta.id_cliente = cat_cliente.id_cliente " +
                 "WHERE ctrl_cuenta.id_doco NOT IN(SELECT id_doco FROM ctrl_asignacion) " +
                 "AND ctrl_cuenta.id_doco NOT IN(SELECT id_doco FROM ctrl_seguimiento WHERE id_movimiento IN(4,9,10));";
@@ -219,6 +338,17 @@ namespace SeguimientoSuper.Collectable.PostgresImpl
             ds.Reset();
             da.Fill(ds);
             conn.Close();
+
+            ds.Tables[0].Columns.Add("dias_vencido", typeof(int));
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                DateTime now = DateTime.Now;
+                DateTime dueDate = DateTime.Parse(row["f_vencimiento"].ToString());
+                TimeSpan elapsed = now.Subtract(dueDate);
+
+                row["dias_vencido"] = int.Parse(elapsed.TotalDays.ToString("0"));
+            }
+
             return ds.Tables[0];
         }
 
@@ -228,7 +358,7 @@ namespace SeguimientoSuper.Collectable.PostgresImpl
             NpgsqlDataAdapter da;
 
             string sqlString = "SELECT id_seguimiento, ctrl_seguimiento.id_movimiento, cat_movimiento.descripcion AS movimiento, " +
-                "system_based, ctrl_seguimiento.descripcion as seguimiento, ts_seguimiento AT TIME ZONE '00' AS ts_seguimiento " +
+                "system_based, ctrl_seguimiento.descripcion as seguimiento, ts_seguimiento " +
                 "FROM ctrl_seguimiento INNER JOIN cat_movimiento ON ctrl_seguimiento.id_movimiento = cat_movimiento.id_movimiento " +
                 "WHERE id_doco = " + docId.ToString() + ";";
 
@@ -325,7 +455,7 @@ namespace SeguimientoSuper.Collectable.PostgresImpl
         public void UpdateAccountById(Collectable.Account adminPaqAccount)
         {
             if (conn == null || conn.State != ConnectionState.Open) connect();
-            
+
             string sqlString = "UPDATE ctrl_cuenta " +
                 "SET F_DOCUMENTO = @f_documento, " +
                 "F_VENCIMIENTO = @f_vencimiento, " +
@@ -396,8 +526,8 @@ namespace SeguimientoSuper.Collectable.PostgresImpl
         }
 
         private void SaveConcepto(Concepto concepto)
-        { 
-            if(!ConceptoExists(concepto))
+        {
+            if (!ConceptoExists(concepto))
             {
                 AddConcepto(concepto);
             }
@@ -421,7 +551,7 @@ namespace SeguimientoSuper.Collectable.PostgresImpl
             cmd.Parameters["@codigo"].Value = concepto.Codigo;
             cmd.Parameters["@nombre"].Value = concepto.Nombre;
             cmd.Parameters["@razon"].Value = concepto.Razon;
-            
+
             cmd.ExecuteNonQuery();
         }
 
@@ -458,7 +588,7 @@ namespace SeguimientoSuper.Collectable.PostgresImpl
                 NpgsqlCommand cmd = new NpgsqlCommand(sqlString, conn);
                 cmd.Parameters.Add("@docId", NpgsqlTypes.NpgsqlDbType.Integer);
                 cmd.Parameters["@docId"].Value = docId;
-                
+
                 cmd.ExecuteNonQuery();
             }
         }
@@ -522,7 +652,7 @@ namespace SeguimientoSuper.Collectable.PostgresImpl
                 "FOLIO = @folio, " +
                 "concepto = @concepto, " +
                 "fecha_deposito = @fecha_deposito, " +
-                "cuenta = @cuenta "+
+                "cuenta = @cuenta " +
                 "WHERE ID_ABONO = @id";
 
             NpgsqlCommand cmd = new NpgsqlCommand(sqlString, conn);
@@ -544,7 +674,7 @@ namespace SeguimientoSuper.Collectable.PostgresImpl
             cmd.Parameters["@fecha_deposito"].Value = payment.DepositDate;
             cmd.Parameters["@cuenta"].Value = payment.Account;
             cmd.Parameters["@id"].Value = payment.PaymentId;
-            
+
             cmd.ExecuteNonQuery();
         }
 
@@ -581,7 +711,7 @@ namespace SeguimientoSuper.Collectable.PostgresImpl
             DataSet ds = new DataSet();
             DataTable dt = new DataTable();
             NpgsqlDataAdapter da;
-            string sqlString = "SELECT id_cliente " + 
+            string sqlString = "SELECT id_cliente " +
                 "FROM cat_cliente " +
                 "WHERE ap_id = " + adminPaqCompany.ApId.ToString() +
                 " AND id_empresa = " + adminPaqCompany.EnterpriseId.ToString() + ";";
@@ -608,7 +738,7 @@ namespace SeguimientoSuper.Collectable.PostgresImpl
                 "nombre_cliente = @nombre_cliente, " +
                 "ruta = @agente, " +
                 "dia_pago = @dia_pago, " +
-                "es_local = @local " + 
+                "es_local = @local " +
                 "WHERE ap_id = @id " +
                 "AND id_empresa = @empresa";
 
@@ -823,7 +953,7 @@ namespace SeguimientoSuper.Collectable.PostgresImpl
             cmd.Parameters["@id_movimiento"].Value = id_movimiento;
             cmd.Parameters["@id_doco"].Value = docId;
             cmd.Parameters["@descripcion"].Value = descripcion;
-            
+
             cmd.ExecuteNonQuery();
             conn.Close();
         }
@@ -884,7 +1014,7 @@ namespace SeguimientoSuper.Collectable.PostgresImpl
 
             cmd.Parameters.Add("@followUpId", NpgsqlTypes.NpgsqlDbType.Integer);
             cmd.Parameters["@followUpId"].Value = followUpId;
-            
+
             cmd.ExecuteNonQuery();
             conn.Close();
         }
@@ -894,7 +1024,7 @@ namespace SeguimientoSuper.Collectable.PostgresImpl
             if (conn == null || conn.State != ConnectionState.Open)
                 connect();
 
-            string sqlString = "INSERT INTO ctrl_asignacion(id_cobrador, id_doco) "+
+            string sqlString = "INSERT INTO ctrl_asignacion(id_cobrador, id_doco) " +
                 "VALUES(@cobrador, @documento);";
 
             NpgsqlCommand cmd = new NpgsqlCommand(sqlString, conn);

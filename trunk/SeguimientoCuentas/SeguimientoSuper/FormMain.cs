@@ -29,7 +29,7 @@ namespace SeguimientoSuper
         private Dictionary<int, FormFollowup> followups = new Dictionary<int, FormFollowup>();
 
         private FormProcess fProcess;
-        
+
         public FormMain()
         {
             InitializeComponent();
@@ -53,7 +53,7 @@ namespace SeguimientoSuper
 
         public bool IsCollectorsOpen
         {
-            get 
+            get
             {
                 return !(fCobradores == null || fCobradores.IsDisposed);
             }
@@ -80,7 +80,7 @@ namespace SeguimientoSuper
         public void ShowFollowUp(SeguimientoSuper.Collectable.Account account)
         {
             FormFollowup currentFollowing;
-            bool following = followups.TryGetValue(account.DocId, out currentFollowing); 
+            bool following = followups.TryGetValue(account.DocId, out currentFollowing);
 
             if (!following)
             {
@@ -145,11 +145,11 @@ namespace SeguimientoSuper
             Enterprise dbEnterprise = new Enterprise();
             foreach (Empresa enterprise in api.Empresas)
             {
-                try 
+                try
                 {
                     dbEnterprise.SaveEnterprise(enterprise);
                 }
-                catch (Exception ex) 
+                catch (Exception ex)
                 {
                     ErrLogger.Log(ex.Message);
                 }

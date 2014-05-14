@@ -117,7 +117,7 @@ namespace SeguimientoCobrador.Process
             {
                 RefreshFollowUpGrid();
                 adminPaqDirty = false;
-            }   
+            }
         }
 
         private void AdminPaq_ValueChanged(object sender, EventArgs e)
@@ -133,8 +133,8 @@ namespace SeguimientoCobrador.Process
                 if (!ConfirmNSaveFollowUp())
                 {
                     e.Cancel = true;
-                    return; 
-                }   
+                    return;
+                }
             }
 
             if (adminPaqDirty)
@@ -176,10 +176,10 @@ namespace SeguimientoCobrador.Process
             try
             {
                 api.UpdateCollectable(account);
-                postgresAcct.UpdateAccount(account);
+                postgresAcct.UpdateAccountById(account);
                 MessageBox.Show("Los datos han sido grabados exitosamente.", "Datos Guardados", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                adminPaqDirty = false;
 
+                adminPaqDirty = false;
                 return true;
             }
             catch (Exception ex)
@@ -226,20 +226,20 @@ namespace SeguimientoCobrador.Process
         {
             DialogResult dr = MessageBox.Show("¿Desea guardar los cambios realizados al seguimiento de la cuenta?", "Cambios en seguimiento", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
             switch (dr)
-            { 
+            {
                 case DialogResult.Yes:
                     SaveFollowUp();
                     return true;
                 case DialogResult.No:
                     return true;
                 default:
-                    return false;   
+                    return false;
             }
         }
 
         private void AddFollowUp()
         {
-            if (ValidateFollowUp()) 
+            if (ValidateFollowUp())
             {
                 postgresAcct.AddFollowUp(comboBoxFollowUpType.Text, textBoxFollowUpNote.Text, account.DocId);
             }
@@ -262,31 +262,31 @@ namespace SeguimientoCobrador.Process
                 return false;
             }
 
-            if(string.Empty.Equals(textBoxFollowUpNote.Text.Trim()))
+            if (string.Empty.Equals(textBoxFollowUpNote.Text.Trim()))
             {
                 MessageBox.Show("Debe capturar la información del detalle del seguimiento", "Detalle del seguimiento", MessageBoxButtons.OK, MessageBoxIcon.Hand);
                 textBoxFollowUpNote.Focus();
                 return false;
             }
 
-            if(string.Empty.Equals(comboBoxFollowUpType.Text.Trim()))
+            if (string.Empty.Equals(comboBoxFollowUpType.Text.Trim()))
             {
                 MessageBox.Show("Debe seleccionar la naturaleza del seguimiento", "Detalle del seguimiento", MessageBoxButtons.OK, MessageBoxIcon.Hand);
                 comboBoxFollowUpType.Focus();
                 return false;
             }
 
-            string[] validFollowUps = {"Llamada", "Visita", "Email", "Otro", "Cerrado" };
+            string[] validFollowUps = { "Llamada", "Visita", "Email", "Otro", "Cerrado" };
             bool validFollowUp = Array.Exists(validFollowUps, x => x.Equals(comboBoxFollowUpType.Text));
 
-            if (!validFollowUp) 
+            if (!validFollowUp)
             {
                 MessageBox.Show("La naturaleza de seguimiento seleccionada no se encontró como una naturaleza de seguimiento válida. " +
                     "\nIntente seleccionar nuevamente el tipo de seguimiento.", "Detalle del seguimiento", MessageBoxButtons.OK, MessageBoxIcon.Hand);
                 comboBoxFollowUpType.Focus();
                 return false;
             }
-            
+
             return true;
         }
 
@@ -305,8 +305,8 @@ namespace SeguimientoCobrador.Process
                 dateTimePickerCollectDate.CustomFormat = " ";
                 dateTimePickerCollectDate.Checked = false;
             }
-                
-                
+
+
 
             DateTime now = DateTime.Now;
             TimeSpan elapsed = now.Subtract(account.DueDate);
@@ -386,7 +386,7 @@ namespace SeguimientoCobrador.Process
         {
             if (row == null) return;
             labelFollowUpId.Text = row.Cells[0].Value.ToString();
-            bool isSystem = bool.Parse( row.Cells[3].Value.ToString() );
+            bool isSystem = bool.Parse(row.Cells[3].Value.ToString());
             LockFollowUp(isSystem);
 
             if (isSystem)
@@ -405,10 +405,9 @@ namespace SeguimientoCobrador.Process
         }
 
         private void LockFollowUp(bool Lock)
-        { 
+        {
             textBoxFollowUpNote.Enabled = !Lock;
             comboBoxFollowUpType.Enabled = !Lock;
         }
-
     }
 }

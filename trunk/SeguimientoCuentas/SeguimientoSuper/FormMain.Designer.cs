@@ -149,7 +149,7 @@
             // 
             this.mainStatus.Name = "mainStatus";
             this.mainStatus.Size = new System.Drawing.Size(308, 17);
-            this.mainStatus.Text = "Seguimiento a cuentas por cobrar - módulo de supervisor V 1.0";
+            this.mainStatus.Text = "Seguimiento a cuentas por cobrar - módulo de supervisor V 1.2";
             // 
             // mainProgressBar
             // 
@@ -172,7 +172,7 @@
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "FormMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Seguimiento Supervisores";
+            this.Text = "Seguimiento Supervisor";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.FormMain_Load);
             this.menuStrip1.ResumeLayout(false);

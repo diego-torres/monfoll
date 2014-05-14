@@ -46,6 +46,8 @@
             this.NAtoolStripButtonAssign = new System.Windows.Forms.ToolStripButton();
             this.NAtoolStripButtonEscale = new System.Windows.Forms.ToolStripButton();
             this.NAtoolStripButtonClose = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripButtonSetCollectDate = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.NAtoolStripButtonClearFilter = new System.Windows.Forms.ToolStripButton();
             this.NAtoolStripButtonUpdate = new System.Windows.Forms.ToolStripButton();
@@ -62,6 +64,8 @@
             this.toolStripButtonEscaleAssigned = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonCloseAssigned = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.AssignedToolStripButtonSetCollectDate = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonRemoveFilter = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonRefresh = new System.Windows.Forms.ToolStripButton();
             this.tabPage3 = new System.Windows.Forms.TabPage();
@@ -74,6 +78,7 @@
             this.toolStripButtonPrintEscalated = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonEscalated = new System.Windows.Forms.ToolStripButton();
+            this.EscalatedToolStripButtonSetCollectDate = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonEscalatedRemoveFilter = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonEscalatedRefresh = new System.Windows.Forms.ToolStripButton();
@@ -101,11 +106,17 @@
             this.toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonRemoveFilterCancelled = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonRefreshCancelled = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripButtonSetCollectDate = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
-            this.AssignedToolStripButtonSetCollectDate = new System.Windows.Forms.ToolStripButton();
-            this.EscalatedToolStripButtonSetCollectDate = new System.Windows.Forms.ToolStripButton();
+            this.tabPage6 = new System.Windows.Forms.TabPage();
+            this.splitContainerUncollectable = new System.Windows.Forms.SplitContainer();
+            this.dataGridViewUncollectableAccounts = new System.Windows.Forms.DataGridView();
+            this.dataGridViewUncollectableFollowUp = new System.Windows.Forms.DataGridView();
+            this.toolStripUncollectable = new System.Windows.Forms.ToolStrip();
+            this.toolStripButtonPrintUncollectable = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator12 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripButtonRemoveUncollectableFilter = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonUpdateUncollectable = new System.Windows.Forms.ToolStripButton();
+            this.statusStripUncollectable = new System.Windows.Forms.StatusStrip();
+            this.toolStripStatusLabelUncollectable = new System.Windows.Forms.ToolStripStatusLabel();
             this.tabControlProcess.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerNotAssigned)).BeginInit();
@@ -153,6 +164,15 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewCancelledFollowUps)).BeginInit();
             this.statusStripCancelled.SuspendLayout();
             this.toolStripCancelled.SuspendLayout();
+            this.tabPage6.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerUncollectable)).BeginInit();
+            this.splitContainerUncollectable.Panel1.SuspendLayout();
+            this.splitContainerUncollectable.Panel2.SuspendLayout();
+            this.splitContainerUncollectable.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewUncollectableAccounts)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewUncollectableFollowUp)).BeginInit();
+            this.toolStripUncollectable.SuspendLayout();
+            this.statusStripUncollectable.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControlProcess
@@ -162,6 +182,7 @@
             this.tabControlProcess.Controls.Add(this.tabPage3);
             this.tabControlProcess.Controls.Add(this.tabPage4);
             this.tabControlProcess.Controls.Add(this.tabPage5);
+            this.tabControlProcess.Controls.Add(this.tabPage6);
             this.tabControlProcess.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControlProcess.Location = new System.Drawing.Point(0, 0);
             this.tabControlProcess.Name = "tabControlProcess";
@@ -330,6 +351,21 @@
             this.NAtoolStripButtonClose.Size = new System.Drawing.Size(23, 22);
             this.NAtoolStripButtonClose.Text = "Cerrar Selección";
             this.NAtoolStripButtonClose.Click += new System.EventHandler(this.NAtoolStripButtonClose_Click);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripButtonSetCollectDate
+            // 
+            this.toolStripButtonSetCollectDate.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonSetCollectDate.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonSetCollectDate.Image")));
+            this.toolStripButtonSetCollectDate.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonSetCollectDate.Name = "toolStripButtonSetCollectDate";
+            this.toolStripButtonSetCollectDate.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonSetCollectDate.Text = "Asignar Fecha de Cobro";
+            this.toolStripButtonSetCollectDate.Click += new System.EventHandler(this.toolStripButtonSetCollectDate_Click);
             // 
             // toolStripSeparator2
             // 
@@ -501,6 +537,21 @@
             this.toolStripSeparator5.Name = "toolStripSeparator5";
             this.toolStripSeparator5.Size = new System.Drawing.Size(6, 25);
             // 
+            // AssignedToolStripButtonSetCollectDate
+            // 
+            this.AssignedToolStripButtonSetCollectDate.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.AssignedToolStripButtonSetCollectDate.Image = ((System.Drawing.Image)(resources.GetObject("AssignedToolStripButtonSetCollectDate.Image")));
+            this.AssignedToolStripButtonSetCollectDate.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.AssignedToolStripButtonSetCollectDate.Name = "AssignedToolStripButtonSetCollectDate";
+            this.AssignedToolStripButtonSetCollectDate.Size = new System.Drawing.Size(23, 22);
+            this.AssignedToolStripButtonSetCollectDate.Text = "Asignar Fecha de Cobro";
+            this.AssignedToolStripButtonSetCollectDate.Click += new System.EventHandler(this.AssignedToolStripButtonSetCollectDate_Click);
+            // 
+            // toolStripSeparator11
+            // 
+            this.toolStripSeparator11.Name = "toolStripSeparator11";
+            this.toolStripSeparator11.Size = new System.Drawing.Size(6, 25);
+            // 
             // toolStripButtonRemoveFilter
             // 
             this.toolStripButtonRemoveFilter.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -637,6 +688,16 @@
             this.toolStripButtonEscalated.Size = new System.Drawing.Size(23, 22);
             this.toolStripButtonEscalated.Text = "Quitar de cuentas escaladas";
             this.toolStripButtonEscalated.Click += new System.EventHandler(this.toolStripButtonEscalated_Click);
+            // 
+            // EscalatedToolStripButtonSetCollectDate
+            // 
+            this.EscalatedToolStripButtonSetCollectDate.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.EscalatedToolStripButtonSetCollectDate.Image = ((System.Drawing.Image)(resources.GetObject("EscalatedToolStripButtonSetCollectDate.Image")));
+            this.EscalatedToolStripButtonSetCollectDate.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.EscalatedToolStripButtonSetCollectDate.Name = "EscalatedToolStripButtonSetCollectDate";
+            this.EscalatedToolStripButtonSetCollectDate.Size = new System.Drawing.Size(23, 22);
+            this.EscalatedToolStripButtonSetCollectDate.Text = "Asignar Fecha de Cobro";
+            this.EscalatedToolStripButtonSetCollectDate.Click += new System.EventHandler(this.EscalatedToolStripButtonSetCollectDate_Click);
             // 
             // toolStripSeparator7
             // 
@@ -926,45 +987,127 @@
             this.toolStripButtonRefreshCancelled.Text = "Refrescar";
             this.toolStripButtonRefreshCancelled.Click += new System.EventHandler(this.toolStripButtonRefreshCancelled_Click);
             // 
-            // toolStripSeparator3
+            // tabPage6
             // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
+            this.tabPage6.Controls.Add(this.splitContainerUncollectable);
+            this.tabPage6.Controls.Add(this.toolStripUncollectable);
+            this.tabPage6.Controls.Add(this.statusStripUncollectable);
+            this.tabPage6.Location = new System.Drawing.Point(4, 22);
+            this.tabPage6.Name = "tabPage6";
+            this.tabPage6.Size = new System.Drawing.Size(805, 437);
+            this.tabPage6.TabIndex = 5;
+            this.tabPage6.Text = "Incobrables";
+            this.tabPage6.UseVisualStyleBackColor = true;
             // 
-            // toolStripButtonSetCollectDate
+            // splitContainerUncollectable
             // 
-            this.toolStripButtonSetCollectDate.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonSetCollectDate.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonSetCollectDate.Image")));
-            this.toolStripButtonSetCollectDate.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonSetCollectDate.Name = "toolStripButtonSetCollectDate";
-            this.toolStripButtonSetCollectDate.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonSetCollectDate.Text = "Asignar Fecha de Cobro";
-            this.toolStripButtonSetCollectDate.Click += new System.EventHandler(this.toolStripButtonSetCollectDate_Click);
+            this.splitContainerUncollectable.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainerUncollectable.Location = new System.Drawing.Point(0, 25);
+            this.splitContainerUncollectable.Name = "splitContainerUncollectable";
             // 
-            // toolStripSeparator11
+            // splitContainerUncollectable.Panel1
             // 
-            this.toolStripSeparator11.Name = "toolStripSeparator11";
-            this.toolStripSeparator11.Size = new System.Drawing.Size(6, 25);
+            this.splitContainerUncollectable.Panel1.Controls.Add(this.dataGridViewUncollectableAccounts);
             // 
-            // AssignedToolStripButtonSetCollectDate
+            // splitContainerUncollectable.Panel2
             // 
-            this.AssignedToolStripButtonSetCollectDate.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.AssignedToolStripButtonSetCollectDate.Image = ((System.Drawing.Image)(resources.GetObject("AssignedToolStripButtonSetCollectDate.Image")));
-            this.AssignedToolStripButtonSetCollectDate.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.AssignedToolStripButtonSetCollectDate.Name = "AssignedToolStripButtonSetCollectDate";
-            this.AssignedToolStripButtonSetCollectDate.Size = new System.Drawing.Size(23, 22);
-            this.AssignedToolStripButtonSetCollectDate.Text = "Asignar Fecha de Cobro";
-            this.AssignedToolStripButtonSetCollectDate.Click += new System.EventHandler(this.AssignedToolStripButtonSetCollectDate_Click);
+            this.splitContainerUncollectable.Panel2.Controls.Add(this.dataGridViewUncollectableFollowUp);
+            this.splitContainerUncollectable.Size = new System.Drawing.Size(805, 390);
+            this.splitContainerUncollectable.SplitterDistance = 408;
+            this.splitContainerUncollectable.TabIndex = 2;
             // 
-            // EscalatedToolStripButtonSetCollectDate
+            // dataGridViewUncollectableAccounts
             // 
-            this.EscalatedToolStripButtonSetCollectDate.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.EscalatedToolStripButtonSetCollectDate.Image = ((System.Drawing.Image)(resources.GetObject("EscalatedToolStripButtonSetCollectDate.Image")));
-            this.EscalatedToolStripButtonSetCollectDate.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.EscalatedToolStripButtonSetCollectDate.Name = "EscalatedToolStripButtonSetCollectDate";
-            this.EscalatedToolStripButtonSetCollectDate.Size = new System.Drawing.Size(23, 22);
-            this.EscalatedToolStripButtonSetCollectDate.Text = "Asignar Fecha de Cobro";
-            this.EscalatedToolStripButtonSetCollectDate.Click += new System.EventHandler(this.EscalatedToolStripButtonSetCollectDate_Click);
+            this.dataGridViewUncollectableAccounts.AllowUserToAddRows = false;
+            this.dataGridViewUncollectableAccounts.AllowUserToDeleteRows = false;
+            this.dataGridViewUncollectableAccounts.AllowUserToOrderColumns = true;
+            this.dataGridViewUncollectableAccounts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewUncollectableAccounts.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridViewUncollectableAccounts.Location = new System.Drawing.Point(0, 0);
+            this.dataGridViewUncollectableAccounts.Name = "dataGridViewUncollectableAccounts";
+            this.dataGridViewUncollectableAccounts.ReadOnly = true;
+            this.dataGridViewUncollectableAccounts.Size = new System.Drawing.Size(408, 390);
+            this.dataGridViewUncollectableAccounts.TabIndex = 0;
+            this.dataGridViewUncollectableAccounts.SelectionChanged += new System.EventHandler(this.dataGridViewUncollectableAccounts_SelectionChanged);
+            this.dataGridViewUncollectableAccounts.DoubleClick += new System.EventHandler(this.dataGridViewUncollectableAccounts_DoubleClick);
+            this.dataGridViewUncollectableAccounts.MouseDown += new System.Windows.Forms.MouseEventHandler(this.dataGridView_MouseDown);
+            // 
+            // dataGridViewUncollectableFollowUp
+            // 
+            this.dataGridViewUncollectableFollowUp.AllowUserToAddRows = false;
+            this.dataGridViewUncollectableFollowUp.AllowUserToDeleteRows = false;
+            this.dataGridViewUncollectableFollowUp.AllowUserToOrderColumns = true;
+            this.dataGridViewUncollectableFollowUp.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewUncollectableFollowUp.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridViewUncollectableFollowUp.Location = new System.Drawing.Point(0, 0);
+            this.dataGridViewUncollectableFollowUp.Name = "dataGridViewUncollectableFollowUp";
+            this.dataGridViewUncollectableFollowUp.ReadOnly = true;
+            this.dataGridViewUncollectableFollowUp.Size = new System.Drawing.Size(393, 390);
+            this.dataGridViewUncollectableFollowUp.TabIndex = 0;
+            // 
+            // toolStripUncollectable
+            // 
+            this.toolStripUncollectable.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripButtonPrintUncollectable,
+            this.toolStripSeparator12,
+            this.toolStripButtonRemoveUncollectableFilter,
+            this.toolStripButtonUpdateUncollectable});
+            this.toolStripUncollectable.Location = new System.Drawing.Point(0, 0);
+            this.toolStripUncollectable.Name = "toolStripUncollectable";
+            this.toolStripUncollectable.Size = new System.Drawing.Size(805, 25);
+            this.toolStripUncollectable.TabIndex = 1;
+            this.toolStripUncollectable.Text = "toolStrip1";
+            // 
+            // toolStripButtonPrintUncollectable
+            // 
+            this.toolStripButtonPrintUncollectable.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonPrintUncollectable.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonPrintUncollectable.Image")));
+            this.toolStripButtonPrintUncollectable.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonPrintUncollectable.Name = "toolStripButtonPrintUncollectable";
+            this.toolStripButtonPrintUncollectable.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonPrintUncollectable.Text = "Imprimir";
+            this.toolStripButtonPrintUncollectable.Click += new System.EventHandler(this.toolStripButtonPrintUncollectable_Click);
+            // 
+            // toolStripSeparator12
+            // 
+            this.toolStripSeparator12.Name = "toolStripSeparator12";
+            this.toolStripSeparator12.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripButtonRemoveUncollectableFilter
+            // 
+            this.toolStripButtonRemoveUncollectableFilter.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonRemoveUncollectableFilter.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonRemoveUncollectableFilter.Image")));
+            this.toolStripButtonRemoveUncollectableFilter.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonRemoveUncollectableFilter.Name = "toolStripButtonRemoveUncollectableFilter";
+            this.toolStripButtonRemoveUncollectableFilter.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonRemoveUncollectableFilter.Text = "Quitar Filtro";
+            this.toolStripButtonRemoveUncollectableFilter.Click += new System.EventHandler(this.toolStripButtonRemoveUncollectableFilter_Click);
+            // 
+            // toolStripButtonUpdateUncollectable
+            // 
+            this.toolStripButtonUpdateUncollectable.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonUpdateUncollectable.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonUpdateUncollectable.Image")));
+            this.toolStripButtonUpdateUncollectable.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonUpdateUncollectable.Name = "toolStripButtonUpdateUncollectable";
+            this.toolStripButtonUpdateUncollectable.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonUpdateUncollectable.Text = "Actualizar";
+            this.toolStripButtonUpdateUncollectable.Click += new System.EventHandler(this.toolStripButtonUpdateUncollectable_Click);
+            // 
+            // statusStripUncollectable
+            // 
+            this.statusStripUncollectable.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripStatusLabelUncollectable});
+            this.statusStripUncollectable.Location = new System.Drawing.Point(0, 415);
+            this.statusStripUncollectable.Name = "statusStripUncollectable";
+            this.statusStripUncollectable.Size = new System.Drawing.Size(805, 22);
+            this.statusStripUncollectable.TabIndex = 0;
+            this.statusStripUncollectable.Text = "statusStrip1";
+            // 
+            // toolStripStatusLabelUncollectable
+            // 
+            this.toolStripStatusLabelUncollectable.Name = "toolStripStatusLabelUncollectable";
+            this.toolStripStatusLabelUncollectable.Size = new System.Drawing.Size(47, 17);
+            this.toolStripStatusLabelUncollectable.Text = "FILTRO:";
             // 
             // FormProcess
             // 
@@ -1038,6 +1181,18 @@
             this.statusStripCancelled.PerformLayout();
             this.toolStripCancelled.ResumeLayout(false);
             this.toolStripCancelled.PerformLayout();
+            this.tabPage6.ResumeLayout(false);
+            this.tabPage6.PerformLayout();
+            this.splitContainerUncollectable.Panel1.ResumeLayout(false);
+            this.splitContainerUncollectable.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerUncollectable)).EndInit();
+            this.splitContainerUncollectable.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewUncollectableAccounts)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewUncollectableFollowUp)).EndInit();
+            this.toolStripUncollectable.ResumeLayout(false);
+            this.toolStripUncollectable.PerformLayout();
+            this.statusStripUncollectable.ResumeLayout(false);
+            this.statusStripUncollectable.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1120,5 +1275,16 @@
         private System.Windows.Forms.ToolStripButton AssignedToolStripButtonSetCollectDate;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator11;
         private System.Windows.Forms.ToolStripButton EscalatedToolStripButtonSetCollectDate;
+        private System.Windows.Forms.TabPage tabPage6;
+        private System.Windows.Forms.ToolStrip toolStripUncollectable;
+        private System.Windows.Forms.ToolStripButton toolStripButtonPrintUncollectable;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator12;
+        private System.Windows.Forms.ToolStripButton toolStripButtonRemoveUncollectableFilter;
+        private System.Windows.Forms.ToolStripButton toolStripButtonUpdateUncollectable;
+        private System.Windows.Forms.StatusStrip statusStripUncollectable;
+        private System.Windows.Forms.SplitContainer splitContainerUncollectable;
+        private System.Windows.Forms.DataGridView dataGridViewUncollectableAccounts;
+        private System.Windows.Forms.DataGridView dataGridViewUncollectableFollowUp;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelUncollectable;
     }
 }
