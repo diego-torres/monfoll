@@ -58,14 +58,10 @@ namespace SeguimientoSuper.Catalogs
         {
             if (dataGridViewAccounts.CurrentRow == null) return;
             FormMain parent = (FormMain)this.MdiParent;
-
-            /*"SELECT ID_DOCO, F_DOCUMENTO, F_VENCIMIENTO, F_COBRO, CTRL_CUENTA.ID_CLIENTE, CD_CLIENTE, NOMBRE_CLIENTE, RUTA, DIA_PAGO, SERIE_DOCO, FOLIO_DOCO, " +
-                "TIPO_DOCUMENTO, TIPO_COBRO, FACTURADO, SALDO, MONEDA, OBSERVACIONES " +
-                "FROM CTRL_CUENTA INNER JOIN CAT_CLIENTE ON CTRL_CUENTA.ID_CLIENTE = CAT_CLIENTE.ID_CLIENTE " +
-                "WHERE CTRL_CUENTA.ID_CLIENTE = " + customerId.ToString() + ";";*/
             
             Collectable.Account account = new Collectable.Account();
-            account.ApId = int.Parse(dataGridViewAccounts.CurrentRow.Cells["id_doco"].Value.ToString());
+            account.DocId = int.Parse(dataGridViewAccounts.CurrentRow.Cells["id_doco"].Value.ToString());
+            account.ApId = int.Parse(dataGridViewAccounts.CurrentRow.Cells["ap_id"].Value.ToString());
             account.DocDate = DateTime.Parse(dataGridViewAccounts.CurrentRow.Cells["f_documento"].Value.ToString());
             account.DueDate = DateTime.Parse(dataGridViewAccounts.CurrentRow.Cells["f_vencimiento"].Value.ToString());
             account.CollectDate = DateTime.Parse(dataGridViewAccounts.CurrentRow.Cells["f_cobro"].Value.ToString());
@@ -132,11 +128,27 @@ namespace SeguimientoSuper.Catalogs
                 ra.Name = labelNombre.Text;
                 ra.AgentCode = labelRuta.Text;
                 ra.Amount = double.Parse(documentRow.Cells["facturado"].Value.ToString());
-                ra.Balance = double.Parse(documentRow.Cells["saldo"].Value.ToString());
+
+                ra.Currency = documentRow.Cells["moneda"].Value.ToString();
+                if (ra.Currency.ToUpper().Contains("PESO"))
+                {
+                    ra.Balance = double.Parse(documentRow.Cells["saldo"].Value.ToString());
+                    ra.Amount = double.Parse(documentRow.Cells["facturado"].Value.ToString());
+                    ra.Dolares = 0;
+                    ra.TotalDolares = 0;
+                }
+                else
+                {
+                    ra.Balance = 0;
+                    ra.Amount = 0;
+                    ra.Dolares = double.Parse(documentRow.Cells["saldo"].Value.ToString());
+                    ra.TotalDolares = double.Parse(documentRow.Cells["facturado"].Value.ToString());
+                }   
+                
                 ra.CollectDate = DateTime.Parse(documentRow.Cells["f_cobro"].Value.ToString());
                 ra.CollectType = documentRow.Cells["tipo_cobro"].Value.ToString();
                 ra.CompanyCode = labelCodigo.Text;
-                ra.Currency = documentRow.Cells["moneda"].Value.ToString();
+                
                 ra.DocDate = DateTime.Parse(documentRow.Cells["f_documento"].Value.ToString());
                 ra.DocId = int.Parse(documentRow.Cells["id_doco"].Value.ToString());
                 ra.DocType = documentRow.Cells["tipo_documento"].Value.ToString();
@@ -358,11 +370,12 @@ namespace SeguimientoSuper.Catalogs
             dataGridViewAccounts.Columns["ruta"].Visible = false;
             dataGridViewAccounts.Columns["cd_cliente"].Visible = false;
             dataGridViewAccounts.Columns["nombre_cliente"].Visible = false;
+            dataGridViewAccounts.Columns["id_doco"].Visible = false;
+            dataGridViewAccounts.Columns["ap_id"].Visible = false;
 
-            FixColumn(dataGridViewAccounts.Columns["id_doco"], 12, "DocId", 60);
-            FixColumn(dataGridViewAccounts.Columns["dias_vencido"], 0, "Dias Vencimiento", 80);
-            FixColumn(dataGridViewAccounts.Columns["f_documento"], 1, "Fecha Documento", 80);
-            FixColumn(dataGridViewAccounts.Columns["f_vencimiento"], 2, "Fecha Vencimiento", 80);
+            FixColumn(dataGridViewAccounts.Columns["f_documento"], 0, "Fecha Documento", 80);
+            FixColumn(dataGridViewAccounts.Columns["f_vencimiento"], 1, "Fecha Vencimiento", 80);
+            FixColumn(dataGridViewAccounts.Columns["dias_vencido"], 2, "Dias Vencimiento", 80);
             FixColumn(dataGridViewAccounts.Columns["f_cobro"], 3, "Fecha Cobro", 80);
 
             FixColumn(dataGridViewAccounts.Columns["serie_doco"], 4, "Serie", 40);

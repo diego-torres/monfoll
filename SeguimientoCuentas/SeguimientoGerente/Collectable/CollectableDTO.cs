@@ -24,6 +24,16 @@ namespace SeguimientoGerente.Collectable
         public const string DATE_FORMAT_PATTERN = "yyyyMMdd";
     }
 
+    public class Concepto
+    {
+        public int Id { get; set; }
+        public int APId { get; set; }
+        public int IdEmpresa { get; set; }
+        public string Codigo { get; set; }
+        public string Nombre { get; set; }
+        public string Razon { get; set; }
+    }
+
     public class Empresa : IComparable<Empresa>
     {
         // FIELD INDEX IN TABLE
@@ -32,16 +42,12 @@ namespace SeguimientoGerente.Collectable
         public const int RUTA_EMPRESA = 3;
 
         // FIELD PROPERTIES FOR OBJECT
-        private long id;
+        private int id;
         private string nombre, ruta, alias, resultadoSemanal, tendencia;
 
-        public long Id { get { return id; } set { id = value; } }
+        public int Id { get { return id; } set { id = value; } }
         public string Nombre { get { return nombre; } set { nombre = value; } }
         public string Ruta { get { return ruta; } set { ruta = value; } }
-        public string Alias { get { return alias; } set { alias = value; } }
-        
-        public string ResultadoSemanal { get { return resultadoSemanal; } set { resultadoSemanal = value; } }
-        public string Tendencia { get { return tendencia; } set { tendencia = value; } }
 
         public int CompareTo(Empresa obj)
         {
@@ -65,6 +71,7 @@ namespace SeguimientoGerente.Collectable
 
         public int DocId { get { return docId; } set { docId = value; } }
         public int Folio { get { return folio; } set { folio = value; } }
+        public int ApId { get; set; }
 
         public DateTime DocDate { get { return docDate; } set { docDate = value; } }
         public DateTime CollectDate { get { return collectDate; } set { collectDate = value; } }
@@ -129,28 +136,21 @@ namespace SeguimientoGerente.Collectable
     public class Company
     {
         private int companyId;
+        private int apId;
+        private int enterpriseId;
         private string code;
         private string name;
         private string paymentDay;
         private string agentCode;
 
         public int Id { get { return companyId; } set { companyId = value; } }
+        public int ApId { get { return apId; } set { apId = value; } }
+        public int EnterpriseId { get { return enterpriseId; } set { enterpriseId = value; } }
         public string Code { get { return code; } set { code = value; } }
         public string Name { get { return name; } set { name = value; } }
         public string PaymentDay { get { return paymentDay; } set { paymentDay = value; } }
         public string AgentCode { get { return agentCode; } set { agentCode = value; } }
-
-        public Company Clone()
-        {
-            Company result = new Company();
-            result.Id = companyId;
-            result.Code = (string)this.code.Clone();
-            result.Name = (string)this.name.Clone();
-            result.PaymentDay = (string)this.paymentDay.Clone();
-            result.AgentCode = (string)this.AgentCode.Clone();
-
-            return result;
-        }
+        public bool EsLocal { get; set; }
     }
 
     public class DocumentConcept

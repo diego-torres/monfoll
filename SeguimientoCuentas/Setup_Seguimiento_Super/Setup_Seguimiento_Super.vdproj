@@ -33,6 +33,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_55E41F66EE3A3B7F1FD9025DF956EDB5"
+        "OwnerKey" = "8:_7EDEEE59830548F3B689D67713649E8F"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_5ACB34241180CA07641FB7B06B7FD74D"
         "OwnerKey" = "8:_7EDEEE59830548F3B689D67713649E8F"
         "MsmSig" = "8:_UNDEFINED"
@@ -52,6 +58,12 @@
         "Entry"
         {
         "MsmKey" = "8:_8DF98FC8F015426D907E5E8197E5E6FE"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_9C957BFB8785460F9EA1BD71E1915783"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -87,12 +99,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_DDF1BF722CB2C1C0DBC56E8A2F9EE497"
-        "OwnerKey" = "8:_7EDEEE59830548F3B689D67713649E8F"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_AA109051ED7A1EB30A4F9D35E6F83D1E"
         "MsmSig" = "8:_UNDEFINED"
@@ -112,7 +118,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_DDF1BF722CB2C1C0DBC56E8A2F9EE497"
+        "OwnerKey" = "8:_55E41F66EE3A3B7F1FD9025DF956EDB5"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -306,6 +312,37 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_55E41F66EE3A3B7F1FD9025DF956EDB5"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:CommonAdminPaq, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_55E41F66EE3A3B7F1FD9025DF956EDB5"
+                    {
+                    "Name" = "8:CommonAdminPaq.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:CommonAdminPaq.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_B90B89FE3C034AEB80619A36F3D4F8CB"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_5ACB34241180CA07641FB7B06B7FD74D"
             {
             "AssemblyRegister" = "3:1"
@@ -343,6 +380,26 @@
             "TargetName" = "8:Aha-Soft-Business-Toolbar-Payment.ico"
             "Tag" = "8:"
             "Folder" = "8:_B90B89FE3C034AEB80619A36F3D4F8CB"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9C957BFB8785460F9EA1BD71E1915783"
+            {
+            "SourcePath" = "8:..\\SeguimientoSuper\\Reports\\ReportCustomerAccounts.rdlc"
+            "TargetName" = "8:ReportCustomerAccounts.rdlc"
+            "Tag" = "8:"
+            "Folder" = "8:_069503C68E67406498D7D75F165169B9"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -450,37 +507,6 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_DDF1BF722CB2C1C0DBC56E8A2F9EE497"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:CommonAdminPaq, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_DDF1BF722CB2C1C0DBC56E8A2F9EE497"
-                    {
-                    "Name" = "8:CommonAdminPaq.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:CommonAdminPaq.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_B90B89FE3C034AEB80619A36F3D4F8CB"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
         }
         "FileType"
         {
@@ -508,6 +534,17 @@
             "Property" = "8:TARGETDIR"
                 "Folders"
                 {
+                    "{9EF0B969-E518-4E46-987F-47570745A589}:_069503C68E67406498D7D75F165169B9"
+                    {
+                    "Name" = "8:Reports"
+                    "AlwaysCreate" = "11:FALSE"
+                    "Condition" = "8:"
+                    "Transitive" = "11:FALSE"
+                    "Property" = "8:_E2C6C5B7CBF744D4A667A96B1EF45737"
+                        "Folders"
+                        {
+                        }
+                    }
                 }
             }
             "{1525181F-901A-416C-8A58-119130FE478E}:_DF592FA220F2483F92770A71A0BA3F72"
@@ -536,20 +573,20 @@
         "Product"
         {
         "Name" = "8:Microsoft Visual Studio"
-        "ProductName" = "8:Seguimiento"
-        "ProductCode" = "8:{1FE97681-E2F4-49A0-8C3C-03FC7B3601BC}"
-        "PackageCode" = "8:{5199FC97-3A6B-480D-ADD7-46174728B311}"
+        "ProductName" = "8:Seguimiento Supervisor"
+        "ProductCode" = "8:{045D4252-E5BF-40F1-A7C6-AA5C7D0C1227}"
+        "PackageCode" = "8:{ED964BB7-7E8F-4B0F-8578-F634428DA561}"
         "UpgradeCode" = "8:{D145EDF6-3734-44BD-B706-A0FAF3619BE7}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.1"
+        "ProductVersion" = "8:1.2.0"
         "Manufacturer" = "8:Inspiracode"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
-        "Title" = "8:Seguimiento"
+        "Title" = "8:Seguimiento Supervisor"
         "Subject" = "8:"
         "ARPCONTACT" = "8:Inspiracode"
         "Keywords" = "8:seguimiento cuenta cobrar"

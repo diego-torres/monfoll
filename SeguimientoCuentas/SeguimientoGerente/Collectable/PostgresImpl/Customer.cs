@@ -13,7 +13,8 @@ namespace SeguimientoGerente.Collectable.PostgresImpl
         {
             DataSet ds = new DataSet();
             NpgsqlDataAdapter da;
-            string sqlString = "SELECT ID_CLIENTE, CD_CLIENTE, NOMBRE_CLIENTE, RUTA, DIA_PAGO " +
+            string sqlString = "SELECT ID_CLIENTE, CD_CLIENTE, NOMBRE_CLIENTE, RUTA, DIA_PAGO, " +
+                "CASE WHEN cat_cliente.es_local THEN 'Local' ELSE 'Foráneo' END AS area " +
                 "FROM CAT_CLIENTE;";
 
             if (conn == null || conn.State != ConnectionState.Open)
@@ -50,8 +51,8 @@ namespace SeguimientoGerente.Collectable.PostgresImpl
         {
             DataSet ds = new DataSet();
             NpgsqlDataAdapter da;
-            string sqlString = "SELECT id_doco, f_documento, f_vencimiento, f_cobro, ctrl_cuenta.id_cliente, cd_cliente, nombre_cliente, ruta, dia_pago, " +
-                "serie_doco, folio_doco, tipo_documento, tipo_cobro, facturado, saldo, moneda, observaciones, CURRENT_DATE - f_vencimiento AS dias_vencido " +
+            string sqlString = "SELECT id_doco, ctrl_cuenta.ap_id, f_documento, f_vencimiento, f_cobro, ctrl_cuenta.id_cliente, cd_cliente, nombre_cliente, ruta, dia_pago, " +
+                "serie_doco, folio_doco, tipo_documento, tipo_cobro, facturado, saldo, moneda, observaciones " +
                 "FROM ctrl_cuenta INNER JOIN cat_cliente ON ctrl_cuenta.id_cliente = cat_cliente.id_cliente " +
                 "WHERE ctrl_cuenta.id_cliente = " + customerId.ToString() + " " +
                 "AND id_doco NOT IN(SELECT id_doco FROM ctrl_seguimiento WHERE id_movimiento IN(9,10));";
@@ -64,6 +65,17 @@ namespace SeguimientoGerente.Collectable.PostgresImpl
             ds.Reset();
             da.Fill(ds);
             conn.Close();
+
+            ds.Tables[0].Columns.Add("dias_vencido", typeof(int));
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                DateTime now = DateTime.Now;
+                DateTime dueDate = DateTime.Parse(row["f_vencimiento"].ToString());
+                TimeSpan elapsed = now.Subtract(dueDate);
+
+                row["dias_vencido"] = int.Parse(elapsed.TotalDays.ToString("0"));
+            }
+
             return ds.Tables[0];
         }
 

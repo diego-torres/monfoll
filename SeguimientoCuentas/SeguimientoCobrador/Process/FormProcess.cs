@@ -18,7 +18,7 @@ namespace SeguimientoCobrador.Process
 
         private SeguimientoCobrador.Collectable.PostgresImpl.Account dbAccount = new SeguimientoCobrador.Collectable.PostgresImpl.Account();
 
-        private DataTable dtUnassigned, dtAssigned, dtEscalated, dtClosed, dtCancelled;
+        private DataTable dtUnassigned, dtAssigned, dtEscalated, dtClosed, dtCancelled, dtUncollectable;
 
         public AdminPaqImp API { get { return api; } set { api = value; } }
 
@@ -31,34 +31,53 @@ namespace SeguimientoCobrador.Process
 
         private void FormProcess_Load(object sender, EventArgs e)
         {
-            Settings set = Settings.Default;
-
-            dtAssigned = dbAccount.Assigned(set.cobrador);
+            dtAssigned = dbAccount.Assigned();
             dataGridViewAssignedAccounts.DataSource = dtAssigned;
             FormatAccountsGridView(dataGridViewAssignedAccounts);
         }
 
-        
+
+        # region PRINT_BUTTONS
+
         private void toolStripButtonPrintAssigned_Click(object sender, EventArgs e)
         {
             ShowReportFromGrid(dataGridViewAssignedAccounts);
         }
+
+        # endregion
+
         
+
+        
+
+        # region FILTER_REMOVERS
+
+        
+
         private void toolStripButtonRemoveFilter_Click(object sender, EventArgs e)
         {
-            Settings set = Settings.Default;
-            dtAssigned = dbAccount.Assigned(set.cobrador);
+            dtAssigned = dbAccount.Assigned();
             dtAssigned.DefaultView.RowFilter = string.Empty;
             dataGridViewAssignedAccounts.DataSource = dtAssigned;
             FormatAccountsGridView(dataGridViewAssignedAccounts);
             assignedToolStripStatusFilter.Text = "FILTRO:";
         }
 
+        # endregion
+
+        # region REFRESH_BUTTONS
+        
+
         private void toolStripButtonRefresh_Click(object sender, EventArgs e)
         {
             RefreshAssigned();
         }
 
+        #endregion
+
+        #region ACTIVATE_ACCOUNT_GRID
+
+        
         private void dataGridViewAssignedAccounts_SelectionChanged(object sender, EventArgs e)
         {
             if (dataGridViewAssignedAccounts.CurrentRow == null) return;
@@ -66,6 +85,14 @@ namespace SeguimientoCobrador.Process
             dataGridViewAssignedFollowUp.DataSource = dbAccount.FollowUp(docId);
             FormatFollowUpGridView(dataGridViewAssignedFollowUp);
         }
+
+
+        #endregion
+
+        #region FOLLOW_UP_ACCOUNT
+
+
+        
 
         private void dataGridViewAssignedAccounts_DoubleClick(object sender, EventArgs e)
         {
@@ -84,6 +111,9 @@ namespace SeguimientoCobrador.Process
 
             parent.ShowFollowUp(account);
         }
+
+
+        #endregion
 
         #region CONTEXT_MENU
 
@@ -160,6 +190,10 @@ namespace SeguimientoCobrador.Process
 
         #endregion
 
+        #region DATE_SETTERS
+
+        
+
         private void AssignedToolStripButtonSetCollectDate_Click(object sender, EventArgs e)
         {
             DialogCollectDate collectDate = new DialogCollectDate();
@@ -177,17 +211,25 @@ namespace SeguimientoCobrador.Process
 
             RefreshAssigned();
         }
+
         #endregion
+
+
+        #endregion
+
+        # region GRID_REFRESHERS
+        
 
         private void RefreshAssigned()
         {
-            Settings set = Settings.Default;
             string prevFilter = dtAssigned.DefaultView.RowFilter;
-            dtAssigned = dbAccount.Assigned(set.cobrador);
+            dtAssigned = dbAccount.Assigned();
             dtAssigned.DefaultView.RowFilter = prevFilter;
             dataGridViewAssignedAccounts.DataSource = dtAssigned;
             FormatAccountsGridView(dataGridViewAssignedAccounts);
         }
+
+        #endregion
 
         private Payment PaymentFromDataRow(DataRow paymentRow)
         {
@@ -221,6 +263,7 @@ namespace SeguimientoCobrador.Process
         {
             Collectable.Account account = new Collectable.Account();
             account.DocId = int.Parse(dgv.CurrentRow.Cells["id_doco"].Value.ToString());
+            account.ApId = int.Parse(dgv.CurrentRow.Cells["ap_id"].Value.ToString());
             account.DocDate = DateTime.Parse(dgv.CurrentRow.Cells["f_documento"].Value.ToString());
             account.DueDate = DateTime.Parse(dgv.CurrentRow.Cells["f_vencimiento"].Value.ToString());
             account.CollectDate = DateTime.Parse(dgv.CurrentRow.Cells["f_cobro"].Value.ToString());
@@ -239,9 +282,16 @@ namespace SeguimientoCobrador.Process
             company.Name = dgv.CurrentRow.Cells["nombre_cliente"].Value.ToString();
             company.AgentCode = dgv.CurrentRow.Cells["ruta"].Value.ToString();
             company.PaymentDay = dgv.CurrentRow.Cells["dia_pago"].Value.ToString();
+            company.EnterpriseId = ConfiguredCompanyId();
             account.Company = company;
 
             return account;
+        }
+
+        private int ConfiguredCompanyId()
+        {
+            Settings set = Settings.Default;
+            return set.empresa;
         }
 
         private void FormatFollowUpGridView(DataGridView dgv)
@@ -274,28 +324,29 @@ namespace SeguimientoCobrador.Process
         private void FormatAccountsGridView(DataGridView dgv)
         {
             dgv.Columns["id_cliente"].Visible = false;
-            
-            FixColumn(dgv.Columns["dias_vencido"], 0, "Dias Vencimiento", 80);
-            FixColumn(dgv.Columns["f_documento"], 1, "Fecha Documento", 80);
-            FixColumn(dgv.Columns["f_vencimiento"], 2, "Fecha Vencimiento", 80);
+            dgv.Columns["id_doco"].Visible = false;
+            dgv.Columns["ap_id"].Visible = false;
+
+            FixColumn(dgv.Columns["f_documento"], 0, "Fecha Documento", 80);
+            FixColumn(dgv.Columns["f_vencimiento"], 1, "Fecha Vencimiento", 80);
+            FixColumn(dgv.Columns["dias_vencido"], 2, "Dias Vencimiento", 80);
             FixColumn(dgv.Columns["f_cobro"], 3, "Fecha Cobro", 80);
 
-            FixColumn(dgv.Columns["serie_doco"], 4, "Serie", 40);
-            FixColumn(dgv.Columns["folio_doco"], 5, "Doc #", 80);
-            FixColumn(dgv.Columns["tipo_documento"], 6, "Tipo Doc", 150);
+            FixColumn(dgv.Columns["ruta"], 4, "Ruta", 80);
+            FixColumn(dgv.Columns["serie_doco"], 5, "Serie", 40);
+            FixColumn(dgv.Columns["folio_doco"], 6, "Doc #", 80);
 
             FixColumn(dgv.Columns["cd_cliente"], 7, "# Cliente", 80);
             FixColumn(dgv.Columns["nombre_cliente"], 8, "Nombre del Cliente", 180);
-            FixColumn(dgv.Columns["ruta"], 9, "Ruta", 80);
-            FixColumn(dgv.Columns["dia_pago"], 10, "Ruta", 120);
 
-            FixColumn(dgv.Columns["tipo_cobro"], 11, "Tipo Cobro", 150);
-            FixColumn(dgv.Columns["facturado"], 12, "Total Facturado", 80);
-            FixColumn(dgv.Columns["saldo"], 13, "Saldo", 80);
-            FixColumn(dgv.Columns["moneda"], 14, "Moneda", 80);
-            FixColumn(dgv.Columns["observaciones"], 15, "Observaciones", 150);
-            FixColumn(dgv.Columns["id_doco"], 16, "DocId", 60);
+            FixColumn(dgv.Columns["tipo_cobro"], 9, "Tipo Cobro", 150);
+            FixColumn(dgv.Columns["facturado"], 10, "Total Facturado", 80);
+            FixColumn(dgv.Columns["saldo"], 11, "Saldo", 80);
+            FixColumn(dgv.Columns["moneda"], 12, "Moneda", 80);
+            FixColumn(dgv.Columns["observaciones"], 13, "Observaciones", 150);
 
+            FixColumn(dgv.Columns["tipo_documento"], 14, "Tipo Doc", 150);
+            FixColumn(dgv.Columns["dia_pago"], 15, "Dia de Pago", 120);
 
             dgv.Columns["f_cobro"].DefaultCellStyle.BackColor = Color.Beige;
             dgv.Columns["tipo_cobro"].DefaultCellStyle.BackColor = Color.Beige;
@@ -307,6 +358,7 @@ namespace SeguimientoCobrador.Process
 
         private void FixColumn(DataGridViewColumn column, int displayedIndex, string HeaderText, int width)
         {
+            if (column == null) return;
             column.DisplayIndex = displayedIndex;
             column.HeaderText = HeaderText;
             column.Width = width;
@@ -350,12 +402,26 @@ namespace SeguimientoCobrador.Process
                 Reports.Account ra = new Reports.Account();
                 ra.Name = documentRow.Cells["nombre_cliente"].Value.ToString();
                 ra.AgentCode = documentRow.Cells["ruta"].Value.ToString();
-                ra.Amount = double.Parse(documentRow.Cells["facturado"].Value.ToString());
-                ra.Balance = double.Parse(documentRow.Cells["saldo"].Value.ToString());
+                
+                ra.Currency = documentRow.Cells["moneda"].Value.ToString();
+                if (ra.Currency.ToUpper().Contains("PESO"))
+                {
+                    ra.Balance = double.Parse(documentRow.Cells["saldo"].Value.ToString());
+                    ra.Amount = double.Parse(documentRow.Cells["facturado"].Value.ToString());
+                    ra.Dolares = 0;
+                    ra.TotalDolares = 0;
+                }
+                else
+                {
+                    ra.Balance = 0;
+                    ra.Amount = 0;
+                    ra.Dolares = double.Parse(documentRow.Cells["saldo"].Value.ToString());
+                    ra.TotalDolares = double.Parse(documentRow.Cells["facturado"].Value.ToString());
+                }
+
                 ra.CollectDate = DateTime.Parse(documentRow.Cells["f_cobro"].Value.ToString());
                 ra.CollectType = documentRow.Cells["tipo_cobro"].Value.ToString();
                 ra.CompanyCode = documentRow.Cells["cd_cliente"].Value.ToString();
-                ra.Currency = documentRow.Cells["moneda"].Value.ToString();
                 ra.DocDate = DateTime.Parse(documentRow.Cells["f_documento"].Value.ToString());
                 ra.DocId = int.Parse(documentRow.Cells["id_doco"].Value.ToString());
                 ra.DocType = documentRow.Cells["tipo_documento"].Value.ToString();

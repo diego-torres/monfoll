@@ -30,16 +30,10 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormProcess));
-            this.tabControlProcess = new System.Windows.Forms.TabControl();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.splitContainerAssigned = new System.Windows.Forms.SplitContainer();
-            this.dataGridViewAssignedAccounts = new System.Windows.Forms.DataGridView();
             this.contextMenuStripAccountsGrid = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.applyFilterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.avoidValueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.dataGridViewAssignedFollowUp = new System.Windows.Forms.DataGridView();
-            this.statusStripAssigned = new System.Windows.Forms.StatusStrip();
-            this.assignedToolStripStatusFilter = new System.Windows.Forms.ToolStripStatusLabel();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
             this.toolStripAssigned = new System.Windows.Forms.ToolStrip();
             this.toolStripButtonPrintAssigned = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
@@ -47,75 +41,24 @@
             this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonRemoveFilter = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonRefresh = new System.Windows.Forms.ToolStripButton();
-            this.tabControlProcess.SuspendLayout();
+            this.statusStripAssigned = new System.Windows.Forms.StatusStrip();
+            this.assignedToolStripStatusFilter = new System.Windows.Forms.ToolStripStatusLabel();
+            this.splitContainerAssigned = new System.Windows.Forms.SplitContainer();
+            this.dataGridViewAssignedFollowUp = new System.Windows.Forms.DataGridView();
+            this.dataGridViewAssignedAccounts = new System.Windows.Forms.DataGridView();
+            this.tabControlProcess = new System.Windows.Forms.TabControl();
+            this.contextMenuStripAccountsGrid.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            this.toolStripAssigned.SuspendLayout();
+            this.statusStripAssigned.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerAssigned)).BeginInit();
             this.splitContainerAssigned.Panel1.SuspendLayout();
             this.splitContainerAssigned.Panel2.SuspendLayout();
             this.splitContainerAssigned.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAssignedAccounts)).BeginInit();
-            this.contextMenuStripAccountsGrid.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAssignedFollowUp)).BeginInit();
-            this.statusStripAssigned.SuspendLayout();
-            this.toolStripAssigned.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAssignedAccounts)).BeginInit();
+            this.tabControlProcess.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // tabControlProcess
-            // 
-            this.tabControlProcess.Controls.Add(this.tabPage2);
-            this.tabControlProcess.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControlProcess.Location = new System.Drawing.Point(0, 0);
-            this.tabControlProcess.Name = "tabControlProcess";
-            this.tabControlProcess.SelectedIndex = 0;
-            this.tabControlProcess.Size = new System.Drawing.Size(813, 463);
-            this.tabControlProcess.TabIndex = 0;
-            // 
-            // tabPage2
-            // 
-            this.tabPage2.Controls.Add(this.splitContainerAssigned);
-            this.tabPage2.Controls.Add(this.statusStripAssigned);
-            this.tabPage2.Controls.Add(this.toolStripAssigned);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(805, 437);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Asignados";
-            this.tabPage2.UseVisualStyleBackColor = true;
-            // 
-            // splitContainerAssigned
-            // 
-            this.splitContainerAssigned.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainerAssigned.Location = new System.Drawing.Point(3, 28);
-            this.splitContainerAssigned.Name = "splitContainerAssigned";
-            // 
-            // splitContainerAssigned.Panel1
-            // 
-            this.splitContainerAssigned.Panel1.Controls.Add(this.dataGridViewAssignedAccounts);
-            // 
-            // splitContainerAssigned.Panel2
-            // 
-            this.splitContainerAssigned.Panel2.Controls.Add(this.dataGridViewAssignedFollowUp);
-            this.splitContainerAssigned.Size = new System.Drawing.Size(799, 384);
-            this.splitContainerAssigned.SplitterDistance = 452;
-            this.splitContainerAssigned.TabIndex = 2;
-            // 
-            // dataGridViewAssignedAccounts
-            // 
-            this.dataGridViewAssignedAccounts.AllowUserToAddRows = false;
-            this.dataGridViewAssignedAccounts.AllowUserToDeleteRows = false;
-            this.dataGridViewAssignedAccounts.AllowUserToOrderColumns = true;
-            this.dataGridViewAssignedAccounts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewAssignedAccounts.ContextMenuStrip = this.contextMenuStripAccountsGrid;
-            this.dataGridViewAssignedAccounts.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridViewAssignedAccounts.Location = new System.Drawing.Point(0, 0);
-            this.dataGridViewAssignedAccounts.Name = "dataGridViewAssignedAccounts";
-            this.dataGridViewAssignedAccounts.ReadOnly = true;
-            this.dataGridViewAssignedAccounts.Size = new System.Drawing.Size(452, 384);
-            this.dataGridViewAssignedAccounts.TabIndex = 0;
-            this.dataGridViewAssignedAccounts.SelectionChanged += new System.EventHandler(this.dataGridViewAssignedAccounts_SelectionChanged);
-            this.dataGridViewAssignedAccounts.DoubleClick += new System.EventHandler(this.dataGridViewAssignedAccounts_DoubleClick);
-            this.dataGridViewAssignedAccounts.MouseDown += new System.Windows.Forms.MouseEventHandler(this.dataGridView_MouseDown);
             // 
             // contextMenuStripAccountsGrid
             // 
@@ -139,34 +82,18 @@
             this.avoidValueToolStripMenuItem.Text = "Omitir este valor";
             this.avoidValueToolStripMenuItem.Click += new System.EventHandler(this.avoidValueToolStripMenuItem_Click);
             // 
-            // dataGridViewAssignedFollowUp
+            // tabPage2
             // 
-            this.dataGridViewAssignedFollowUp.AllowUserToAddRows = false;
-            this.dataGridViewAssignedFollowUp.AllowUserToDeleteRows = false;
-            this.dataGridViewAssignedFollowUp.AllowUserToOrderColumns = true;
-            this.dataGridViewAssignedFollowUp.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewAssignedFollowUp.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridViewAssignedFollowUp.Location = new System.Drawing.Point(0, 0);
-            this.dataGridViewAssignedFollowUp.Name = "dataGridViewAssignedFollowUp";
-            this.dataGridViewAssignedFollowUp.ReadOnly = true;
-            this.dataGridViewAssignedFollowUp.Size = new System.Drawing.Size(343, 384);
-            this.dataGridViewAssignedFollowUp.TabIndex = 0;
-            // 
-            // statusStripAssigned
-            // 
-            this.statusStripAssigned.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.assignedToolStripStatusFilter});
-            this.statusStripAssigned.Location = new System.Drawing.Point(3, 412);
-            this.statusStripAssigned.Name = "statusStripAssigned";
-            this.statusStripAssigned.Size = new System.Drawing.Size(799, 22);
-            this.statusStripAssigned.TabIndex = 1;
-            this.statusStripAssigned.Text = "statusStrip2";
-            // 
-            // assignedToolStripStatusFilter
-            // 
-            this.assignedToolStripStatusFilter.Name = "assignedToolStripStatusFilter";
-            this.assignedToolStripStatusFilter.Size = new System.Drawing.Size(47, 17);
-            this.assignedToolStripStatusFilter.Text = "FILTRO:";
+            this.tabPage2.Controls.Add(this.statusStripAssigned);
+            this.tabPage2.Controls.Add(this.splitContainerAssigned);
+            this.tabPage2.Controls.Add(this.toolStripAssigned);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(805, 437);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "Asignados";
+            this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // toolStripAssigned
             // 
@@ -233,6 +160,79 @@
             this.toolStripButtonRefresh.Text = "Actualizar";
             this.toolStripButtonRefresh.Click += new System.EventHandler(this.toolStripButtonRefresh_Click);
             // 
+            // statusStripAssigned
+            // 
+            this.statusStripAssigned.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.assignedToolStripStatusFilter});
+            this.statusStripAssigned.Location = new System.Drawing.Point(3, 412);
+            this.statusStripAssigned.Name = "statusStripAssigned";
+            this.statusStripAssigned.Size = new System.Drawing.Size(799, 22);
+            this.statusStripAssigned.TabIndex = 1;
+            this.statusStripAssigned.Text = "statusStrip2";
+            // 
+            // assignedToolStripStatusFilter
+            // 
+            this.assignedToolStripStatusFilter.Name = "assignedToolStripStatusFilter";
+            this.assignedToolStripStatusFilter.Size = new System.Drawing.Size(47, 17);
+            this.assignedToolStripStatusFilter.Text = "FILTRO:";
+            // 
+            // splitContainerAssigned
+            // 
+            this.splitContainerAssigned.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainerAssigned.Location = new System.Drawing.Point(3, 28);
+            this.splitContainerAssigned.Name = "splitContainerAssigned";
+            // 
+            // splitContainerAssigned.Panel1
+            // 
+            this.splitContainerAssigned.Panel1.Controls.Add(this.dataGridViewAssignedAccounts);
+            // 
+            // splitContainerAssigned.Panel2
+            // 
+            this.splitContainerAssigned.Panel2.Controls.Add(this.dataGridViewAssignedFollowUp);
+            this.splitContainerAssigned.Size = new System.Drawing.Size(799, 406);
+            this.splitContainerAssigned.SplitterDistance = 452;
+            this.splitContainerAssigned.TabIndex = 2;
+            // 
+            // dataGridViewAssignedFollowUp
+            // 
+            this.dataGridViewAssignedFollowUp.AllowUserToAddRows = false;
+            this.dataGridViewAssignedFollowUp.AllowUserToDeleteRows = false;
+            this.dataGridViewAssignedFollowUp.AllowUserToOrderColumns = true;
+            this.dataGridViewAssignedFollowUp.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewAssignedFollowUp.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridViewAssignedFollowUp.Location = new System.Drawing.Point(0, 0);
+            this.dataGridViewAssignedFollowUp.Name = "dataGridViewAssignedFollowUp";
+            this.dataGridViewAssignedFollowUp.ReadOnly = true;
+            this.dataGridViewAssignedFollowUp.Size = new System.Drawing.Size(343, 406);
+            this.dataGridViewAssignedFollowUp.TabIndex = 0;
+            // 
+            // dataGridViewAssignedAccounts
+            // 
+            this.dataGridViewAssignedAccounts.AllowUserToAddRows = false;
+            this.dataGridViewAssignedAccounts.AllowUserToDeleteRows = false;
+            this.dataGridViewAssignedAccounts.AllowUserToOrderColumns = true;
+            this.dataGridViewAssignedAccounts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewAssignedAccounts.ContextMenuStrip = this.contextMenuStripAccountsGrid;
+            this.dataGridViewAssignedAccounts.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridViewAssignedAccounts.Location = new System.Drawing.Point(0, 0);
+            this.dataGridViewAssignedAccounts.Name = "dataGridViewAssignedAccounts";
+            this.dataGridViewAssignedAccounts.ReadOnly = true;
+            this.dataGridViewAssignedAccounts.Size = new System.Drawing.Size(452, 406);
+            this.dataGridViewAssignedAccounts.TabIndex = 0;
+            this.dataGridViewAssignedAccounts.SelectionChanged += new System.EventHandler(this.dataGridViewAssignedAccounts_SelectionChanged);
+            this.dataGridViewAssignedAccounts.DoubleClick += new System.EventHandler(this.dataGridViewAssignedAccounts_DoubleClick);
+            this.dataGridViewAssignedAccounts.MouseDown += new System.Windows.Forms.MouseEventHandler(this.dataGridView_MouseDown);
+            // 
+            // tabControlProcess
+            // 
+            this.tabControlProcess.Controls.Add(this.tabPage2);
+            this.tabControlProcess.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControlProcess.Location = new System.Drawing.Point(0, 0);
+            this.tabControlProcess.Name = "tabControlProcess";
+            this.tabControlProcess.SelectedIndex = 0;
+            this.tabControlProcess.Size = new System.Drawing.Size(813, 463);
+            this.tabControlProcess.TabIndex = 0;
+            // 
             // FormProcess
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -243,42 +243,42 @@
             this.Name = "FormProcess";
             this.Text = "FormProcess";
             this.Load += new System.EventHandler(this.FormProcess_Load);
-            this.tabControlProcess.ResumeLayout(false);
+            this.contextMenuStripAccountsGrid.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
+            this.toolStripAssigned.ResumeLayout(false);
+            this.toolStripAssigned.PerformLayout();
+            this.statusStripAssigned.ResumeLayout(false);
+            this.statusStripAssigned.PerformLayout();
             this.splitContainerAssigned.Panel1.ResumeLayout(false);
             this.splitContainerAssigned.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerAssigned)).EndInit();
             this.splitContainerAssigned.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAssignedAccounts)).EndInit();
-            this.contextMenuStripAccountsGrid.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAssignedFollowUp)).EndInit();
-            this.statusStripAssigned.ResumeLayout(false);
-            this.statusStripAssigned.PerformLayout();
-            this.toolStripAssigned.ResumeLayout(false);
-            this.toolStripAssigned.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAssignedAccounts)).EndInit();
+            this.tabControlProcess.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.TabControl tabControlProcess;
-        private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripAccountsGrid;
         private System.Windows.Forms.ToolStripMenuItem applyFilterToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem avoidValueToolStripMenuItem;
+        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.StatusStrip statusStripAssigned;
+        private System.Windows.Forms.ToolStripStatusLabel assignedToolStripStatusFilter;
         private System.Windows.Forms.SplitContainer splitContainerAssigned;
         private System.Windows.Forms.DataGridView dataGridViewAssignedAccounts;
         private System.Windows.Forms.DataGridView dataGridViewAssignedFollowUp;
-        private System.Windows.Forms.StatusStrip statusStripAssigned;
         private System.Windows.Forms.ToolStrip toolStripAssigned;
-        private System.Windows.Forms.ToolStripStatusLabel assignedToolStripStatusFilter;
         private System.Windows.Forms.ToolStripButton toolStripButtonPrintAssigned;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
-        private System.Windows.Forms.ToolStripButton toolStripButtonRemoveFilter;
-        private System.Windows.Forms.ToolStripButton toolStripButtonRefresh;
         private System.Windows.Forms.ToolStripButton AssignedToolStripButtonSetCollectDate;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator11;
+        private System.Windows.Forms.ToolStripButton toolStripButtonRemoveFilter;
+        private System.Windows.Forms.ToolStripButton toolStripButtonRefresh;
+        private System.Windows.Forms.TabControl tabControlProcess;
     }
 }

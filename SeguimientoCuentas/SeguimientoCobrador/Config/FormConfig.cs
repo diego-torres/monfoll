@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using SeguimientoCobrador.Collectable;
 using SeguimientoCobrador.Properties;
 using Npgsql;
+using CommonAdminPaq;
 
 namespace SeguimientoCobrador.Config
 {
@@ -35,13 +36,21 @@ namespace SeguimientoCobrador.Config
             comboBoxEmpresas.DataSource = bindingSourceEmpresas;
             comboBoxEmpresas.DisplayMember = "Nombre";
             comboBoxEmpresas.ValueMember = "Id";
+            try 
+            {
+                bindingSourceCollectors.DataSource = dbCollector.ReadCollectors();
+                comboBoxCobrador.DataSource = bindingSourceCollectors;
+                comboBoxCobrador.DisplayMember = "nombre_cobrador";
+                comboBoxCobrador.ValueMember = "id_cobrador";
 
-            bindingSourceCollectors.DataSource = dbCollector.ReadCollectors();
-            comboBoxCobrador.DataSource = bindingSourceCollectors;
-            comboBoxCobrador.DisplayMember = "nombre_cobrador";
-            comboBoxCobrador.ValueMember = "id_cobrador";
-            
-            loadConfiguration();
+                loadConfiguration();
+            }
+            catch (Exception ex) 
+            {
+                ErrLogger.Log(ex.Message);
+                MessageBox.Show("No se encontraron registros de cobradores en la base de datos. Pida a su supervisor que agregue los usuarios necesarios", "No hay cobradores", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                this.Close();
+            }
         }
 
         private void comboBoxEmpresas_SelectionChangeCommitted(object sender, EventArgs e)

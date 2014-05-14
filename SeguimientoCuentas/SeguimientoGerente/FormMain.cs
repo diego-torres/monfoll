@@ -11,6 +11,8 @@ using SeguimientoGerente.Catalogs;
 using SeguimientoGerente.Collectable;
 using SeguimientoGerente.Config;
 using SeguimientoGerente.Process;
+using SeguimientoGerente.Collectable.PostgresImpl;
+using CommonAdminPaq;
 
 namespace SeguimientoGerente
 {
@@ -27,7 +29,7 @@ namespace SeguimientoGerente
         private Dictionary<int, FormFollowup> followups = new Dictionary<int, FormFollowup>();
 
         private FormProcess fProcess;
-        
+
         public FormMain()
         {
             InitializeComponent();
@@ -51,7 +53,7 @@ namespace SeguimientoGerente
 
         public bool IsCollectorsOpen
         {
-            get 
+            get
             {
                 return !(fCobradores == null || fCobradores.IsDisposed);
             }
@@ -75,10 +77,10 @@ namespace SeguimientoGerente
                 fClientes.RefreshAccounts();
         }
 
-        public void ShowFollowUp(Account account)
+        public void ShowFollowUp(SeguimientoGerente.Collectable.Account account)
         {
             FormFollowup currentFollowing;
-            bool following = followups.TryGetValue(account.DocId, out currentFollowing); 
+            bool following = followups.TryGetValue(account.DocId, out currentFollowing);
 
             if (!following)
             {
@@ -140,6 +142,18 @@ namespace SeguimientoGerente
         private void FormMain_Load(object sender, EventArgs e)
         {
             api = new AdminPaqImp();
+            Enterprise dbEnterprise = new Enterprise();
+            foreach (Empresa enterprise in api.Empresas)
+            {
+                try
+                {
+                    dbEnterprise.SaveEnterprise(enterprise);
+                }
+                catch (Exception ex)
+                {
+                    ErrLogger.Log(ex.Message);
+                }
+            }
         }
 
         private void acercaDeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -169,7 +183,7 @@ namespace SeguimientoGerente
             ShowDownload();
             List<Collectable.Account> adminPaqAccounts = api.DownloadCollectables();
             Collectable.PostgresImpl.Account AccountInterface = new Collectable.PostgresImpl.Account();
-            AccountInterface.UploadAccounts(adminPaqAccounts, api.Cancelados);
+            AccountInterface.UploadAccounts(adminPaqAccounts, api.Cancelados, api.Conceptos);
             CloseDownload();
         }
 

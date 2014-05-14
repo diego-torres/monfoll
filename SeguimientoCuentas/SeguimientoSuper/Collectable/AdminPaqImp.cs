@@ -128,7 +128,7 @@ namespace SeguimientoSuper.Collectable
                         TableNames.DOCUMENTOS, account.CollectType, account.Note);
                 }
 
-                
+
 
                 dbResponse = AdminPaqLib.dbCmdExec(connection, command);
                 if (dbResponse != 0)
@@ -137,7 +137,7 @@ namespace SeguimientoSuper.Collectable
                     AdminPaqLib.dbLogOut(connection);
                     throw new Exception("No se pudo actualizar el registro");
                 }
-                else 
+                else
                 {
                     dbResponse = AdminPaqLib.dbCmdExec(connection, "COMMIT;");
                     if (dbResponse != 0)
@@ -148,14 +148,14 @@ namespace SeguimientoSuper.Collectable
                     }
                 }
             }
-            else 
+            else
             {
                 AdminPaqLib.dbLogOut(connection);
                 throw new Exception("El registro del documento se encuentra bloqueado por otro usuario.");
             }
 
             AdminPaqLib.dbLogOut(connection);
-            
+
         }
 
         public List<Account> DownloadCollectables()
@@ -165,11 +165,11 @@ namespace SeguimientoSuper.Collectable
             conceptos.Clear();
 
             Settings set = Settings.Default;
-            int connDocos, dbResponse, fieldResponse, collectableDocType=4;
+            int connDocos, dbResponse, fieldResponse, collectableDocType = 4;
             string startDate, endDate, tipo_doc;
 
-            int docType=collectableDocType, cancelled=0, conceptId=0, docId=0, folioDoc=0, currencyId=0, companyId=0;
-            double saldoPendiente=0, totalDoc=0;
+            int docType = collectableDocType, cancelled = 0, conceptId = 0, docId = 0, folioDoc = 0, currencyId = 0, companyId = 0;
+            double saldoPendiente = 0, totalDoc = 0;
             StringBuilder sbFechaDoco = new StringBuilder(9);
             StringBuilder sbFechaCobro = new StringBuilder(9);
             StringBuilder sbFechaVenc = new StringBuilder(9);
@@ -243,7 +243,7 @@ namespace SeguimientoSuper.Collectable
                         continue;
                     }
                 }
-                else 
+                else
                 {
                     if (!(sFechaCobro.CompareTo(startDate) >= 0 && sFechaCobro.CompareTo(endDate) <= 0))
                     {
@@ -314,7 +314,7 @@ namespace SeguimientoSuper.Collectable
                 account.Note = sObservations;
 
                 fieldResponse = AdminPaqLib.dbFieldLong(connDocos, TableNames.DOCUMENTOS, 15, ref currencyId);
-                if (!currencies.ContainsKey(currencyId)) 
+                if (!currencies.ContainsKey(currencyId))
                 {
                     currencyName = CurrencyName(currencyId, configuredCompany.Ruta);
                     if (currencyName != null)
@@ -323,7 +323,7 @@ namespace SeguimientoSuper.Collectable
                 account.Currency = currencies[currencyId];
 
                 fieldResponse = AdminPaqLib.dbFieldLong(connDocos, TableNames.DOCUMENTOS, 7, ref companyId);
-                
+
                 if (!companies.ContainsKey(companyId))
                 {
                     fieldResponse = AdminPaqLib.dbFieldChar(connDocos, TableNames.DOCUMENTOS, 8, sbCompanyName, 61);
@@ -348,7 +348,7 @@ namespace SeguimientoSuper.Collectable
             return result;
         }
 
-        private void FillPayments(Account account, string filePath, string[] conceptosAbono) 
+        private void FillPayments(Account account, string filePath, string[] conceptosAbono)
         {
             int connPayments, dbResponse, fqResponse;
             string key;
@@ -407,7 +407,7 @@ namespace SeguimientoSuper.Collectable
             key = docId.ToString().PadLeft(11);
             dbResponse = AdminPaqLib.dbGetNoLock(connPayment, TableNames.DOCUMENTOS, IndexNames.PRIMARY_KEY, key);
 
-            if (dbResponse == 0) 
+            if (dbResponse == 0)
             {
                 fqResponse = AdminPaqLib.dbFieldLong(connPayment, TableNames.DOCUMENTOS, 3, ref idPaymentConcept);
                 DocumentConcept concept = GetDocumentConcept(idPaymentConcept, filePath);
@@ -456,7 +456,7 @@ namespace SeguimientoSuper.Collectable
 
         private void FillCompany(Company company, string filePath)
         {
-            int connCompany, dbResponse, fqResponse, agentId=0, ubicacion=0;
+            int connCompany, dbResponse, fqResponse, agentId = 0, ubicacion = 0;
             StringBuilder sbCompanyCode = new StringBuilder(31);
             StringBuilder sbPaymentDay = new StringBuilder(51);
             string key;
@@ -519,7 +519,7 @@ namespace SeguimientoSuper.Collectable
         {
             int connCurrency, dbResponse, fqResponse;
             StringBuilder sbCurrencyName = new StringBuilder(61);
-            string key, sCurrencyName=String.Empty;
+            string key, sCurrencyName = String.Empty;
 
             connCurrency = AdminPaqLib.dbLogIn("", filePath);
             if (connCurrency == 0)
@@ -558,7 +558,7 @@ namespace SeguimientoSuper.Collectable
             key = docId.ToString().PadLeft(11);
             dbResponse = AdminPaqLib.dbGetNoLock(connDocos, TableNames.CONCEPTOS_DOCUMENTOS, IndexNames.PRIMARY_KEY, key);
 
-            if (dbResponse == 0) 
+            if (dbResponse == 0)
             {
                 fqResponse = AdminPaqLib.dbFieldChar(connDocos, TableNames.CONCEPTOS_DOCUMENTOS, 2, sConceptCode, 31);
                 conceptCode = sConceptCode.ToString().Substring(0, 30).Trim();

@@ -18,7 +18,7 @@ namespace SeguimientoGerente.Catalogs
         private bool collectorDirty = false;
         private bool noteDirty = false;
         private bool fireEvents = true;
-        
+
         private Collector dbCollector = new Collector();
         private SeguimientoGerente.Collectable.PostgresImpl.Account dbAccount = new Collectable.PostgresImpl.Account();
 
@@ -35,7 +35,7 @@ namespace SeguimientoGerente.Catalogs
             refreshAssignmentsGrid();
         }
 
-    # region EVENTS
+        # region EVENTS
         private void FormCobradoresGrid_Load(object sender, EventArgs e)
         {
             fireEvents = false;
@@ -70,6 +70,12 @@ namespace SeguimientoGerente.Catalogs
             collectorDirty = true;
         }
 
+        private int ConfiguredCompanyId()
+        {
+            Settings set = Settings.Default;
+            return set.empresa;
+        }
+
         private void dataGridViewAssignedDocuments_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             if (dataGridViewAssignedDocuments.CurrentRow == null) return;
@@ -100,6 +106,7 @@ namespace SeguimientoGerente.Catalogs
             company.Name = dataGridViewAssignedDocuments.CurrentRow.Cells["nombre_cliente"].Value.ToString();
             company.AgentCode = dataGridViewAssignedDocuments.CurrentRow.Cells["ruta"].Value.ToString();
             company.PaymentDay = dataGridViewAssignedDocuments.CurrentRow.Cells["dia_pago"].Value.ToString();
+            company.EnterpriseId = ConfiguredCompanyId();
             account.Company = company;
 
             int accountId = int.Parse(dataGridViewAssignedDocuments.CurrentRow.Cells["id_doco"].Value.ToString());
@@ -132,12 +139,28 @@ namespace SeguimientoGerente.Catalogs
                 Reports.Account ra = new Reports.Account();
                 ra.Name = documentRow.Cells["nombre_cliente"].Value.ToString();
                 ra.AgentCode = documentRow.Cells["ruta"].Value.ToString();
-                ra.Amount = double.Parse(documentRow.Cells["facturado"].Value.ToString());
-                ra.Balance = double.Parse(documentRow.Cells["saldo"].Value.ToString());
+
+                ra.Currency = documentRow.Cells["moneda"].Value.ToString();
+                if (ra.Currency.ToUpper().Contains("PESO"))
+                {
+                    ra.Balance = double.Parse(documentRow.Cells["saldo"].Value.ToString());
+                    ra.Amount = double.Parse(documentRow.Cells["facturado"].Value.ToString());
+                    ra.Dolares = 0;
+                    ra.TotalDolares = 0;
+                }
+                else
+                {
+                    ra.Balance = 0;
+                    ra.Amount = 0;
+                    ra.Dolares = double.Parse(documentRow.Cells["saldo"].Value.ToString());
+                    ra.TotalDolares = double.Parse(documentRow.Cells["facturado"].Value.ToString());
+                }
+
+
                 ra.CollectDate = DateTime.Parse(documentRow.Cells["f_cobro"].Value.ToString());
                 ra.CollectType = documentRow.Cells["tipo_cobro"].Value.ToString();
                 ra.CompanyCode = documentRow.Cells["cd_cliente"].Value.ToString();
-                ra.Currency = documentRow.Cells["moneda"].Value.ToString();
+                
                 ra.DocDate = DateTime.Parse(documentRow.Cells["f_documento"].Value.ToString());
                 ra.DocId = int.Parse(documentRow.Cells["id_doco"].Value.ToString());
                 ra.DocType = documentRow.Cells["tipo_documento"].Value.ToString();
@@ -171,7 +194,7 @@ namespace SeguimientoGerente.Catalogs
                     tabControl1.SelectTab(0);
                     return;
                 }
-                else 
+                else
                 {
                     refreshNotesGrid();
                 }
@@ -257,7 +280,7 @@ namespace SeguimientoGerente.Catalogs
         }
         #endregion
 
-    # endregion
+        # endregion
 
         private void ForceNoteSelection(string noteId)
         {
@@ -283,11 +306,11 @@ namespace SeguimientoGerente.Catalogs
 
             dataGridViewNotes.Columns[0].Width = 0;
             dataGridViewNotes.Columns[1].Width = 300;
-            
+
             dataGridViewNotes.Columns[0].HeaderText = "ID";
             dataGridViewNotes.Columns[0].Visible = false;
             dataGridViewNotes.Columns[1].HeaderText = "Nota";
-            
+
             if (dataGridViewNotes.Rows.Count > 0)
             {
                 dataGridViewNotes.Sort(dataGridViewNotes.Columns[1], ListSortDirection.Ascending);
@@ -341,8 +364,8 @@ namespace SeguimientoGerente.Catalogs
         }
 
         private bool ValidateNote()
-        { 
-            if(String.Empty.Equals(labelNoteID.Text))
+        {
+            if (String.Empty.Equals(labelNoteID.Text))
             {
                 MessageBox.Show("Seleccione una nota de la lista o seleccione [Nueva Nota] para agregar una nota nueva", "Identificador Interno", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 clearNoteSelection();
@@ -353,7 +376,7 @@ namespace SeguimientoGerente.Catalogs
             {
                 MessageBox.Show("No se pueden agregar Notas vacías", "Descripción de la Nota", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 textBoxComment.Focus();
-                return false;  
+                return false;
             }
 
             return true;
@@ -427,8 +450,8 @@ namespace SeguimientoGerente.Catalogs
         }
 
         private void refreshAssignmentsGrid()
-        { 
-            if(dataGridViewCollectors.CurrentRow == null) return;
+        {
+            if (dataGridViewCollectors.CurrentRow == null) return;
             int selectedCollectorId = int.Parse(dataGridViewCollectors.CurrentRow.Cells["id_cobrador"].Value.ToString());
             dataGridViewAssignedDocuments.DataSource = dbCollector.ReadAssignments(selectedCollectorId);
 
@@ -446,29 +469,26 @@ namespace SeguimientoGerente.Catalogs
 
             dataGridViewAssignedDocuments.Columns["id_cliente"].Visible = false;
             dataGridViewAssignedDocuments.Columns["dia_pago"].Visible = false;
-            
+            dataGridViewAssignedDocuments.Columns["id_doco"].Visible = false;
+            dataGridViewAssignedDocuments.Columns["tipo_documento"].Visible = false;
 
-            FixColumn(dataGridViewAssignedDocuments.Columns["id_doco"], 15, "DocId", 60);
-            FixColumn(dataGridViewAssignedDocuments.Columns["dias_vencido"], 0, "Dias Vencimiento", 80);
-            FixColumn(dataGridViewAssignedDocuments.Columns["f_documento"], 1, "Fecha Documento", 80);
-            FixColumn(dataGridViewAssignedDocuments.Columns["f_vencimiento"], 2, "Fecha Vencimiento", 80);
+            FixColumn(dataGridViewAssignedDocuments.Columns["f_documento"], 0, "Fecha Documento", 80);
+            FixColumn(dataGridViewAssignedDocuments.Columns["f_vencimiento"], 1, "Fecha Vencimiento", 80);
+            FixColumn(dataGridViewAssignedDocuments.Columns["dias_vencido"], 2, "Dias Vencimiento", 80);
             FixColumn(dataGridViewAssignedDocuments.Columns["f_cobro"], 3, "Fecha Cobro", 80);
 
-            FixColumn(dataGridViewAssignedDocuments.Columns["serie_doco"], 4, "Serie", 40);
-            FixColumn(dataGridViewAssignedDocuments.Columns["folio_doco"], 5, "Doc #", 80);
-            FixColumn(dataGridViewAssignedDocuments.Columns["tipo_documento"], 6, "Tipo Doc", 150);
-
+            FixColumn(dataGridViewAssignedDocuments.Columns["ruta"], 4, "Ruta", 80);
+            FixColumn(dataGridViewAssignedDocuments.Columns["serie_doco"], 5, "Serie", 40);
+            FixColumn(dataGridViewAssignedDocuments.Columns["folio_doco"], 6, "Doc #", 80);
             FixColumn(dataGridViewAssignedDocuments.Columns["cd_cliente"], 7, "# Cliente", 80);
             FixColumn(dataGridViewAssignedDocuments.Columns["nombre_cliente"], 8, "Nombre del Cliente", 180);
-            FixColumn(dataGridViewAssignedDocuments.Columns["ruta"], 9, "Ruta", 80);
-
-            FixColumn(dataGridViewAssignedDocuments.Columns["tipo_cobro"], 10, "Tipo Cobro", 150);
-            FixColumn(dataGridViewAssignedDocuments.Columns["facturado"], 11, "Total Facturado", 80);
-            FixColumn(dataGridViewAssignedDocuments.Columns["saldo"], 12, "Saldo", 80);
-            FixColumn(dataGridViewAssignedDocuments.Columns["moneda"], 13, "Moneda", 80);
-            FixColumn(dataGridViewAssignedDocuments.Columns["observaciones"], 14, "Observaciones", 150);
-
-
+            
+            FixColumn(dataGridViewAssignedDocuments.Columns["tipo_cobro"], 9, "Tipo Cobro", 150);
+            FixColumn(dataGridViewAssignedDocuments.Columns["facturado"], 10, "Total Facturado", 80);
+            FixColumn(dataGridViewAssignedDocuments.Columns["saldo"], 11, "Saldo", 80);
+            FixColumn(dataGridViewAssignedDocuments.Columns["moneda"], 12, "Moneda", 80);
+            FixColumn(dataGridViewAssignedDocuments.Columns["observaciones"], 13, "Observaciones", 150);
+            
             dataGridViewAssignedDocuments.Columns["f_cobro"].DefaultCellStyle.BackColor = Color.Beige;
             dataGridViewAssignedDocuments.Columns["tipo_cobro"].DefaultCellStyle.BackColor = Color.Beige;
             dataGridViewAssignedDocuments.Columns["observaciones"].DefaultCellStyle.BackColor = Color.Beige;
@@ -602,7 +622,5 @@ namespace SeguimientoGerente.Catalogs
             textBoxNombre.Focus();
             collectorDirty = false;
         }
-
-        
     }
 }
