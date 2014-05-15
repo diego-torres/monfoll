@@ -65,20 +65,20 @@
             this.clientesToolStripMenuItem,
             this.cobradoresToolStripMenuItem});
             this.catalogsToolStripMenuItem.Name = "catalogsToolStripMenuItem";
-            this.catalogsToolStripMenuItem.Size = new System.Drawing.Size(67, 20);
+            this.catalogsToolStripMenuItem.Size = new System.Drawing.Size(72, 20);
             this.catalogsToolStripMenuItem.Text = "&Catálogos";
             // 
             // clientesToolStripMenuItem
             // 
             this.clientesToolStripMenuItem.Name = "clientesToolStripMenuItem";
-            this.clientesToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
+            this.clientesToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
             this.clientesToolStripMenuItem.Text = "Cli&entes";
             this.clientesToolStripMenuItem.Click += new System.EventHandler(this.clientesToolStripMenuItem_Click);
             // 
             // cobradoresToolStripMenuItem
             // 
             this.cobradoresToolStripMenuItem.Name = "cobradoresToolStripMenuItem";
-            this.cobradoresToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
+            this.cobradoresToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
             this.cobradoresToolStripMenuItem.Text = "C&obradores";
             this.cobradoresToolStripMenuItem.Click += new System.EventHandler(this.cobradoresToolStripMenuItem_Click);
             // 
@@ -88,20 +88,20 @@
             this.descargarToolStripMenuItem,
             this.processToolStripMenuItem});
             this.cuentasToolStripMenuItem.Name = "cuentasToolStripMenuItem";
-            this.cuentasToolStripMenuItem.Size = new System.Drawing.Size(59, 20);
+            this.cuentasToolStripMenuItem.Size = new System.Drawing.Size(62, 20);
             this.cuentasToolStripMenuItem.Text = "C&uentas";
             // 
             // descargarToolStripMenuItem
             // 
             this.descargarToolStripMenuItem.Name = "descargarToolStripMenuItem";
-            this.descargarToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.descargarToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
             this.descargarToolStripMenuItem.Text = "&Descargar";
             this.descargarToolStripMenuItem.Click += new System.EventHandler(this.descargarToolStripMenuItem_Click);
             // 
             // processToolStripMenuItem
             // 
             this.processToolStripMenuItem.Name = "processToolStripMenuItem";
-            this.processToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.processToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
             this.processToolStripMenuItem.Text = "&Proceso";
             this.processToolStripMenuItem.Click += new System.EventHandler(this.processToolStripMenuItem_Click);
             // 
@@ -112,25 +112,25 @@
             this.toolStripSeparator2,
             this.acercaDeToolStripMenuItem});
             this.toolStripMenuItemConfig.Name = "toolStripMenuItemConfig";
-            this.toolStripMenuItemConfig.Size = new System.Drawing.Size(83, 20);
+            this.toolStripMenuItemConfig.Size = new System.Drawing.Size(90, 20);
             this.toolStripMenuItemConfig.Text = "&Herramientas";
             // 
             // configuracionToolStripMenuItem
             // 
             this.configuracionToolStripMenuItem.Name = "configuracionToolStripMenuItem";
-            this.configuracionToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
+            this.configuracionToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
             this.configuracionToolStripMenuItem.Text = "Configuración";
             this.configuracionToolStripMenuItem.Click += new System.EventHandler(this.configuracionToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(148, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(147, 6);
             // 
             // acercaDeToolStripMenuItem
             // 
             this.acercaDeToolStripMenuItem.Name = "acercaDeToolStripMenuItem";
-            this.acercaDeToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
+            this.acercaDeToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
             this.acercaDeToolStripMenuItem.Text = "Acerca de ...";
             this.acercaDeToolStripMenuItem.Click += new System.EventHandler(this.acercaDeToolStripMenuItem_Click);
             // 
@@ -148,8 +148,8 @@
             // mainStatus
             // 
             this.mainStatus.Name = "mainStatus";
-            this.mainStatus.Size = new System.Drawing.Size(308, 17);
-            this.mainStatus.Text = "Seguimiento a cuentas por cobrar - módulo de supervisor V 1.2";
+            this.mainStatus.Size = new System.Drawing.Size(348, 17);
+            this.mainStatus.Text = "Seguimiento a cuentas por cobrar - módulo de supervisor V 1.2.1";
             // 
             // mainProgressBar
             // 

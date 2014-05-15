@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Data;
 using Npgsql;
+using SeguimientoSuper.Properties;
 
 namespace SeguimientoSuper.Collectable.PostgresImpl
 {
@@ -417,9 +418,14 @@ namespace SeguimientoSuper.Collectable.PostgresImpl
 
             }
 
-            foreach (int docId in cancelled)
+            foreach (int AdminPaqId in cancelled)
             {
-                CancelAccount(docId);
+                int pgId = GetDocIdFromAdminPaq(AdminPaqId);
+                if (pgId != -1)
+                {
+                    CancelAccount(AdminPaqId);
+                }
+
             }
 
             foreach (Concepto concepto in conceptos.Values)
@@ -525,6 +531,30 @@ namespace SeguimientoSuper.Collectable.PostgresImpl
             return int.Parse(dt.Rows[0]["id_doco"].ToString());
         }
 
+        private int GetDocIdFromAdminPaq(int AdminPaqId)
+        {
+            Settings configusuario = Settings.Default;
+
+            DataSet ds = new DataSet();
+            DataTable dt = new DataTable();
+            NpgsqlDataAdapter da;
+            string sqlString = "SELECT id_doco " +
+                "FROM ctrl_cuenta " +
+                "WHERE ap_id = " + AdminPaqId.ToString() +
+                " AND enterprise_id = " + configusuario.empresa.ToString() + ";";
+            da = new NpgsqlDataAdapter(sqlString, conn);
+
+            ds.Reset();
+            da.Fill(ds);
+            dt = ds.Tables[0];
+            if (dt.Rows.Count == 0)
+            {
+                return -1;
+            }
+
+            return int.Parse(dt.Rows[0]["id_doco"].ToString());
+        }
+
         private void SaveConcepto(Concepto concepto)
         {
             if (!ConceptoExists(concepto))
@@ -575,22 +605,22 @@ namespace SeguimientoSuper.Collectable.PostgresImpl
 
         private void CancelAccount(int docId)
         {
-            if (DocumentExists(docId))
-            {
-                if (IsCancelled(docId)) return;
 
-                if (conn == null || conn.State != ConnectionState.Open)
-                    connect();
 
-                string sqlString = "INSERT INTO ctrl_seguimiento(id_movimiento, id_doco, descripcion) " +
-                    "VALUES(10, @docId, 'Documento cancelado en AdminPaq');";
+            if (IsCancelled(docId)) return;
 
-                NpgsqlCommand cmd = new NpgsqlCommand(sqlString, conn);
-                cmd.Parameters.Add("@docId", NpgsqlTypes.NpgsqlDbType.Integer);
-                cmd.Parameters["@docId"].Value = docId;
+            if (conn == null || conn.State != ConnectionState.Open)
+                connect();
 
-                cmd.ExecuteNonQuery();
-            }
+            string sqlString = "INSERT INTO ctrl_seguimiento(id_movimiento, id_doco, descripcion) " +
+                "VALUES(10, @docId, 'Documento cancelado en AdminPaq');";
+
+            NpgsqlCommand cmd = new NpgsqlCommand(sqlString, conn);
+            cmd.Parameters.Add("@docId", NpgsqlTypes.NpgsqlDbType.Integer);
+            cmd.Parameters["@docId"].Value = docId;
+
+            cmd.ExecuteNonQuery();
+
         }
 
         private bool IsCancelled(int docId)
@@ -610,12 +640,14 @@ namespace SeguimientoSuper.Collectable.PostgresImpl
             return dt.Rows.Count >= 1;
         }
 
-        private bool DocumentExists(int docId)
+        private bool DocumentExists(int AdminPaqId, int EnterpriseId)
         {
             DataSet ds = new DataSet();
             DataTable dt = new DataTable();
             NpgsqlDataAdapter da;
-            string sqlString = "SELECT id_doco FROM ctrl_cuenta WHERE id_doco = " + docId.ToString() + ";";
+            string sqlString = "SELECT id_doco FROM ctrl_cuenta " +
+                "WHERE ap_id = " + AdminPaqId.ToString() +
+                " AND enterprise_id = " + EnterpriseId.ToString() + ";";
             da = new NpgsqlDataAdapter(sqlString, conn);
 
             ds.Reset();
@@ -794,7 +826,7 @@ namespace SeguimientoSuper.Collectable.PostgresImpl
 
         private void SaveAccount(Collectable.Account adminPaqAccount)
         {
-            if (DocumentExists(adminPaqAccount.DocId))
+            if (DocumentExists(adminPaqAccount.ApId, adminPaqAccount.Company.EnterpriseId))
                 UpdateAccount(adminPaqAccount);
             else
                 AddAccount(adminPaqAccount);
