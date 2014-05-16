@@ -200,12 +200,12 @@ namespace SeguimientoCobrador.Process
             collectDate.ShowDialog();
 
             if (collectDate.DialogResult == DialogResult.Cancel) return;
-            List<int> selectedIds = SelectedIds(dataGridViewAssignedAccounts);
+            List<Collectable.Account> selectedIds = SelectedAdminId(dataGridViewAssignedAccounts);
 
-            foreach (int id in selectedIds)
+            foreach (Collectable.Account account in selectedIds)
             {
-                dbAccount.SetCollectDate(id, collectDate.dateTimePickerCollectDate.Value);
-                api.SetCollectDate(id, collectDate.dateTimePickerCollectDate.Value);
+                dbAccount.SetCollectDate(account.DocId, collectDate.dateTimePickerCollectDate.Value);
+                api.SetCollectDate(account.ApId, collectDate.dateTimePickerCollectDate.Value);
             }
             MessageBox.Show("Fecha de cobro actualizada en AdminPaq.", "Fecha de cobro asignada", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
@@ -436,18 +436,24 @@ namespace SeguimientoCobrador.Process
             return rAccounts;
         }
 
-        private List<int> SelectedIds(DataGridView dgv)
+        private List<Collectable.Account> SelectedAdminId(DataGridView dgv)
         {
-            List<int> selectedIds = new List<int>();
+            List<Collectable.Account> selectedAdminId = new List<Collectable.Account>();
 
             foreach (DataGridViewCell cell in dgv.SelectedCells)
             {
                 DataGridViewRow selectedRow = dgv.Rows[cell.RowIndex];
-                int selectedId = int.Parse(selectedRow.Cells["id_doco"].Value.ToString());
-                if (!selectedIds.Contains(selectedId))
-                    selectedIds.Add(selectedId);
+                int selectedId = int.Parse(selectedRow.Cells["ap_id"].Value.ToString());
+                int selectedPgDocId = int.Parse(selectedRow.Cells["id_doco"].Value.ToString());
+
+                Collectable.Account pgDoco = new Collectable.Account();
+                pgDoco.ApId = selectedId;
+                pgDoco.DocId = selectedPgDocId;
+
+                if (!selectedAdminId.Contains(pgDoco))
+                    selectedAdminId.Add(pgDoco);
             }
-            return selectedIds;
+            return selectedAdminId;
         }
     }
 }

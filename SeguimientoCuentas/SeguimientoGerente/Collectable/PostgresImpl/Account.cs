@@ -423,7 +423,7 @@ namespace SeguimientoGerente.Collectable.PostgresImpl
                 int pgId = GetDocIdFromAdminPaq(AdminPaqId);
                 if (pgId != -1)
                 {
-                    CancelAccount(AdminPaqId);
+                    CancelAccount(pgId);
                 }
 
             }
@@ -497,7 +497,7 @@ namespace SeguimientoGerente.Collectable.PostgresImpl
             cmd.Parameters["@f_documento"].Value = adminPaqAccount.DocDate;
             cmd.Parameters["@f_vencimiento"].Value = adminPaqAccount.DueDate;
             cmd.Parameters["@f_cobro"].Value = adminPaqAccount.CollectDate;
-            cmd.Parameters["@id_cliente"].Value = CompanyId(adminPaqAccount.Company.ApId, adminPaqAccount.Company.EnterpriseId);
+            cmd.Parameters["@id_cliente"].Value = adminPaqAccount.Company.Id;
             cmd.Parameters["@serie_doco"].Value = adminPaqAccount.Serie;
             cmd.Parameters["@folio_doco"].Value = adminPaqAccount.Folio;
             cmd.Parameters["@tipo_documento"].Value = adminPaqAccount.DocType;

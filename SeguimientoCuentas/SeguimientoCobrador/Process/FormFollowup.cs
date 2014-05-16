@@ -179,6 +179,9 @@ namespace SeguimientoCobrador.Process
                 postgresAcct.UpdateAccountById(account);
                 MessageBox.Show("Los datos han sido grabados exitosamente.", "Datos Guardados", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
+                FormMain fMain = (FormMain)this.MdiParent;
+                fMain.RefreshProcessAccounts();
+
                 adminPaqDirty = false;
                 return true;
             }
