@@ -115,6 +115,12 @@
     <Compile Include="Process\DialogCollectDate.Designer.cs">
       <DependentUpon>DialogCollectDate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Process\DialogDataToAdminPaq.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Process\DialogDataToAdminPaq.Designer.cs">
+      <DependentUpon>DialogDataToAdminPaq.cs</DependentUpon>
+    </Compile>
     <Compile Include="Process\FormFollowup.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -159,6 +165,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Process\DialogCollectDate.resx">
       <DependentUpon>DialogCollectDate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Process\DialogDataToAdminPaq.resx">
+      <DependentUpon>DialogDataToAdminPaq.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Process\FormFollowup.resx">
       <DependentUpon>FormFollowup.cs</DependentUpon>

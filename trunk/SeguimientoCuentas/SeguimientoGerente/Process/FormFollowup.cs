@@ -185,7 +185,11 @@ namespace SeguimientoGerente.Process
                     fMain.RefreshAccountsInClientes();
 
                 if (fMain.IsCollectorsOpen)
-                    fMain.RefreshAccountsInClientes();
+                    fMain.RefreshAccountsInCollectors();
+
+                if (fMain.IsProcessOpen)
+                    fMain.RefreshProcessAccounts();
+
 
                 adminPaqDirty = false;
 

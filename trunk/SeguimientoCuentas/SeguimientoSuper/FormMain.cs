@@ -61,7 +61,7 @@ namespace SeguimientoSuper
 
         public void RefreshProcessAccounts()
         {
-            if (IsCollectorsOpen)
+            if (IsProcessOpen)
                 fProcess.Refresh();
         }
 

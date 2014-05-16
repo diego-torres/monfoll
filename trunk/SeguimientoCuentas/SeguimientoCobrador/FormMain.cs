@@ -38,6 +38,12 @@ namespace SeguimientoCobrador
             }
         }
 
+        public void RefreshProcessAccounts()
+        {
+            if (IsProcessOpen)
+                fProcess.Refresh();
+        }
+
         public void ShowFollowUp(SeguimientoCobrador.Collectable.Account account)
         {
             FormFollowup currentFollowing;
