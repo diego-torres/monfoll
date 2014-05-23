@@ -35,6 +35,62 @@ namespace SeguimientoCobrador.Collectable
             InitializeSDK();
         }
 
+        public void SetObservations(int docId, string collectType, string observations)
+        {
+            int connection, dbResponse;
+            string key, command;
+
+            Empresa configuredCompany = ConfiguredCompany();
+
+            if (configuredCompany == null)
+            {
+                ErrLogger.Log("Wrong Company configuration.");
+                return;
+            }
+
+            connection = AdminPaqLib.dbLogIn("", configuredCompany.Ruta);
+            if (connection == 0)
+            {
+                ErrLogger.Log("Unable to open connection to documents table for company [" + configuredCompany.Nombre + "]");
+                return;
+            }
+
+            key = docId.ToString().PadLeft(11);
+            dbResponse = AdminPaqLib.dbGet(connection, TableNames.DOCUMENTOS, IndexNames.PRIMARY_KEY, key);
+
+            if (dbResponse == 0)
+            {
+                command = string.Format("UPDATE {0}(CTEXTOEX01=\"{1}\",CTEXTOEX02=\"{2}\");",
+                        TableNames.DOCUMENTOS, collectType, observations);
+
+
+                dbResponse = AdminPaqLib.dbCmdExec(connection, command);
+                if (dbResponse != 0)
+                {
+                    dbResponse = AdminPaqLib.dbCmdExec(connection, "ROLLBACK;");
+                    AdminPaqLib.dbLogOut(connection);
+                    throw new Exception("No se pudo actualizar el registro");
+                }
+                else
+                {
+                    dbResponse = AdminPaqLib.dbCmdExec(connection, "COMMIT;");
+                    if (dbResponse != 0)
+                    {
+                        dbResponse = AdminPaqLib.dbCmdExec(connection, "ROLLBACK;");
+                        AdminPaqLib.dbLogOut(connection);
+                        throw new Exception("No se pudo confirmar la actualización del registro.");
+                    }
+                }
+            }
+            else
+            {
+                AdminPaqLib.dbLogOut(connection);
+                throw new Exception("El registro del documento se encuentra bloqueado por otro usuario.");
+            }
+
+            AdminPaqLib.dbLogOut(connection);
+        }
+
         public void SetCollectDate(int docId, DateTime collectDate)
         {
             int connection, dbResponse;
@@ -61,6 +117,11 @@ namespace SeguimientoCobrador.Collectable
             if (dbResponse == 0)
             {
                 string sCollectDate = collectDate.ToString("yyyyMMdd");
+                if (collectDate.Ticks == 0)
+                {
+                    sCollectDate = "18991230";
+                }
+
                 command = string.Format("UPDATE {0}(CFECHAEX01=\"{1}\");",
                     TableNames.DOCUMENTOS, sCollectDate);
 
@@ -116,17 +177,14 @@ namespace SeguimientoCobrador.Collectable
 
             if (dbResponse == 0)
             {
+                string sCollectDate = "18991230";
                 if (account.CollectDate.Ticks > 0)
                 {
-                    string sCollectDate = account.CollectDate.ToString("yyyyMMdd");
-                    command = string.Format("UPDATE {0}(CFECHAEX01=\"{1}\",CTEXTOEX01=\"{2}\",CTEXTOEX02=\"{3}\");",
+                    sCollectDate = account.CollectDate.ToString("yyyyMMdd");
+                    
+                }
+                command = string.Format("UPDATE {0}(CFECHAEX01=\"{1}\",CTEXTOEX01=\"{2}\",CTEXTOEX02=\"{3}\");",
                         TableNames.DOCUMENTOS, sCollectDate, account.CollectType, account.Note);
-                }
-                else
-                {
-                    command = string.Format("UPDATE {0}(CTEXTOEX01=\"{1}\",CTEXTOEX02=\"{2}\");",
-                        TableNames.DOCUMENTOS, account.CollectType, account.Note);
-                }
 
 
 
@@ -156,6 +214,99 @@ namespace SeguimientoCobrador.Collectable
 
             AdminPaqLib.dbLogOut(connection);
 
+        }
+
+        public void DownloadCollectable(ref Account source, string[] conceptosAbono, out bool isCancelled)
+        {
+            int connection, dbResponse, fieldResponse;
+            string key;
+
+            int cancelled = 0, folioDoc = 0, currencyId = 0;
+            double saldoPendiente = 0, totalDoc = 0;
+            StringBuilder sbFechaDoco = new StringBuilder(9);
+            StringBuilder sbFechaCobro = new StringBuilder(9);
+            StringBuilder sbFechaVenc = new StringBuilder(9);
+            StringBuilder sbCompanyName = new StringBuilder(61);
+            StringBuilder sbSerieDoc = new StringBuilder(12);
+            StringBuilder sbTipoCobro = new StringBuilder(51);
+            StringBuilder sbObservations = new StringBuilder(51);
+            string sFechaDoco, sFechaCobro, sFechaVenc, sSerieDoc, sTipoCobro, sObservations;
+
+            Empresa configuredCompany = ConfiguredCompany();
+
+            if (configuredCompany == null)
+            {
+                ErrLogger.Log("Wrong Company configuration.");
+                throw new Exception("Error en la configuración de empresa.");
+            }
+
+            connection = AdminPaqLib.dbLogIn("", configuredCompany.Ruta);
+            if (connection == 0)
+            {
+                ErrLogger.Log("Unable to open connection to documents table for company [" + configuredCompany.Nombre + "]");
+                throw new Exception("No fue posible establecer la conexión con la base de datos de la empresa.");
+            }
+
+            key = source.ApId.ToString().PadLeft(11);
+            dbResponse = AdminPaqLib.dbGet(connection, TableNames.DOCUMENTOS, IndexNames.PRIMARY_KEY, key);
+
+            if (dbResponse == 0)
+            {
+                // Obtener datos de la cuenta
+                fieldResponse = AdminPaqLib.dbFieldLong(connection, TableNames.DOCUMENTOS, 26, ref cancelled);
+                isCancelled = cancelled != 0;
+                
+
+                fieldResponse = AdminPaqLib.dbFieldDouble(connection, TableNames.DOCUMENTOS, 44, ref saldoPendiente);
+
+                fieldResponse = AdminPaqLib.dbFieldChar(connection, TableNames.DOCUMENTOS, 6, sbFechaDoco, 9);
+                fieldResponse = AdminPaqLib.dbFieldChar(connection, TableNames.DOCUMENTOS, 56, sbFechaCobro, 9);
+
+                sFechaDoco = sbFechaDoco.ToString().Substring(0, 8);
+                sFechaCobro = sbFechaCobro.ToString().Substring(0, 8);
+
+                source.DocDate = DateTime.ParseExact(sFechaDoco, IndexNames.DATE_FORMAT_PATTERN, CultureInfo.InvariantCulture);
+
+                if (!string.Empty.Equals(sFechaCobro.Trim()) && !"18991230".Equals(sFechaCobro.Trim()))
+                    source.CollectDate = DateTime.ParseExact(sFechaCobro, IndexNames.DATE_FORMAT_PATTERN, CultureInfo.InvariantCulture);
+
+                source.Balance = saldoPendiente;
+
+                fieldResponse = AdminPaqLib.dbFieldChar(connection, TableNames.DOCUMENTOS, 11, sbFechaVenc, 9);
+                sFechaVenc = sbFechaVenc.ToString().Substring(0, 8).Trim();
+                source.DueDate = DateTime.ParseExact(sFechaVenc, IndexNames.DATE_FORMAT_PATTERN, CultureInfo.InvariantCulture);
+
+                fieldResponse = AdminPaqLib.dbFieldChar(connection, TableNames.DOCUMENTOS, 4, sbSerieDoc, 12);
+                sSerieDoc = sbSerieDoc.ToString().Substring(0, 11).Trim();
+                source.Serie = sSerieDoc;
+
+                fieldResponse = AdminPaqLib.dbFieldLong(connection, TableNames.DOCUMENTOS, 5, ref folioDoc);
+                source.Folio = folioDoc;
+
+                fieldResponse = AdminPaqLib.dbFieldDouble(connection, TableNames.DOCUMENTOS, 43, ref totalDoc);
+                source.Amount = totalDoc;
+
+                fieldResponse = AdminPaqLib.dbFieldChar(connection, TableNames.DOCUMENTOS, 53, sbTipoCobro, 51);
+                sTipoCobro = sbTipoCobro.ToString().Substring(0, 50).Trim();
+                source.CollectType = sTipoCobro;
+
+                fieldResponse = AdminPaqLib.dbFieldChar(connection, TableNames.DOCUMENTOS, 54, sbObservations, 51);
+                sObservations = sbObservations.ToString().Substring(0, 50).Trim();
+                source.Note = sObservations;
+
+                fieldResponse = AdminPaqLib.dbFieldLong(connection, TableNames.DOCUMENTOS, 15, ref currencyId);
+                source.Currency = CurrencyName(currencyId, configuredCompany.Ruta);
+
+                source.Company = source.Company;
+                FillPayments(source, configuredCompany.Ruta, conceptosAbono);
+            }
+            else
+            {
+                AdminPaqLib.dbLogOut(connection);
+                throw new Exception("El registro del documento se encuentra bloqueado por otro usuario.");
+            }
+
+            AdminPaqLib.dbLogOut(connection);
         }
 
         private void FillPayments(Account account, string filePath, string[] conceptosAbono)

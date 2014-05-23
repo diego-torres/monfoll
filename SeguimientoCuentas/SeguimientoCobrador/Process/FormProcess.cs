@@ -18,7 +18,7 @@ namespace SeguimientoCobrador.Process
 
         private SeguimientoCobrador.Collectable.PostgresImpl.Account dbAccount = new SeguimientoCobrador.Collectable.PostgresImpl.Account();
 
-        private DataTable dtUnassigned, dtAssigned, dtEscalated, dtClosed, dtCancelled, dtUncollectable;
+        private DataTable dtAssigned, dtAttended;
 
         public AdminPaqImp API { get { return api; } set { api = value; } }
 
@@ -34,10 +34,19 @@ namespace SeguimientoCobrador.Process
             dtAssigned = dbAccount.Assigned();
             dataGridViewAssignedAccounts.DataSource = dtAssigned;
             FormatAccountsGridView(dataGridViewAssignedAccounts);
+
+            dtAttended = dbAccount.Attended();
+            dataGridViewAttendedAccounts.DataSource = dtAttended;
+            FormatAccountsGridView(dataGridViewAttendedAccounts);
         }
 
 
         # region PRINT_BUTTONS
+
+        private void toolStripButtonPrintAttended_Click(object sender, EventArgs e)
+        {
+            ShowReportFromGrid(dataGridViewAttendedAccounts);
+        }
 
         private void toolStripButtonPrintAssigned_Click(object sender, EventArgs e)
         {
@@ -46,13 +55,16 @@ namespace SeguimientoCobrador.Process
 
         # endregion
 
-        
-
-        
-
         # region FILTER_REMOVERS
 
-        
+        private void toolStripButtonRemmoveFilterAttended_Click(object sender, EventArgs e)
+        {
+            dtAttended = dbAccount.Attended();
+            dtAttended.DefaultView.RowFilter = string.Empty;
+            dataGridViewAttendedAccounts.DataSource = dtAttended;
+            FormatAccountsGridView(dataGridViewAttendedAccounts);
+            toolStripStatusLabelAttended.Text = "FILTRO:";
+        }
 
         private void toolStripButtonRemoveFilter_Click(object sender, EventArgs e)
         {
@@ -66,7 +78,12 @@ namespace SeguimientoCobrador.Process
         # endregion
 
         # region REFRESH_BUTTONS
-        
+
+
+        private void toolStripButtonUpdateAttended_Click(object sender, EventArgs e)
+        {
+            RefreshAttended();
+        }
 
         private void toolStripButtonRefresh_Click(object sender, EventArgs e)
         {
@@ -76,7 +93,14 @@ namespace SeguimientoCobrador.Process
         #endregion
 
         #region ACTIVATE_ACCOUNT_GRID
-
+        
+        private void dataGridViewAttendedAccounts_SelectionChanged(object sender, EventArgs e)
+        {
+            if (dataGridViewAttendedAccounts.CurrentRow == null) return;
+            int docId = int.Parse(dataGridViewAttendedAccounts.CurrentRow.Cells["id_doco"].Value.ToString());
+            dataGridViewAttendedFollowUp.DataSource = dbAccount.FollowUp(docId);
+            FormatFollowUpGridView(dataGridViewAttendedFollowUp);
+        }
         
         private void dataGridViewAssignedAccounts_SelectionChanged(object sender, EventArgs e)
         {
@@ -91,8 +115,23 @@ namespace SeguimientoCobrador.Process
 
         #region FOLLOW_UP_ACCOUNT
 
+        private void dataGridViewAttendedAccounts_DoubleClick(object sender, EventArgs e)
+        {
+            if (dataGridViewAttendedAccounts.CurrentRow == null) return;
+            FormMain parent = (FormMain)this.MdiParent;
+            Collectable.Account account = AccountFromGrid(dataGridViewAttendedAccounts);
 
-        
+            DataTable dtPayments = dbAccount.ReadPayments(account.DocId);
+
+            foreach (DataRow paymentRow in dtPayments.Rows)
+            {
+                Payment payment = PaymentFromDataRow(paymentRow);
+                payment.DocId = account.DocId;
+                account.Payments.Add(payment);
+            }
+
+            parent.ShowFollowUp(account);
+        }
 
         private void dataGridViewAssignedAccounts_DoubleClick(object sender, EventArgs e)
         {
@@ -138,9 +177,21 @@ namespace SeguimientoCobrador.Process
             DataTable dtSender = null;
             ToolStripStatusLabel status = null;
 
-            dgvSender = dataGridViewAssignedAccounts;
-            dtSender = dtAssigned;
-            status = assignedToolStripStatusFilter;
+            switch (tabControlProcess.SelectedIndex)
+            {
+                case 0:
+                    dgvSender = dataGridViewAssignedAccounts;
+                    dtSender = dtAssigned;
+                    status = assignedToolStripStatusFilter;
+                    break;
+                case 1:
+                    dgvSender = dataGridViewAttendedAccounts;
+                    dtSender = dtAttended;
+                    status = toolStripStatusLabelAttended;
+                    break;
+                default:
+                    return;
+            }
 
             string filterToApply = dtSender.DefaultView.RowFilter;
             string columnName = dgvSender.Columns[dgvSender.CurrentCell.ColumnIndex].Name;
@@ -167,9 +218,21 @@ namespace SeguimientoCobrador.Process
             DataTable dtSender = null;
             ToolStripStatusLabel status = null;
 
-            dgvSender = dataGridViewAssignedAccounts;
-            dtSender = dtAssigned;
-            status = assignedToolStripStatusFilter;
+            switch (tabControlProcess.SelectedIndex)
+            {
+                case 0:
+                    dgvSender = dataGridViewAssignedAccounts;
+                    dtSender = dtAssigned;
+                    status = assignedToolStripStatusFilter;
+                    break;
+                case 1:
+                    dgvSender = dataGridViewAttendedAccounts;
+                    dtSender = dtAttended;
+                    status = toolStripStatusLabelAttended;
+                    break;
+                default:
+                    return;
+            }
 
             string filterToApply = dtSender.DefaultView.RowFilter;
             string columnName = dgvSender.Columns[dgvSender.CurrentCell.ColumnIndex].Name;
@@ -192,7 +255,69 @@ namespace SeguimientoCobrador.Process
 
         #region DATE_SETTERS
 
-        
+        private void toolStripButtonAttendedObservations_Click(object sender, EventArgs e)
+        {
+            DialogObservations dlgObs = new DialogObservations();
+            dlgObs.ShowDialog();
+            if (dlgObs.DialogResult == DialogResult.Cancel) return;
+
+            List<Collectable.Account> selectedIds = SelectedAdminId(dataGridViewAttendedAccounts);
+
+            foreach (Collectable.Account account in selectedIds)
+            {
+                dbAccount.SetObservations(account.DocId, dlgObs.textBoxCollectType.Text, dlgObs.textBoxObservations.Text);
+                api.SetObservations(account.ApId, dlgObs.textBoxCollectType.Text, dlgObs.textBoxObservations.Text);
+            }
+            MessageBox.Show("Observaciones actualizadas exitosamente en AdminPaq.", "Observaciones actualizadas", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            RefreshAttended();
+        }
+
+        private void toolStripButtonObservacionesAsignados_Click(object sender, EventArgs e)
+        {
+            DialogObservations dlgObs = new DialogObservations();
+            dlgObs.ShowDialog();
+            if (dlgObs.DialogResult == DialogResult.Cancel) return;
+
+            List<Collectable.Account> selectedIds = SelectedAdminId(dataGridViewAssignedAccounts);
+
+            foreach (Collectable.Account account in selectedIds)
+            {
+                dbAccount.SetObservations(account.DocId, dlgObs.textBoxCollectType.Text, dlgObs.textBoxObservations.Text);
+                api.SetObservations(account.ApId, dlgObs.textBoxCollectType.Text, dlgObs.textBoxObservations.Text);
+            }
+            MessageBox.Show("Observaciones actualizadas exitosamente en AdminPaq.", "Observaciones actualizadas", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            RefreshAssigned();
+            RefreshAttended();
+        }
+
+        private void toolStripButtonSetCollectDateAttended_Click(object sender, EventArgs e)
+        {
+            DialogCollectDate collectDate = new DialogCollectDate();
+            collectDate.ShowDialog();
+
+            if (collectDate.DialogResult == DialogResult.Cancel) return;
+            List<Collectable.Account> selectedIds = SelectedAdminId(dataGridViewAttendedAccounts);
+
+            foreach (Collectable.Account account in selectedIds)
+            {
+                if (collectDate.dateTimePickerCollectDate.Checked)
+                {
+                    dbAccount.SetCollectDate(account.DocId, collectDate.dateTimePickerCollectDate.Value);
+                    api.SetCollectDate(account.ApId, collectDate.dateTimePickerCollectDate.Value);
+                }
+                else
+                {
+                    dbAccount.SetCollectDate(account.DocId, new DateTime(0));
+                    api.SetCollectDate(account.ApId, collectDate.dateTimePickerCollectDate.Value);
+                }
+            }
+            MessageBox.Show("Fecha de cobro actualizada en AdminPaq.", "Fecha de cobro asignada", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            RefreshAssigned();
+            RefreshAttended();
+        }
 
         private void AssignedToolStripButtonSetCollectDate_Click(object sender, EventArgs e)
         {
@@ -204,12 +329,22 @@ namespace SeguimientoCobrador.Process
 
             foreach (Collectable.Account account in selectedIds)
             {
-                dbAccount.SetCollectDate(account.DocId, collectDate.dateTimePickerCollectDate.Value);
-                api.SetCollectDate(account.ApId, collectDate.dateTimePickerCollectDate.Value);
+
+                if (collectDate.dateTimePickerCollectDate.Checked)
+                {
+                    dbAccount.SetCollectDate(account.DocId, collectDate.dateTimePickerCollectDate.Value);
+                    api.SetCollectDate(account.ApId, collectDate.dateTimePickerCollectDate.Value);
+                }
+                else
+                {
+                    dbAccount.SetCollectDate(account.DocId, new DateTime(0));
+                    api.SetCollectDate(account.ApId, collectDate.dateTimePickerCollectDate.Value);
+                }
             }
             MessageBox.Show("Fecha de cobro actualizada en AdminPaq.", "Fecha de cobro asignada", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             RefreshAssigned();
+            RefreshAttended();
         }
 
         #endregion
@@ -218,7 +353,15 @@ namespace SeguimientoCobrador.Process
         #endregion
 
         # region GRID_REFRESHERS
-        
+
+        private void RefreshAttended()
+        {
+            string prevFilter = dtAttended.DefaultView.RowFilter;
+            dtAttended = dbAccount.Attended();
+            dtAttended.DefaultView.RowFilter = prevFilter;
+            dataGridViewAttendedAccounts.DataSource = dtAttended;
+            FormatAccountsGridView(dataGridViewAttendedAccounts);
+        }
 
         private void RefreshAssigned()
         {
@@ -227,6 +370,12 @@ namespace SeguimientoCobrador.Process
             dtAssigned.DefaultView.RowFilter = prevFilter;
             dataGridViewAssignedAccounts.DataSource = dtAssigned;
             FormatAccountsGridView(dataGridViewAssignedAccounts);
+            if (dtAssigned.Rows.Count == 0)
+            {
+                dataGridViewAssignedFollowUp.DataSource = null;
+                dataGridViewAssignedFollowUp.Refresh();
+            }
+                
         }
 
         #endregion
@@ -436,6 +585,20 @@ namespace SeguimientoCobrador.Process
             return rAccounts;
         }
 
+        private List<int> SelectedIds(DataGridView dgv)
+        {
+            List<int> selectedIds = new List<int>();
+
+            foreach (DataGridViewCell cell in dgv.SelectedCells)
+            {
+                DataGridViewRow selectedRow = dgv.Rows[cell.RowIndex];
+                int selectedId = int.Parse(selectedRow.Cells["id_doco"].Value.ToString());
+                if (!selectedIds.Contains(selectedId))
+                    selectedIds.Add(selectedId);
+            }
+            return selectedIds;
+        }
+
         private List<Collectable.Account> SelectedAdminId(DataGridView dgv)
         {
             List<Collectable.Account> selectedAdminId = new List<Collectable.Account>();
@@ -455,5 +618,6 @@ namespace SeguimientoCobrador.Process
             }
             return selectedAdminId;
         }
+
     }
 }

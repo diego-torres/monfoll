@@ -126,7 +126,7 @@ namespace SeguimientoSuper.Config
 
 
             List<Collectable.Account> adminPaqAccounts = api.DownloadCollectables();
-            AccountInterface.UploadAccounts(adminPaqAccounts, api.Cancelados, api.Conceptos);
+            AccountInterface.UploadAccounts(adminPaqAccounts, api.Cancelados, api.Saldados, api.Conceptos);
             parent.CloseDownload();
             this.Close();
         }

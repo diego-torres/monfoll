@@ -62,6 +62,7 @@
             this.dateTimePickerCollectDate.MaxDate = new System.DateTime(2024, 1, 1, 0, 0, 0, 0);
             this.dateTimePickerCollectDate.MinDate = new System.DateTime(2014, 1, 1, 0, 0, 0, 0);
             this.dateTimePickerCollectDate.Name = "dateTimePickerCollectDate";
+            this.dateTimePickerCollectDate.ShowCheckBox = true;
             this.dateTimePickerCollectDate.Size = new System.Drawing.Size(168, 20);
             this.dateTimePickerCollectDate.TabIndex = 3;
             this.dateTimePickerCollectDate.Value = new System.DateTime(2014, 1, 1, 0, 0, 0, 0);

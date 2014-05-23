@@ -87,6 +87,40 @@ namespace SeguimientoGerente.Collectable.PostgresImpl
             conn.Close();
         }
 
+        public void SetObservations(int docId, string collectType, string observations)
+        {
+            if (conn == null || conn.State != ConnectionState.Open)
+                connect();
+
+            string sqlString = "UPDATE ctrl_cuenta " +
+                "SET tipo_cobro = @collect_type, " +
+                "observaciones = @observations " +
+                "WHERE ID_DOCO = @id";
+
+            NpgsqlCommand cmd = new NpgsqlCommand(sqlString, conn);
+
+            cmd.Parameters.Add("@collect_type", NpgsqlTypes.NpgsqlDbType.Varchar, 50);
+            cmd.Parameters.Add("@observations", NpgsqlTypes.NpgsqlDbType.Varchar, 50);
+            cmd.Parameters.Add("@id", NpgsqlTypes.NpgsqlDbType.Integer);
+
+            cmd.Parameters["@collect_type"].Value = collectType;
+            cmd.Parameters["@observations"].Value = observations;
+            cmd.Parameters["@id"].Value = docId;
+
+            cmd.ExecuteNonQuery();
+
+            sqlString = "INSERT INTO ctrl_seguimiento(id_movimiento, id_doco, descripcion) " +
+                "VALUES(16, @documento, 'Cuenta Modificada en AdminPaq por cobrador asignado.');";
+            cmd = new NpgsqlCommand(sqlString, conn);
+
+            cmd.Parameters.Add("@documento", NpgsqlTypes.NpgsqlDbType.Integer);
+            cmd.Parameters["@documento"].Value = docId;
+
+            cmd.ExecuteNonQuery();
+
+            conn.Close();
+        }
+
         public void SetCollectDate(int docId, DateTime collectDate)
         {
             if (conn == null || conn.State != ConnectionState.Open)
@@ -153,6 +187,88 @@ namespace SeguimientoGerente.Collectable.PostgresImpl
 
             sqlString = "INSERT INTO ctrl_seguimiento(id_movimiento, id_doco, descripcion) " +
                 "VALUES(13, @documento, 'Cuenta desescalada.');";
+            cmd = new NpgsqlCommand(sqlString, conn);
+
+            cmd.Parameters.Add("@documento", NpgsqlTypes.NpgsqlDbType.Integer);
+            cmd.Parameters["@documento"].Value = docId;
+
+            cmd.ExecuteNonQuery();
+
+            conn.Close();
+        }
+
+        public void UnReview(int docId)
+        {
+            if (conn == null || conn.State != ConnectionState.Open)
+                connect();
+
+            string sqlString = "DELETE FROM ctrl_seguimiento " +
+                "WHERE id_doco = @docId AND id_movimiento = 17;";
+
+            NpgsqlCommand cmd = new NpgsqlCommand(sqlString, conn);
+
+            cmd.Parameters.Add("@docId", NpgsqlTypes.NpgsqlDbType.Integer);
+            cmd.Parameters["@docId"].Value = docId;
+
+            cmd.ExecuteNonQuery();
+
+            sqlString = "INSERT INTO ctrl_seguimiento(id_movimiento, id_doco, descripcion) " +
+                "VALUES(15, @documento, 'El supervisor quitó la bandera de revisión.');";
+            cmd = new NpgsqlCommand(sqlString, conn);
+
+            cmd.Parameters.Add("@documento", NpgsqlTypes.NpgsqlDbType.Integer);
+            cmd.Parameters["@documento"].Value = docId;
+
+            cmd.ExecuteNonQuery();
+
+            conn.Close();
+        }
+
+        public void UnAttend(int docId)
+        {
+            if (conn == null || conn.State != ConnectionState.Open)
+                connect();
+
+            string sqlString = "DELETE FROM ctrl_seguimiento " +
+                "WHERE id_doco = @docId AND id_movimiento = 16;";
+
+            NpgsqlCommand cmd = new NpgsqlCommand(sqlString, conn);
+
+            cmd.Parameters.Add("@docId", NpgsqlTypes.NpgsqlDbType.Integer);
+            cmd.Parameters["@docId"].Value = docId;
+
+            cmd.ExecuteNonQuery();
+
+            sqlString = "INSERT INTO ctrl_seguimiento(id_movimiento, id_doco, descripcion) " +
+                "VALUES(15, @documento, 'El supervisor regresó la cuenta al cobrador.');";
+            cmd = new NpgsqlCommand(sqlString, conn);
+
+            cmd.Parameters.Add("@documento", NpgsqlTypes.NpgsqlDbType.Integer);
+            cmd.Parameters["@documento"].Value = docId;
+
+            cmd.ExecuteNonQuery();
+
+            conn.Close();
+        }
+
+        public void Review(int docId)
+        {
+            if (conn == null || conn.State != ConnectionState.Open)
+                connect();
+
+            string sqlString = "DELETE FROM ctrl_seguimiento " +
+                "WHERE id_doco = @docId AND id_movimiento = 16;";
+
+            NpgsqlCommand cmd = new NpgsqlCommand(sqlString, conn);
+
+            cmd.Parameters.Add("@docId", NpgsqlTypes.NpgsqlDbType.Integer);
+            cmd.Parameters["@docId"].Value = docId;
+
+            cmd.ExecuteNonQuery();
+
+            sqlString = "INSERT INTO ctrl_seguimiento(id_movimiento, id_doco, descripcion) " +
+                "VALUES(17, @documento, 'Cuenta revisada por supervisor.');";
+
             cmd = new NpgsqlCommand(sqlString, conn);
 
             cmd.Parameters.Add("@documento", NpgsqlTypes.NpgsqlDbType.Integer);
@@ -286,6 +402,74 @@ namespace SeguimientoGerente.Collectable.PostgresImpl
             return ds.Tables[0];
         }
 
+        public DataTable Reviewed()
+        {
+            DataSet ds = new DataSet();
+            NpgsqlDataAdapter da;
+            string sqlString = "SELECT ctrl_cuenta.id_doco, ctrl_cuenta.ap_id, f_documento, f_vencimiento, f_cobro, ctrl_cuenta.id_cliente, cd_cliente, nombre_cliente, ruta, dia_pago, " +
+                "CASE WHEN cat_cliente.es_local THEN 'Local' ELSE 'Foráneo' END AS area, " +
+                "serie_doco, folio_doco, tipo_documento, tipo_cobro, facturado, saldo, moneda, observaciones, nombre_cobrador " +
+                "FROM ctrl_cuenta INNER JOIN cat_cliente ON ctrl_cuenta.id_cliente = cat_cliente.id_cliente " +
+                "INNER JOIN ctrl_asignacion ON ctrl_cuenta.id_doco = ctrl_asignacion.id_doco " +
+                "INNER JOIN cat_cobrador ON ctrl_asignacion.id_cobrador = cat_cobrador.id_cobrador " +
+                "WHERE ctrl_cuenta.id_doco IN(SELECT id_doco FROM ctrl_seguimiento WHERE id_movimiento = 17);";
+
+            if (conn == null || conn.State != ConnectionState.Open)
+                connect();
+
+            da = new NpgsqlDataAdapter(sqlString, conn);
+
+            ds.Reset();
+            da.Fill(ds);
+            conn.Close();
+
+            ds.Tables[0].Columns.Add("dias_vencido", typeof(int));
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                DateTime now = DateTime.Now;
+                DateTime dueDate = DateTime.Parse(row["f_vencimiento"].ToString());
+                TimeSpan elapsed = now.Subtract(dueDate);
+
+                row["dias_vencido"] = int.Parse(elapsed.TotalDays.ToString("0"));
+            }
+
+            return ds.Tables[0];
+        }
+
+        public DataTable Attended()
+        {
+            DataSet ds = new DataSet();
+            NpgsqlDataAdapter da;
+            string sqlString = "SELECT ctrl_cuenta.id_doco, ctrl_cuenta.ap_id, f_documento, f_vencimiento, f_cobro, ctrl_cuenta.id_cliente, cd_cliente, nombre_cliente, ruta, dia_pago, " +
+                "CASE WHEN cat_cliente.es_local THEN 'Local' ELSE 'Foráneo' END AS area, " +
+                "serie_doco, folio_doco, tipo_documento, tipo_cobro, facturado, saldo, moneda, observaciones, nombre_cobrador " +
+                "FROM ctrl_cuenta INNER JOIN cat_cliente ON ctrl_cuenta.id_cliente = cat_cliente.id_cliente " +
+                "INNER JOIN ctrl_asignacion ON ctrl_cuenta.id_doco = ctrl_asignacion.id_doco " +
+                "INNER JOIN cat_cobrador ON ctrl_asignacion.id_cobrador = cat_cobrador.id_cobrador " +
+                "WHERE ctrl_cuenta.id_doco IN(SELECT id_doco FROM ctrl_seguimiento WHERE id_movimiento = 16);";
+
+            if (conn == null || conn.State != ConnectionState.Open)
+                connect();
+
+            da = new NpgsqlDataAdapter(sqlString, conn);
+
+            ds.Reset();
+            da.Fill(ds);
+            conn.Close();
+
+            ds.Tables[0].Columns.Add("dias_vencido", typeof(int));
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                DateTime now = DateTime.Now;
+                DateTime dueDate = DateTime.Parse(row["f_vencimiento"].ToString());
+                TimeSpan elapsed = now.Subtract(dueDate);
+
+                row["dias_vencido"] = int.Parse(elapsed.TotalDays.ToString("0"));
+            }
+
+            return ds.Tables[0];
+        }
+
         public DataTable Assigned()
         {
             DataSet ds = new DataSet();
@@ -296,7 +480,7 @@ namespace SeguimientoGerente.Collectable.PostgresImpl
                 "FROM ctrl_cuenta INNER JOIN cat_cliente ON ctrl_cuenta.id_cliente = cat_cliente.id_cliente " +
                 "INNER JOIN ctrl_asignacion ON ctrl_cuenta.id_doco = ctrl_asignacion.id_doco " +
                 "INNER JOIN cat_cobrador ON ctrl_asignacion.id_cobrador = cat_cobrador.id_cobrador " +
-                "WHERE ctrl_cuenta.id_doco NOT IN(SELECT id_doco FROM ctrl_seguimiento WHERE id_movimiento IN(4,9,10));";
+                "WHERE ctrl_cuenta.id_doco NOT IN(SELECT id_doco FROM ctrl_seguimiento WHERE id_movimiento IN(4,9,10,16,17));";
 
             if (conn == null || conn.State != ConnectionState.Open)
                 connect();
@@ -329,7 +513,7 @@ namespace SeguimientoGerente.Collectable.PostgresImpl
                 "serie_doco, folio_doco, tipo_documento, tipo_cobro, facturado, saldo, moneda, observaciones " +
                 "FROM ctrl_cuenta INNER JOIN cat_cliente ON ctrl_cuenta.id_cliente = cat_cliente.id_cliente " +
                 "WHERE ctrl_cuenta.id_doco NOT IN(SELECT id_doco FROM ctrl_asignacion) " +
-                "AND ctrl_cuenta.id_doco NOT IN(SELECT id_doco FROM ctrl_seguimiento WHERE id_movimiento IN(4,9,10));";
+                "AND ctrl_cuenta.id_doco NOT IN(SELECT id_doco FROM ctrl_seguimiento WHERE id_movimiento IN(4,9,10,16,17));";
 
             if (conn == null || conn.State != ConnectionState.Open)
                 connect();
@@ -349,6 +533,44 @@ namespace SeguimientoGerente.Collectable.PostgresImpl
 
                 row["dias_vencido"] = int.Parse(elapsed.TotalDays.ToString("0"));
             }
+
+            return ds.Tables[0];
+        }
+
+        public DataTable ReadSeries()
+        {
+            DataSet ds = new DataSet();
+            NpgsqlDataAdapter da;
+            string sqlString = "SELECT DISTINCT serie_doco " +
+                "FROM ctrl_cuenta;";
+
+            if (conn == null || conn.State != ConnectionState.Open)
+                connect();
+
+            da = new NpgsqlDataAdapter(sqlString, conn);
+
+            ds.Reset();
+            da.Fill(ds);
+            conn.Close();
+
+            return ds.Tables[0];
+        }
+
+        public DataTable ReadFolios()
+        {
+            DataSet ds = new DataSet();
+            NpgsqlDataAdapter da;
+            string sqlString = "SELECT folio_doco " +
+                "FROM ctrl_cuenta;";
+
+            if (conn == null || conn.State != ConnectionState.Open)
+                connect();
+
+            da = new NpgsqlDataAdapter(sqlString, conn);
+
+            ds.Reset();
+            da.Fill(ds);
+            conn.Close();
 
             return ds.Tables[0];
         }
@@ -393,7 +615,7 @@ namespace SeguimientoGerente.Collectable.PostgresImpl
             return ds.Tables[0];
         }
 
-        public void UploadAccounts(List<Collectable.Account> adminPaqAccounts, List<int> cancelled, Dictionary<int, Concepto> conceptos)
+        public void UploadAccounts(List<Collectable.Account> adminPaqAccounts, List<int> cancelled, List<int> saldados, Dictionary<int, Concepto> conceptos)
         {
             if (conn == null || conn.State != ConnectionState.Open)
                 connect();
@@ -428,6 +650,15 @@ namespace SeguimientoGerente.Collectable.PostgresImpl
 
             }
 
+            foreach (int AdminPaqId in saldados)
+            {
+                int pgId = GetDocIdFromAdminPaq(AdminPaqId);
+                if (pgId != -1)
+                {
+                    CloseBalancedAccount(pgId);
+                }
+            }
+
             foreach (Concepto concepto in conceptos.Values)
             {
                 if (!savedConcepts.ContainsKey(concepto.APId))
@@ -437,6 +668,23 @@ namespace SeguimientoGerente.Collectable.PostgresImpl
                 }
             }
 
+            conn.Close();
+        }
+
+        private void CloseBalancedAccount(int docId)
+        {
+            if (conn == null || conn.State != ConnectionState.Open)
+                connect();
+
+            string sqlString = "INSERT INTO ctrl_seguimiento(id_movimiento, id_doco, descripcion) " +
+                    "VALUES(9, @documento, 'Cuenta saldada en adminPaq');";
+
+            NpgsqlCommand cmd = new NpgsqlCommand(sqlString, conn);
+
+            cmd.Parameters.Add("@documento", NpgsqlTypes.NpgsqlDbType.Integer);
+            cmd.Parameters["@documento"].Value = docId;
+
+            cmd.ExecuteNonQuery();
             conn.Close();
         }
 
@@ -603,14 +851,16 @@ namespace SeguimientoGerente.Collectable.PostgresImpl
             return dt.Rows.Count >= 1;
         }
 
-        private void CancelAccount(int docId)
+        public void CancelAccount(int docId)
         {
-
-
-            if (IsCancelled(docId)) return;
-
+            bool connected = false;
             if (conn == null || conn.State != ConnectionState.Open)
+            {
                 connect();
+                connected = true;
+            }
+            
+            if (IsCancelled(docId)) return;
 
             string sqlString = "INSERT INTO ctrl_seguimiento(id_movimiento, id_doco, descripcion) " +
                 "VALUES(10, @docId, 'Documento cancelado en AdminPaq');";
@@ -621,6 +871,8 @@ namespace SeguimientoGerente.Collectable.PostgresImpl
 
             cmd.ExecuteNonQuery();
 
+            if (connected)
+                conn.Close();
         }
 
         private bool IsCancelled(int docId)
@@ -657,8 +909,15 @@ namespace SeguimientoGerente.Collectable.PostgresImpl
             return dt.Rows.Count >= 1;
         }
 
-        private void SavePayment(Payment payment)
+        public void SavePayment(Payment payment)
         {
+            bool connected = false;
+            if (conn == null || conn.State != ConnectionState.Open)
+            {
+                connect();
+                connected = true;
+            }
+
             DataSet ds = new DataSet();
             DataTable dt = new DataTable();
             NpgsqlDataAdapter da;
@@ -673,6 +932,8 @@ namespace SeguimientoGerente.Collectable.PostgresImpl
                 UpdatePayment(payment);
             else
                 AddPayment(payment);
+
+            if (connected) conn.Close();
         }
 
         private void UpdatePayment(Payment payment)
@@ -824,12 +1085,22 @@ namespace SeguimientoGerente.Collectable.PostgresImpl
             cmd.ExecuteNonQuery();
         }
 
-        private void SaveAccount(Collectable.Account adminPaqAccount)
+        public void SaveAccount(Collectable.Account adminPaqAccount)
         {
+            bool connected = false;
+            if (conn == null || conn.State != ConnectionState.Open)
+            {
+                connect();
+                connected = true;
+            }
+
             if (DocumentExists(adminPaqAccount.ApId, adminPaqAccount.Company.EnterpriseId))
                 UpdateAccount(adminPaqAccount);
             else
                 AddAccount(adminPaqAccount);
+
+            if (connected)
+                conn.Close();
         }
 
         private void UpdateAccount(Collectable.Account adminPaqAccount)
@@ -870,7 +1141,7 @@ namespace SeguimientoGerente.Collectable.PostgresImpl
             cmd.Parameters["@f_documento"].Value = adminPaqAccount.DocDate;
             cmd.Parameters["@f_vencimiento"].Value = adminPaqAccount.DueDate;
             cmd.Parameters["@f_cobro"].Value = adminPaqAccount.CollectDate;
-            cmd.Parameters["@id_cliente"].Value = CompanyId(adminPaqAccount.Company.ApId, adminPaqAccount.Company.EnterpriseId);
+            cmd.Parameters["@id_cliente"].Value = adminPaqAccount.Company.Id == 0 ? CompanyId(adminPaqAccount.Company.ApId, adminPaqAccount.Company.EnterpriseId) : adminPaqAccount.Company.Id;
             cmd.Parameters["@serie_doco"].Value = adminPaqAccount.Serie;
             cmd.Parameters["@folio_doco"].Value = adminPaqAccount.Folio;
             cmd.Parameters["@tipo_documento"].Value = adminPaqAccount.DocType;

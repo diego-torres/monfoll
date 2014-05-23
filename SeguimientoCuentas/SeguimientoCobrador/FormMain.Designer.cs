@@ -59,13 +59,13 @@
             this.cuentasToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.processToolStripMenuItem});
             this.cuentasToolStripMenuItem.Name = "cuentasToolStripMenuItem";
-            this.cuentasToolStripMenuItem.Size = new System.Drawing.Size(62, 20);
+            this.cuentasToolStripMenuItem.Size = new System.Drawing.Size(59, 20);
             this.cuentasToolStripMenuItem.Text = "C&uentas";
             // 
             // processToolStripMenuItem
             // 
             this.processToolStripMenuItem.Name = "processToolStripMenuItem";
-            this.processToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
+            this.processToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
             this.processToolStripMenuItem.Text = "&Proceso";
             this.processToolStripMenuItem.Click += new System.EventHandler(this.processToolStripMenuItem_Click);
             // 
@@ -76,25 +76,25 @@
             this.toolStripSeparator2,
             this.acercaDeToolStripMenuItem});
             this.toolStripMenuItemConfig.Name = "toolStripMenuItemConfig";
-            this.toolStripMenuItemConfig.Size = new System.Drawing.Size(90, 20);
+            this.toolStripMenuItemConfig.Size = new System.Drawing.Size(83, 20);
             this.toolStripMenuItemConfig.Text = "&Herramientas";
             // 
             // configuracionToolStripMenuItem
             // 
             this.configuracionToolStripMenuItem.Name = "configuracionToolStripMenuItem";
-            this.configuracionToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
+            this.configuracionToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
             this.configuracionToolStripMenuItem.Text = "Configuración";
             this.configuracionToolStripMenuItem.Click += new System.EventHandler(this.configuracionToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(147, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(148, 6);
             // 
             // acercaDeToolStripMenuItem
             // 
             this.acercaDeToolStripMenuItem.Name = "acercaDeToolStripMenuItem";
-            this.acercaDeToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
+            this.acercaDeToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
             this.acercaDeToolStripMenuItem.Text = "Acerca de ...";
             this.acercaDeToolStripMenuItem.Click += new System.EventHandler(this.acercaDeToolStripMenuItem_Click);
             // 
@@ -112,8 +112,8 @@
             // mainStatus
             // 
             this.mainStatus.Name = "mainStatus";
-            this.mainStatus.Size = new System.Drawing.Size(342, 17);
-            this.mainStatus.Text = "Seguimiento a cuentas por cobrar - módulo de cobrador V 1.2.2";
+            this.mainStatus.Size = new System.Drawing.Size(311, 17);
+            this.mainStatus.Text = "Seguimiento a cuentas por cobrar - módulo de cobrador V 2.0.0";
             // 
             // mainProgressBar
             // 

@@ -48,6 +48,7 @@
             this.NAtoolStripButtonClose = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonSetCollectDate = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonNAObservations = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.NAtoolStripButtonClearFilter = new System.Windows.Forms.ToolStripButton();
             this.NAtoolStripButtonUpdate = new System.Windows.Forms.ToolStripButton();
@@ -65,9 +66,47 @@
             this.toolStripButtonCloseAssigned = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.AssignedToolStripButtonSetCollectDate = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonAssignedObservations = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonRemoveFilter = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonRefresh = new System.Windows.Forms.ToolStripButton();
+            this.tabPage7 = new System.Windows.Forms.TabPage();
+            this.splitContainerAttended = new System.Windows.Forms.SplitContainer();
+            this.dataGridViewAttendedAccounts = new System.Windows.Forms.DataGridView();
+            this.dataGridViewAttendedFollowUp = new System.Windows.Forms.DataGridView();
+            this.toolStripAttended = new System.Windows.Forms.ToolStrip();
+            this.toolStripButtonPrintAttended = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator14 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripButtonReview = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonReturn = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonAssignAttended = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonEscalateAttended = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator15 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripButtonCollectDateAttended = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonObservationsAttended = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator16 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripButtonRemoveAttendedFilter = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonRefreshAttended = new System.Windows.Forms.ToolStripButton();
+            this.statusStripAttended = new System.Windows.Forms.StatusStrip();
+            this.toolStripStatusLabelAttendedFilter = new System.Windows.Forms.ToolStripStatusLabel();
+            this.tabPage8 = new System.Windows.Forms.TabPage();
+            this.splitContainerReviewed = new System.Windows.Forms.SplitContainer();
+            this.dataGridViewReviewedAccounts = new System.Windows.Forms.DataGridView();
+            this.dataGridViewReviewedFollowUp = new System.Windows.Forms.DataGridView();
+            this.statusStripReviewed = new System.Windows.Forms.StatusStrip();
+            this.toolStripStatusLabelReviewedFilter = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripReviewed = new System.Windows.Forms.ToolStrip();
+            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator17 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripButtonAssignReviewed = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonEscalateReviewed = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonCloseReviewed = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator18 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripButtonCollectionDateReviewed = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonObservationsReviewed = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator19 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripButtonRemoveReviewedFilter = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonRefreshReviewed = new System.Windows.Forms.ToolStripButton();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.splitContainerEscalated = new System.Windows.Forms.SplitContainer();
             this.dataGridViewEscalatedAccounts = new System.Windows.Forms.DataGridView();
@@ -137,6 +176,24 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAssignedFollowUp)).BeginInit();
             this.statusStripAssigned.SuspendLayout();
             this.toolStripAssigned.SuspendLayout();
+            this.tabPage7.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerAttended)).BeginInit();
+            this.splitContainerAttended.Panel1.SuspendLayout();
+            this.splitContainerAttended.Panel2.SuspendLayout();
+            this.splitContainerAttended.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAttendedAccounts)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAttendedFollowUp)).BeginInit();
+            this.toolStripAttended.SuspendLayout();
+            this.statusStripAttended.SuspendLayout();
+            this.tabPage8.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerReviewed)).BeginInit();
+            this.splitContainerReviewed.Panel1.SuspendLayout();
+            this.splitContainerReviewed.Panel2.SuspendLayout();
+            this.splitContainerReviewed.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewReviewedAccounts)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewReviewedFollowUp)).BeginInit();
+            this.statusStripReviewed.SuspendLayout();
+            this.toolStripReviewed.SuspendLayout();
             this.tabPage3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerEscalated)).BeginInit();
             this.splitContainerEscalated.Panel1.SuspendLayout();
@@ -179,6 +236,8 @@
             // 
             this.tabControlProcess.Controls.Add(this.tabPage1);
             this.tabControlProcess.Controls.Add(this.tabPage2);
+            this.tabControlProcess.Controls.Add(this.tabPage7);
+            this.tabControlProcess.Controls.Add(this.tabPage8);
             this.tabControlProcess.Controls.Add(this.tabPage3);
             this.tabControlProcess.Controls.Add(this.tabPage4);
             this.tabControlProcess.Controls.Add(this.tabPage5);
@@ -298,6 +357,7 @@
             this.NAtoolStripButtonClose,
             this.toolStripSeparator3,
             this.toolStripButtonSetCollectDate,
+            this.toolStripButtonNAObservations,
             this.toolStripSeparator2,
             this.NAtoolStripButtonClearFilter,
             this.NAtoolStripButtonUpdate});
@@ -366,6 +426,16 @@
             this.toolStripButtonSetCollectDate.Size = new System.Drawing.Size(23, 22);
             this.toolStripButtonSetCollectDate.Text = "Asignar Fecha de Cobro";
             this.toolStripButtonSetCollectDate.Click += new System.EventHandler(this.toolStripButtonSetCollectDate_Click);
+            // 
+            // toolStripButtonNAObservations
+            // 
+            this.toolStripButtonNAObservations.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonNAObservations.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonNAObservations.Image")));
+            this.toolStripButtonNAObservations.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonNAObservations.Name = "toolStripButtonNAObservations";
+            this.toolStripButtonNAObservations.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonNAObservations.Text = "Capturar Observaciones";
+            this.toolStripButtonNAObservations.Click += new System.EventHandler(this.toolStripButtonNAObservations_Click);
             // 
             // toolStripSeparator2
             // 
@@ -478,6 +548,7 @@
             this.toolStripButtonCloseAssigned,
             this.toolStripSeparator5,
             this.AssignedToolStripButtonSetCollectDate,
+            this.toolStripButtonAssignedObservations,
             this.toolStripSeparator11,
             this.toolStripButtonRemoveFilter,
             this.toolStripButtonRefresh});
@@ -547,6 +618,16 @@
             this.AssignedToolStripButtonSetCollectDate.Text = "Asignar Fecha de Cobro";
             this.AssignedToolStripButtonSetCollectDate.Click += new System.EventHandler(this.AssignedToolStripButtonSetCollectDate_Click);
             // 
+            // toolStripButtonAssignedObservations
+            // 
+            this.toolStripButtonAssignedObservations.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonAssignedObservations.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonAssignedObservations.Image")));
+            this.toolStripButtonAssignedObservations.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonAssignedObservations.Name = "toolStripButtonAssignedObservations";
+            this.toolStripButtonAssignedObservations.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonAssignedObservations.Text = "Capturar Observaciones";
+            this.toolStripButtonAssignedObservations.Click += new System.EventHandler(this.toolStripButtonAssignedObservations_Click);
+            // 
             // toolStripSeparator11
             // 
             this.toolStripSeparator11.Name = "toolStripSeparator11";
@@ -571,6 +652,396 @@
             this.toolStripButtonRefresh.Size = new System.Drawing.Size(23, 22);
             this.toolStripButtonRefresh.Text = "Actualizar";
             this.toolStripButtonRefresh.Click += new System.EventHandler(this.toolStripButtonRefresh_Click);
+            // 
+            // tabPage7
+            // 
+            this.tabPage7.Controls.Add(this.splitContainerAttended);
+            this.tabPage7.Controls.Add(this.toolStripAttended);
+            this.tabPage7.Controls.Add(this.statusStripAttended);
+            this.tabPage7.Location = new System.Drawing.Point(4, 22);
+            this.tabPage7.Name = "tabPage7";
+            this.tabPage7.Size = new System.Drawing.Size(805, 437);
+            this.tabPage7.TabIndex = 6;
+            this.tabPage7.Text = "Atendidos";
+            this.tabPage7.UseVisualStyleBackColor = true;
+            // 
+            // splitContainerAttended
+            // 
+            this.splitContainerAttended.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainerAttended.Location = new System.Drawing.Point(0, 25);
+            this.splitContainerAttended.Name = "splitContainerAttended";
+            // 
+            // splitContainerAttended.Panel1
+            // 
+            this.splitContainerAttended.Panel1.Controls.Add(this.dataGridViewAttendedAccounts);
+            // 
+            // splitContainerAttended.Panel2
+            // 
+            this.splitContainerAttended.Panel2.Controls.Add(this.dataGridViewAttendedFollowUp);
+            this.splitContainerAttended.Size = new System.Drawing.Size(805, 390);
+            this.splitContainerAttended.SplitterDistance = 511;
+            this.splitContainerAttended.TabIndex = 2;
+            // 
+            // dataGridViewAttendedAccounts
+            // 
+            this.dataGridViewAttendedAccounts.AllowUserToAddRows = false;
+            this.dataGridViewAttendedAccounts.AllowUserToDeleteRows = false;
+            this.dataGridViewAttendedAccounts.AllowUserToOrderColumns = true;
+            this.dataGridViewAttendedAccounts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewAttendedAccounts.ContextMenuStrip = this.contextMenuStripAccountsGrid;
+            this.dataGridViewAttendedAccounts.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridViewAttendedAccounts.Location = new System.Drawing.Point(0, 0);
+            this.dataGridViewAttendedAccounts.Name = "dataGridViewAttendedAccounts";
+            this.dataGridViewAttendedAccounts.ReadOnly = true;
+            this.dataGridViewAttendedAccounts.Size = new System.Drawing.Size(511, 390);
+            this.dataGridViewAttendedAccounts.TabIndex = 0;
+            this.dataGridViewAttendedAccounts.SelectionChanged += new System.EventHandler(this.dataGridViewAttendedAccounts_SelectionChanged);
+            this.dataGridViewAttendedAccounts.DoubleClick += new System.EventHandler(this.dataGridViewAttendedAccounts_DoubleClick);
+            this.dataGridViewAttendedAccounts.MouseDown += new System.Windows.Forms.MouseEventHandler(this.dataGridView_MouseDown);
+            // 
+            // dataGridViewAttendedFollowUp
+            // 
+            this.dataGridViewAttendedFollowUp.AllowUserToAddRows = false;
+            this.dataGridViewAttendedFollowUp.AllowUserToDeleteRows = false;
+            this.dataGridViewAttendedFollowUp.AllowUserToOrderColumns = true;
+            this.dataGridViewAttendedFollowUp.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewAttendedFollowUp.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridViewAttendedFollowUp.Location = new System.Drawing.Point(0, 0);
+            this.dataGridViewAttendedFollowUp.Name = "dataGridViewAttendedFollowUp";
+            this.dataGridViewAttendedFollowUp.ReadOnly = true;
+            this.dataGridViewAttendedFollowUp.Size = new System.Drawing.Size(290, 390);
+            this.dataGridViewAttendedFollowUp.TabIndex = 0;
+            // 
+            // toolStripAttended
+            // 
+            this.toolStripAttended.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripButtonPrintAttended,
+            this.toolStripSeparator14,
+            this.toolStripButtonReview,
+            this.toolStripButtonReturn,
+            this.toolStripButtonAssignAttended,
+            this.toolStripButtonEscalateAttended,
+            this.toolStripSeparator15,
+            this.toolStripButtonCollectDateAttended,
+            this.toolStripButtonObservationsAttended,
+            this.toolStripSeparator16,
+            this.toolStripButtonRemoveAttendedFilter,
+            this.toolStripButtonRefreshAttended});
+            this.toolStripAttended.Location = new System.Drawing.Point(0, 0);
+            this.toolStripAttended.Name = "toolStripAttended";
+            this.toolStripAttended.Size = new System.Drawing.Size(805, 25);
+            this.toolStripAttended.TabIndex = 1;
+            this.toolStripAttended.Text = "toolStrip1";
+            // 
+            // toolStripButtonPrintAttended
+            // 
+            this.toolStripButtonPrintAttended.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonPrintAttended.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonPrintAttended.Image")));
+            this.toolStripButtonPrintAttended.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonPrintAttended.Name = "toolStripButtonPrintAttended";
+            this.toolStripButtonPrintAttended.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonPrintAttended.Text = "Imprimir";
+            this.toolStripButtonPrintAttended.Click += new System.EventHandler(this.toolStripButtonPrintAttended_Click);
+            // 
+            // toolStripSeparator14
+            // 
+            this.toolStripSeparator14.Name = "toolStripSeparator14";
+            this.toolStripSeparator14.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripButtonReview
+            // 
+            this.toolStripButtonReview.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonReview.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonReview.Image")));
+            this.toolStripButtonReview.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonReview.Name = "toolStripButtonReview";
+            this.toolStripButtonReview.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonReview.Text = "Revisado";
+            this.toolStripButtonReview.Click += new System.EventHandler(this.toolStripButtonReview_Click);
+            // 
+            // toolStripButtonReturn
+            // 
+            this.toolStripButtonReturn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonReturn.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonReturn.Image")));
+            this.toolStripButtonReturn.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonReturn.Name = "toolStripButtonReturn";
+            this.toolStripButtonReturn.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonReturn.Text = "Devolver a cobrador";
+            this.toolStripButtonReturn.Click += new System.EventHandler(this.toolStripButtonReturn_Click);
+            // 
+            // toolStripButtonAssignAttended
+            // 
+            this.toolStripButtonAssignAttended.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonAssignAttended.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonAssignAttended.Image")));
+            this.toolStripButtonAssignAttended.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonAssignAttended.Name = "toolStripButtonAssignAttended";
+            this.toolStripButtonAssignAttended.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonAssignAttended.Text = "Asignar a otro";
+            this.toolStripButtonAssignAttended.Click += new System.EventHandler(this.toolStripButtonAssignAttended_Click);
+            // 
+            // toolStripButtonEscalateAttended
+            // 
+            this.toolStripButtonEscalateAttended.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonEscalateAttended.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonEscalateAttended.Image")));
+            this.toolStripButtonEscalateAttended.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonEscalateAttended.Name = "toolStripButtonEscalateAttended";
+            this.toolStripButtonEscalateAttended.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonEscalateAttended.Text = "Escalar";
+            this.toolStripButtonEscalateAttended.Click += new System.EventHandler(this.toolStripButtonEscalateAttended_Click);
+            // 
+            // toolStripSeparator15
+            // 
+            this.toolStripSeparator15.Name = "toolStripSeparator15";
+            this.toolStripSeparator15.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripButtonCollectDateAttended
+            // 
+            this.toolStripButtonCollectDateAttended.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonCollectDateAttended.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonCollectDateAttended.Image")));
+            this.toolStripButtonCollectDateAttended.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonCollectDateAttended.Name = "toolStripButtonCollectDateAttended";
+            this.toolStripButtonCollectDateAttended.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonCollectDateAttended.Text = "Capturar Fecha de Cobro";
+            this.toolStripButtonCollectDateAttended.Click += new System.EventHandler(this.toolStripButtonCollectDateAttended_Click);
+            // 
+            // toolStripButtonObservationsAttended
+            // 
+            this.toolStripButtonObservationsAttended.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonObservationsAttended.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonObservationsAttended.Image")));
+            this.toolStripButtonObservationsAttended.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonObservationsAttended.Name = "toolStripButtonObservationsAttended";
+            this.toolStripButtonObservationsAttended.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonObservationsAttended.Text = "Capturar Observaciones";
+            this.toolStripButtonObservationsAttended.Click += new System.EventHandler(this.toolStripButtonObservationsAttended_Click);
+            // 
+            // toolStripSeparator16
+            // 
+            this.toolStripSeparator16.Name = "toolStripSeparator16";
+            this.toolStripSeparator16.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripButtonRemoveAttendedFilter
+            // 
+            this.toolStripButtonRemoveAttendedFilter.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonRemoveAttendedFilter.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonRemoveAttendedFilter.Image")));
+            this.toolStripButtonRemoveAttendedFilter.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonRemoveAttendedFilter.Name = "toolStripButtonRemoveAttendedFilter";
+            this.toolStripButtonRemoveAttendedFilter.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonRemoveAttendedFilter.Text = "Quitar Filtro";
+            this.toolStripButtonRemoveAttendedFilter.Click += new System.EventHandler(this.toolStripButtonRemoveAttendedFilter_Click);
+            // 
+            // toolStripButtonRefreshAttended
+            // 
+            this.toolStripButtonRefreshAttended.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonRefreshAttended.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonRefreshAttended.Image")));
+            this.toolStripButtonRefreshAttended.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonRefreshAttended.Name = "toolStripButtonRefreshAttended";
+            this.toolStripButtonRefreshAttended.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonRefreshAttended.Text = "Actualizar";
+            this.toolStripButtonRefreshAttended.Click += new System.EventHandler(this.toolStripButtonRefreshAttended_Click);
+            // 
+            // statusStripAttended
+            // 
+            this.statusStripAttended.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripStatusLabelAttendedFilter});
+            this.statusStripAttended.Location = new System.Drawing.Point(0, 415);
+            this.statusStripAttended.Name = "statusStripAttended";
+            this.statusStripAttended.Size = new System.Drawing.Size(805, 22);
+            this.statusStripAttended.TabIndex = 0;
+            // 
+            // toolStripStatusLabelAttendedFilter
+            // 
+            this.toolStripStatusLabelAttendedFilter.Name = "toolStripStatusLabelAttendedFilter";
+            this.toolStripStatusLabelAttendedFilter.Size = new System.Drawing.Size(47, 17);
+            this.toolStripStatusLabelAttendedFilter.Text = "FILTRO:";
+            // 
+            // tabPage8
+            // 
+            this.tabPage8.Controls.Add(this.splitContainerReviewed);
+            this.tabPage8.Controls.Add(this.statusStripReviewed);
+            this.tabPage8.Controls.Add(this.toolStripReviewed);
+            this.tabPage8.Location = new System.Drawing.Point(4, 22);
+            this.tabPage8.Name = "tabPage8";
+            this.tabPage8.Size = new System.Drawing.Size(805, 437);
+            this.tabPage8.TabIndex = 7;
+            this.tabPage8.Text = "Revisados";
+            this.tabPage8.UseVisualStyleBackColor = true;
+            // 
+            // splitContainerReviewed
+            // 
+            this.splitContainerReviewed.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainerReviewed.Location = new System.Drawing.Point(0, 25);
+            this.splitContainerReviewed.Name = "splitContainerReviewed";
+            // 
+            // splitContainerReviewed.Panel1
+            // 
+            this.splitContainerReviewed.Panel1.Controls.Add(this.dataGridViewReviewedAccounts);
+            // 
+            // splitContainerReviewed.Panel2
+            // 
+            this.splitContainerReviewed.Panel2.Controls.Add(this.dataGridViewReviewedFollowUp);
+            this.splitContainerReviewed.Size = new System.Drawing.Size(805, 390);
+            this.splitContainerReviewed.SplitterDistance = 450;
+            this.splitContainerReviewed.TabIndex = 2;
+            // 
+            // dataGridViewReviewedAccounts
+            // 
+            this.dataGridViewReviewedAccounts.AllowUserToAddRows = false;
+            this.dataGridViewReviewedAccounts.AllowUserToDeleteRows = false;
+            this.dataGridViewReviewedAccounts.AllowUserToOrderColumns = true;
+            this.dataGridViewReviewedAccounts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewReviewedAccounts.ContextMenuStrip = this.contextMenuStripAccountsGrid;
+            this.dataGridViewReviewedAccounts.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridViewReviewedAccounts.Location = new System.Drawing.Point(0, 0);
+            this.dataGridViewReviewedAccounts.Name = "dataGridViewReviewedAccounts";
+            this.dataGridViewReviewedAccounts.ReadOnly = true;
+            this.dataGridViewReviewedAccounts.Size = new System.Drawing.Size(450, 390);
+            this.dataGridViewReviewedAccounts.TabIndex = 0;
+            this.dataGridViewReviewedAccounts.SelectionChanged += new System.EventHandler(this.dataGridViewReviewedAccounts_SelectionChanged);
+            this.dataGridViewReviewedAccounts.DoubleClick += new System.EventHandler(this.dataGridViewReviewedAccounts_DoubleClick);
+            this.dataGridViewReviewedAccounts.MouseDown += new System.Windows.Forms.MouseEventHandler(this.dataGridView_MouseDown);
+            // 
+            // dataGridViewReviewedFollowUp
+            // 
+            this.dataGridViewReviewedFollowUp.AllowUserToAddRows = false;
+            this.dataGridViewReviewedFollowUp.AllowUserToDeleteRows = false;
+            this.dataGridViewReviewedFollowUp.AllowUserToOrderColumns = true;
+            this.dataGridViewReviewedFollowUp.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewReviewedFollowUp.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridViewReviewedFollowUp.Location = new System.Drawing.Point(0, 0);
+            this.dataGridViewReviewedFollowUp.Name = "dataGridViewReviewedFollowUp";
+            this.dataGridViewReviewedFollowUp.ReadOnly = true;
+            this.dataGridViewReviewedFollowUp.Size = new System.Drawing.Size(351, 390);
+            this.dataGridViewReviewedFollowUp.TabIndex = 0;
+            // 
+            // statusStripReviewed
+            // 
+            this.statusStripReviewed.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripStatusLabelReviewedFilter});
+            this.statusStripReviewed.Location = new System.Drawing.Point(0, 415);
+            this.statusStripReviewed.Name = "statusStripReviewed";
+            this.statusStripReviewed.Size = new System.Drawing.Size(805, 22);
+            this.statusStripReviewed.TabIndex = 1;
+            this.statusStripReviewed.Text = "statusStrip1";
+            // 
+            // toolStripStatusLabelReviewedFilter
+            // 
+            this.toolStripStatusLabelReviewedFilter.Name = "toolStripStatusLabelReviewedFilter";
+            this.toolStripStatusLabelReviewedFilter.Size = new System.Drawing.Size(47, 17);
+            this.toolStripStatusLabelReviewedFilter.Text = "FILTRO:";
+            // 
+            // toolStripReviewed
+            // 
+            this.toolStripReviewed.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripButton1,
+            this.toolStripSeparator17,
+            this.toolStripButtonAssignReviewed,
+            this.toolStripButtonEscalateReviewed,
+            this.toolStripButtonCloseReviewed,
+            this.toolStripSeparator18,
+            this.toolStripButtonCollectionDateReviewed,
+            this.toolStripButtonObservationsReviewed,
+            this.toolStripSeparator19,
+            this.toolStripButtonRemoveReviewedFilter,
+            this.toolStripButtonRefreshReviewed});
+            this.toolStripReviewed.Location = new System.Drawing.Point(0, 0);
+            this.toolStripReviewed.Name = "toolStripReviewed";
+            this.toolStripReviewed.Size = new System.Drawing.Size(805, 25);
+            this.toolStripReviewed.TabIndex = 0;
+            this.toolStripReviewed.Text = "toolStrip1";
+            // 
+            // toolStripButton1
+            // 
+            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
+            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton1.Name = "toolStripButton1";
+            this.toolStripButton1.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButton1.Text = "Imprimir";
+            this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
+            // 
+            // toolStripSeparator17
+            // 
+            this.toolStripSeparator17.Name = "toolStripSeparator17";
+            this.toolStripSeparator17.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripButtonAssignReviewed
+            // 
+            this.toolStripButtonAssignReviewed.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonAssignReviewed.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonAssignReviewed.Image")));
+            this.toolStripButtonAssignReviewed.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonAssignReviewed.Name = "toolStripButtonAssignReviewed";
+            this.toolStripButtonAssignReviewed.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonAssignReviewed.Text = "Asignar a cobrador";
+            this.toolStripButtonAssignReviewed.Click += new System.EventHandler(this.toolStripButtonAssignReviewed_Click);
+            // 
+            // toolStripButtonEscalateReviewed
+            // 
+            this.toolStripButtonEscalateReviewed.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonEscalateReviewed.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonEscalateReviewed.Image")));
+            this.toolStripButtonEscalateReviewed.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonEscalateReviewed.Name = "toolStripButtonEscalateReviewed";
+            this.toolStripButtonEscalateReviewed.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonEscalateReviewed.Text = "Escalar a gerencia";
+            this.toolStripButtonEscalateReviewed.Click += new System.EventHandler(this.toolStripButtonEscalateReviewed_Click);
+            // 
+            // toolStripButtonCloseReviewed
+            // 
+            this.toolStripButtonCloseReviewed.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonCloseReviewed.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonCloseReviewed.Image")));
+            this.toolStripButtonCloseReviewed.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonCloseReviewed.Name = "toolStripButtonCloseReviewed";
+            this.toolStripButtonCloseReviewed.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonCloseReviewed.Text = "Cerrar";
+            this.toolStripButtonCloseReviewed.Click += new System.EventHandler(this.toolStripButtonCloseReviewed_Click);
+            // 
+            // toolStripSeparator18
+            // 
+            this.toolStripSeparator18.Name = "toolStripSeparator18";
+            this.toolStripSeparator18.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripButtonCollectionDateReviewed
+            // 
+            this.toolStripButtonCollectionDateReviewed.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonCollectionDateReviewed.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonCollectionDateReviewed.Image")));
+            this.toolStripButtonCollectionDateReviewed.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonCollectionDateReviewed.Name = "toolStripButtonCollectionDateReviewed";
+            this.toolStripButtonCollectionDateReviewed.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonCollectionDateReviewed.Text = "Capturar Fecha de Cobro";
+            this.toolStripButtonCollectionDateReviewed.Click += new System.EventHandler(this.toolStripButtonCollectionDateReviewed_Click);
+            // 
+            // toolStripButtonObservationsReviewed
+            // 
+            this.toolStripButtonObservationsReviewed.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonObservationsReviewed.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonObservationsReviewed.Image")));
+            this.toolStripButtonObservationsReviewed.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonObservationsReviewed.Name = "toolStripButtonObservationsReviewed";
+            this.toolStripButtonObservationsReviewed.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonObservationsReviewed.Text = "Capturar Observaciones";
+            this.toolStripButtonObservationsReviewed.Click += new System.EventHandler(this.toolStripButtonObservationsReviewed_Click);
+            // 
+            // toolStripSeparator19
+            // 
+            this.toolStripSeparator19.Name = "toolStripSeparator19";
+            this.toolStripSeparator19.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripButtonRemoveReviewedFilter
+            // 
+            this.toolStripButtonRemoveReviewedFilter.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonRemoveReviewedFilter.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonRemoveReviewedFilter.Image")));
+            this.toolStripButtonRemoveReviewedFilter.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonRemoveReviewedFilter.Name = "toolStripButtonRemoveReviewedFilter";
+            this.toolStripButtonRemoveReviewedFilter.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonRemoveReviewedFilter.Text = "Borrar Filtro";
+            this.toolStripButtonRemoveReviewedFilter.Click += new System.EventHandler(this.toolStripButtonRemoveReviewedFilter_Click);
+            // 
+            // toolStripButtonRefreshReviewed
+            // 
+            this.toolStripButtonRefreshReviewed.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonRefreshReviewed.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonRefreshReviewed.Image")));
+            this.toolStripButtonRefreshReviewed.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonRefreshReviewed.Name = "toolStripButtonRefreshReviewed";
+            this.toolStripButtonRefreshReviewed.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonRefreshReviewed.Text = "Actualizar";
+            this.toolStripButtonRefreshReviewed.Click += new System.EventHandler(this.toolStripButtonRefreshReviewed_Click);
             // 
             // tabPage3
             // 
@@ -1117,7 +1588,7 @@
             this.Controls.Add(this.tabControlProcess);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormProcess";
-            this.Text = "FormProcess";
+            this.Text = "Proceso";
             this.Load += new System.EventHandler(this.FormProcess_Load);
             this.tabControlProcess.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
@@ -1145,6 +1616,30 @@
             this.statusStripAssigned.PerformLayout();
             this.toolStripAssigned.ResumeLayout(false);
             this.toolStripAssigned.PerformLayout();
+            this.tabPage7.ResumeLayout(false);
+            this.tabPage7.PerformLayout();
+            this.splitContainerAttended.Panel1.ResumeLayout(false);
+            this.splitContainerAttended.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerAttended)).EndInit();
+            this.splitContainerAttended.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAttendedAccounts)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAttendedFollowUp)).EndInit();
+            this.toolStripAttended.ResumeLayout(false);
+            this.toolStripAttended.PerformLayout();
+            this.statusStripAttended.ResumeLayout(false);
+            this.statusStripAttended.PerformLayout();
+            this.tabPage8.ResumeLayout(false);
+            this.tabPage8.PerformLayout();
+            this.splitContainerReviewed.Panel1.ResumeLayout(false);
+            this.splitContainerReviewed.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerReviewed)).EndInit();
+            this.splitContainerReviewed.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewReviewedAccounts)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewReviewedFollowUp)).EndInit();
+            this.statusStripReviewed.ResumeLayout(false);
+            this.statusStripReviewed.PerformLayout();
+            this.toolStripReviewed.ResumeLayout(false);
+            this.toolStripReviewed.PerformLayout();
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
             this.splitContainerEscalated.Panel1.ResumeLayout(false);
@@ -1286,5 +1781,44 @@
         private System.Windows.Forms.DataGridView dataGridViewUncollectableAccounts;
         private System.Windows.Forms.DataGridView dataGridViewUncollectableFollowUp;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelUncollectable;
+        private System.Windows.Forms.ToolStripButton toolStripButtonNAObservations;
+        private System.Windows.Forms.ToolStripButton toolStripButtonAssignedObservations;
+        private System.Windows.Forms.TabPage tabPage7;
+        private System.Windows.Forms.ToolStrip toolStripAttended;
+        private System.Windows.Forms.ToolStripButton toolStripButtonPrintAttended;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator14;
+        private System.Windows.Forms.ToolStripButton toolStripButtonReview;
+        private System.Windows.Forms.ToolStripButton toolStripButtonReturn;
+        private System.Windows.Forms.ToolStripButton toolStripButtonAssignAttended;
+        private System.Windows.Forms.ToolStripButton toolStripButtonEscalateAttended;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator15;
+        private System.Windows.Forms.ToolStripButton toolStripButtonCollectDateAttended;
+        private System.Windows.Forms.ToolStripButton toolStripButtonObservationsAttended;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator16;
+        private System.Windows.Forms.ToolStripButton toolStripButtonRemoveAttendedFilter;
+        private System.Windows.Forms.ToolStripButton toolStripButtonRefreshAttended;
+        private System.Windows.Forms.StatusStrip statusStripAttended;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelAttendedFilter;
+        private System.Windows.Forms.TabPage tabPage8;
+        private System.Windows.Forms.StatusStrip statusStripReviewed;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelReviewedFilter;
+        private System.Windows.Forms.ToolStrip toolStripReviewed;
+        private System.Windows.Forms.ToolStripButton toolStripButton1;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator17;
+        private System.Windows.Forms.ToolStripButton toolStripButtonAssignReviewed;
+        private System.Windows.Forms.ToolStripButton toolStripButtonEscalateReviewed;
+        private System.Windows.Forms.ToolStripButton toolStripButtonCloseReviewed;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator18;
+        private System.Windows.Forms.ToolStripButton toolStripButtonCollectionDateReviewed;
+        private System.Windows.Forms.ToolStripButton toolStripButtonObservationsReviewed;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator19;
+        private System.Windows.Forms.ToolStripButton toolStripButtonRemoveReviewedFilter;
+        private System.Windows.Forms.ToolStripButton toolStripButtonRefreshReviewed;
+        private System.Windows.Forms.SplitContainer splitContainerAttended;
+        private System.Windows.Forms.SplitContainer splitContainerReviewed;
+        private System.Windows.Forms.DataGridView dataGridViewAttendedAccounts;
+        private System.Windows.Forms.DataGridView dataGridViewAttendedFollowUp;
+        private System.Windows.Forms.DataGridView dataGridViewReviewedAccounts;
+        private System.Windows.Forms.DataGridView dataGridViewReviewedFollowUp;
     }
 }

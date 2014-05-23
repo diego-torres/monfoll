@@ -124,9 +124,8 @@ namespace SeguimientoGerente.Config
             FormMain parent = (FormMain)MdiParent;
             parent.ShowDownload();
 
-
             List<Collectable.Account> adminPaqAccounts = api.DownloadCollectables();
-            AccountInterface.UploadAccounts(adminPaqAccounts, api.Cancelados, api.Conceptos);
+            AccountInterface.UploadAccounts(adminPaqAccounts, api.Cancelados, api.Saldados, api.Conceptos);
             parent.CloseDownload();
             this.Close();
         }

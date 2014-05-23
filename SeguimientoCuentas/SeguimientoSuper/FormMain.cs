@@ -181,10 +181,7 @@ namespace SeguimientoSuper
         private void descargarToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ShowDownload();
-            List<Collectable.Account> adminPaqAccounts = api.DownloadCollectables();
-            Collectable.PostgresImpl.Account AccountInterface = new Collectable.PostgresImpl.Account();
-            AccountInterface.UploadAccounts(adminPaqAccounts, api.Cancelados, api.Conceptos);
-            CloseDownload();
+            backgroundWorker1.RunWorkerAsync();
         }
 
         private void processToolStripMenuItem_Click(object sender, EventArgs e)
@@ -196,6 +193,44 @@ namespace SeguimientoSuper
                 fProcess.MdiParent = this;
             }
             fProcess.Show();
+        }
+
+        private void buscarToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DialogSearch search = new DialogSearch();
+            search.ShowDialog();
+
+            if (search.DialogResult == DialogResult.Cancel) return;
+
+            if (!IsProcessOpen)
+            {
+                fProcess = new FormProcess();
+                fProcess.API = api;
+                fProcess.MdiParent = this;
+            }
+            fProcess.Show();
+            fProcess.SearchData(search.comboBoxClient.Text, search.comboBoxSerie.Text, search.textBoxFolio.Text);
+        }
+
+        private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
+        {
+            Application.UseWaitCursor = true;
+            List<Collectable.Account> adminPaqAccounts = api.DownloadCollectables();
+            Collectable.PostgresImpl.Account AccountInterface = new Collectable.PostgresImpl.Account();
+            AccountInterface.UploadAccounts(adminPaqAccounts, api.Cancelados, api.Saldados, api.Conceptos);
+            
+        }
+
+        private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            CloseDownload();
+            Application.UseWaitCursor = false;
+            if (e.Error != null)
+            {
+                MessageBox.Show("Ocurrió un error al descargar los datos de adminpaq: \n" +
+                e.Error.Message, "Error al descargar datos de adminpaq.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ErrLogger.Log(e.Error.StackTrace);
+            }
         }
     }
 }

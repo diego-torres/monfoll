@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using SeguimientoSuper.Collectable;
 using CommonAdminPaq;
+using SeguimientoSuper.Properties;
 
 namespace SeguimientoSuper.Process
 {
@@ -186,9 +187,10 @@ namespace SeguimientoSuper.Process
 
                 if (fMain.IsCollectorsOpen)
                     fMain.RefreshAccountsInCollectors();
-                
+
                 if (fMain.IsProcessOpen)
                     fMain.RefreshProcessAccounts();
+
 
                 adminPaqDirty = false;
 
@@ -420,6 +422,41 @@ namespace SeguimientoSuper.Process
         {
             textBoxFollowUpNote.Enabled = !Lock;
             comboBoxFollowUpType.Enabled = !Lock;
+        }
+
+        private void toolStripButtonDownload_Click(object sender, EventArgs e)
+        {
+            if (followUpDirty && !ConfirmNSaveFollowUp()) return;
+            if (adminPaqDirty && !ConfirmNSaveAdminPaq()) return;
+
+            SeguimientoSuper.Collectable.PostgresImpl.Enterprise dbEnterprise = new SeguimientoSuper.Collectable.PostgresImpl.Enterprise();
+
+            Settings set = Settings.Default;
+
+            bool cancelled = false;
+            try
+            {
+                api.DownloadCollectable(ref account, dbEnterprise.ConceptosPago(set.empresa), out cancelled);
+                Collectable.PostgresImpl.Account dbAccount = new Collectable.PostgresImpl.Account();
+                dbAccount.SaveAccount(account);
+
+                foreach (Collectable.Payment payment in account.Payments)
+                {
+                    payment.DocId = account.DocId;
+                    dbAccount.SavePayment(payment);
+                }
+
+                if (cancelled) dbAccount.CancelAccount(account.DocId);
+
+                RefreshFollowUpGrid();
+                adminPaqDirty = false;
+
+            }
+            catch (Exception ex)
+            {
+                ErrLogger.Log(ex.StackTrace);
+                MessageBox.Show("Error al obtener los datos de AdminPaq para la cuenta, intentelo mas tarde: \n " + ex.Message, "No se puede obtener la cuenta", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+            }
         }
     }
 }
