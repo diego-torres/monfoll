@@ -9,6 +9,34 @@ namespace SeguimientoGerente.Collectable.PostgresImpl
 {
     public class Enterprise : CommonBase
     {
+
+        public string[] ConceptosPago(int enterpriseId)
+        {
+            List<string> conceptos = new List<string>();
+
+            DataSet ds = new DataSet();
+            NpgsqlDataAdapter da;
+            string sqlString = "SELECT codigo_concepto " +
+                "FROM cat_concepto " +
+                "WHERE id_empresa = " + enterpriseId.ToString() + " AND razon='PAGO';";
+
+            if (conn == null || conn.State != ConnectionState.Open)
+                connect();
+
+            da = new NpgsqlDataAdapter(sqlString, conn);
+
+            ds.Reset();
+            da.Fill(ds);
+            conn.Close();
+
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                conceptos.Add(row["codigo_concepto"].ToString());
+            }
+
+            return conceptos.ToArray();
+        }
+
         public void SaveEnterprise(Empresa enterprise)
         {
             if (enterprise.Id == 0) return;

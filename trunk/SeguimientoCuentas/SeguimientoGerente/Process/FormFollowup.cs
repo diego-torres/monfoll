@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using SeguimientoGerente.Collectable;
 using CommonAdminPaq;
+using SeguimientoGerente.Properties;
 
 namespace SeguimientoGerente.Process
 {
@@ -421,6 +422,41 @@ namespace SeguimientoGerente.Process
         {
             textBoxFollowUpNote.Enabled = !Lock;
             comboBoxFollowUpType.Enabled = !Lock;
+        }
+
+        private void toolStripButtonDownload_Click(object sender, EventArgs e)
+        {
+            if (followUpDirty && !ConfirmNSaveFollowUp()) return;
+            if (adminPaqDirty && !ConfirmNSaveAdminPaq()) return;
+
+            SeguimientoGerente.Collectable.PostgresImpl.Enterprise dbEnterprise = new SeguimientoGerente.Collectable.PostgresImpl.Enterprise();
+
+            Settings set = Settings.Default;
+
+            bool cancelled = false;
+            try
+            {
+                api.DownloadCollectable(ref account, dbEnterprise.ConceptosPago(set.empresa), out cancelled);
+                Collectable.PostgresImpl.Account dbAccount = new Collectable.PostgresImpl.Account();
+                dbAccount.SaveAccount(account);
+
+                foreach (Collectable.Payment payment in account.Payments)
+                {
+                    payment.DocId = account.DocId;
+                    dbAccount.SavePayment(payment);
+                }
+
+                if (cancelled) dbAccount.CancelAccount(account.DocId);
+
+                RefreshFollowUpGrid();
+                adminPaqDirty = false;
+
+            }
+            catch (Exception ex)
+            {
+                ErrLogger.Log(ex.StackTrace);
+                MessageBox.Show("Error al obtener los datos de AdminPaq para la cuenta, intentelo mas tarde: \n " + ex.Message, "No se puede obtener la cuenta", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+            }
         }
     }
 }

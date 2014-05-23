@@ -115,11 +115,17 @@
     <Compile Include="Process\DialogCollectDate.Designer.cs">
       <DependentUpon>DialogCollectDate.cs</DependentUpon>
     </Compile>
-    <Compile Include="Process\DialogDataToAdminPaq.cs">
+    <Compile Include="Process\DialogObservations.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Process\DialogDataToAdminPaq.Designer.cs">
-      <DependentUpon>DialogDataToAdminPaq.cs</DependentUpon>
+    <Compile Include="Process\DialogObservations.Designer.cs">
+      <DependentUpon>DialogObservations.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Process\DialogSearch.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Process\DialogSearch.Designer.cs">
+      <DependentUpon>DialogSearch.cs</DependentUpon>
     </Compile>
     <Compile Include="Process\FormFollowup.cs">
       <SubType>Form</SubType>
@@ -166,8 +172,11 @@
     <EmbeddedResource Include="Process\DialogCollectDate.resx">
       <DependentUpon>DialogCollectDate.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Process\DialogDataToAdminPaq.resx">
-      <DependentUpon>DialogDataToAdminPaq.cs</DependentUpon>
+    <EmbeddedResource Include="Process\DialogObservations.resx">
+      <DependentUpon>DialogObservations.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Process\DialogSearch.resx">
+      <DependentUpon>DialogSearch.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Process\FormFollowup.resx">
       <DependentUpon>FormFollowup.cs</DependentUpon>

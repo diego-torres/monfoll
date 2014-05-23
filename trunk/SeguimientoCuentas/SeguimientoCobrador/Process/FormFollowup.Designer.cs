@@ -86,6 +86,7 @@
             this.toolStripButtonUndoFollowUp = new System.Windows.Forms.ToolStripButton();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.dataGridViewPayments = new System.Windows.Forms.DataGridView();
+            this.toolStripButtonDownload = new System.Windows.Forms.ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMain)).BeginInit();
             this.splitContainerMain.Panel1.SuspendLayout();
             this.splitContainerMain.Panel2.SuspendLayout();
@@ -135,7 +136,8 @@
             // toolStripMainMenu
             // 
             this.toolStripMainMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripButtonSave});
+            this.toolStripButtonSave,
+            this.toolStripButtonDownload});
             this.toolStripMainMenu.Location = new System.Drawing.Point(0, 0);
             this.toolStripMainMenu.Name = "toolStripMainMenu";
             this.toolStripMainMenu.Size = new System.Drawing.Size(1255, 25);
@@ -741,6 +743,16 @@
             this.dataGridViewPayments.Size = new System.Drawing.Size(1243, 393);
             this.dataGridViewPayments.TabIndex = 0;
             // 
+            // toolStripButtonDownload
+            // 
+            this.toolStripButtonDownload.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonDownload.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonDownload.Image")));
+            this.toolStripButtonDownload.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonDownload.Name = "toolStripButtonDownload";
+            this.toolStripButtonDownload.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonDownload.Text = "Descargar Cuenta de AdminPaq";
+            this.toolStripButtonDownload.Click += new System.EventHandler(this.toolStripButtonDownload_Click);
+            // 
             // FormFollowup
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -844,5 +856,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ToolStrip toolStripMainMenu;
         private System.Windows.Forms.ToolStripButton toolStripButtonSave;
+        private System.Windows.Forms.ToolStripButton toolStripButtonDownload;
     }
 }
