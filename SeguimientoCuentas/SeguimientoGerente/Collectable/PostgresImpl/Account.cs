@@ -109,15 +109,6 @@ namespace SeguimientoGerente.Collectable.PostgresImpl
 
             cmd.ExecuteNonQuery();
 
-            sqlString = "INSERT INTO ctrl_seguimiento(id_movimiento, id_doco, descripcion) " +
-                "VALUES(16, @documento, 'Cuenta Modificada en AdminPaq por cobrador asignado.');";
-            cmd = new NpgsqlCommand(sqlString, conn);
-
-            cmd.Parameters.Add("@documento", NpgsqlTypes.NpgsqlDbType.Integer);
-            cmd.Parameters["@documento"].Value = docId;
-
-            cmd.ExecuteNonQuery();
-
             conn.Close();
         }
 
@@ -556,6 +547,32 @@ namespace SeguimientoGerente.Collectable.PostgresImpl
             return ds.Tables[0];
         }
 
+        public List<int> AdminPaqIds(int enterprise)
+        {
+            DataSet ds = new DataSet();
+            NpgsqlDataAdapter da;
+            string sqlString = "SELECT DISTINCT ap_id " +
+                "FROM ctrl_cuenta " + 
+                "WHERE enterprise_id=" + enterprise.ToString() + ";";
+
+            if (conn == null || conn.State != ConnectionState.Open)
+                connect();
+
+            da = new NpgsqlDataAdapter(sqlString, conn);
+
+            ds.Reset();
+            da.Fill(ds);
+            conn.Close();
+
+            List<int> result = new List<int>();
+            foreach (DataRow dr in ds.Tables[0].Rows)
+            {
+                result.Add(int.Parse(dr["ap_id"].ToString()));
+            }
+
+            return result;
+        }
+
         public DataTable ReadFolios()
         {
             DataSet ds = new DataSet();
@@ -640,22 +657,25 @@ namespace SeguimientoGerente.Collectable.PostgresImpl
 
             }
 
+            Settings set = Settings.Default;
+            List<int> APIdsInDatabase = AdminPaqIds(set.empresa);
             foreach (int AdminPaqId in cancelled)
             {
-                int pgId = GetDocIdFromAdminPaq(AdminPaqId);
-                if (pgId != -1)
+                if(APIdsInDatabase.Contains(AdminPaqId))
                 {
-                    CancelAccount(pgId);
+                    int pgId = GetDocIdFromAdminPaq(AdminPaqId);
+                    if (pgId != -1) CancelAccount(pgId);
                 }
-
             }
 
+            
             foreach (int AdminPaqId in saldados)
             {
-                int pgId = GetDocIdFromAdminPaq(AdminPaqId);
-                if (pgId != -1)
+                if(APIdsInDatabase.Contains(AdminPaqId))
                 {
-                    CloseBalancedAccount(pgId);
+                    int pgId = GetDocIdFromAdminPaq(AdminPaqId);
+                    if (pgId != -1) CloseBalancedAccount(pgId);
+                        
                 }
             }
 

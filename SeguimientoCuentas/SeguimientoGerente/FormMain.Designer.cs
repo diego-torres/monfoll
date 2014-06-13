@@ -45,7 +45,6 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.mainStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.mainProgressBar = new System.Windows.Forms.ToolStripProgressBar();
-            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -167,18 +166,13 @@
             // 
             this.mainStatus.Name = "mainStatus";
             this.mainStatus.Size = new System.Drawing.Size(306, 17);
-            this.mainStatus.Text = "Seguimiento a cuentas por cobrar - módulo de gerente V 2.0.0";
+            this.mainStatus.Text = "Seguimiento a cuentas por cobrar - módulo de gerente V 2.1.0";
             // 
             // mainProgressBar
             // 
             this.mainProgressBar.Name = "mainProgressBar";
             this.mainProgressBar.Size = new System.Drawing.Size(100, 16);
             this.mainProgressBar.Visible = false;
-            // 
-            // backgroundWorker1
-            // 
-            this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
-            this.backgroundWorker1.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker1_RunWorkerCompleted);
             // 
             // FormMain
             // 
@@ -225,7 +219,6 @@
         private System.Windows.Forms.ToolStripStatusLabel mainStatus;
         private System.Windows.Forms.ToolStripMenuItem buscarToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.ComponentModel.BackgroundWorker backgroundWorker1;
     }
 }
 

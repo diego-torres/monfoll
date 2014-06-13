@@ -13,6 +13,7 @@ using SeguimientoGerente.Config;
 using SeguimientoGerente.Process;
 using SeguimientoGerente.Collectable.PostgresImpl;
 using CommonAdminPaq;
+using System.Threading;
 
 namespace SeguimientoGerente
 {
@@ -27,6 +28,10 @@ namespace SeguimientoGerente
         private AboutBox about;
         private FormDownload fDownload;
         private Dictionary<int, FormFollowup> followups = new Dictionary<int, FormFollowup>();
+        List<Collectable.Account> adminPaqAccounts = new List<Collectable.Account>();
+
+        readonly object stateLock = new object();
+        Collectable.PostgresImpl.Account AccountInterface = new Collectable.PostgresImpl.Account();
 
         private FormProcess fProcess;
 
@@ -180,8 +185,27 @@ namespace SeguimientoGerente
 
         private void descargarToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ShowDownload();
-            backgroundWorker1.RunWorkerAsync();
+            try
+            {
+                ShowDownload();
+                List<Collectable.Account> adminPaqAccounts = api.DownloadCollectables();
+                AccountInterface.UploadAccounts(adminPaqAccounts, api.Cancelados, api.Saldados, api.Conceptos);
+            }
+            catch (Exception ex)
+            {
+                ErrLogger.Log("Unable to download data from AdminPaq: \n" +
+                    ex.StackTrace);
+                MessageBox.Show("Se ha detectado un error al intentar descargar las cuentas de AdminPaq:\n"
+                    + ex.Message + "\n"
+                    + ex.StackTrace,
+                    "Error al descargar de AdminPaq",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
+            finally 
+            {
+                CloseDownload();
+            }
         }
 
         private void processToolStripMenuItem_Click(object sender, EventArgs e)
@@ -212,25 +236,5 @@ namespace SeguimientoGerente
             fProcess.SearchData(search.comboBoxClient.Text, search.comboBoxSerie.Text, search.textBoxFolio.Text);
         }
 
-        private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
-        {
-            Application.UseWaitCursor = true;
-            List<Collectable.Account> adminPaqAccounts = api.DownloadCollectables();
-            Collectable.PostgresImpl.Account AccountInterface = new Collectable.PostgresImpl.Account();
-            AccountInterface.UploadAccounts(adminPaqAccounts, api.Cancelados, api.Saldados, api.Conceptos);
-            
-        }
-
-        private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            CloseDownload();
-            Application.UseWaitCursor = false;
-            if (e.Error != null)
-            {
-                MessageBox.Show("Ocurrió un error al descargar los datos de adminpaq: \n" +
-                e.Error.Message, "Error al descargar datos de adminpaq.", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                ErrLogger.Log(e.Error.StackTrace);
-            }
-        }
     }
 }
