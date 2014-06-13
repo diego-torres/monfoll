@@ -1015,7 +1015,7 @@ namespace SeguimientoGerente.Process
             }
             MessageBox.Show("Observaciones actualizadas exitosamente en AdminPaq.", "Observaciones actualizadas", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-            RefreshReviewed();
+            RefreshAssigned();
         }
         private void toolStripButtonNAObservations_Click(object sender, EventArgs e)
         {
@@ -1032,7 +1032,7 @@ namespace SeguimientoGerente.Process
             }
             MessageBox.Show("Observaciones actualizadas exitosamente en AdminPaq.", "Observaciones actualizadas", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-            RefreshReviewed();
+            RefreshUnassigned();
         }
 
         private void toolStripButtonObservationsReviewed_Click(object sender, EventArgs e)
