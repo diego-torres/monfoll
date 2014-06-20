@@ -750,7 +750,7 @@
             this.toolStripButtonDownload.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonDownload.Name = "toolStripButtonDownload";
             this.toolStripButtonDownload.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonDownload.Text = "Descargar Cuenta de AdminPaq";
+            this.toolStripButtonDownload.Text = "Actualizar desde AdminPaq";
             this.toolStripButtonDownload.Click += new System.EventHandler(this.toolStripButtonDownload_Click);
             // 
             // FormFollowup

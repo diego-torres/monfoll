@@ -2545,7 +2545,6 @@
                         <TablixMember>
                           <Group Name="Details" />
                           <Visibility>
-                            <Hidden>true</Hidden>
                             <ToggleItem>Name</ToggleItem>
                           </Visibility>
                         </TablixMember>

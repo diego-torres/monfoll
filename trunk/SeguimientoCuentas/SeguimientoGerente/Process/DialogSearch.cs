@@ -13,8 +13,13 @@ namespace SeguimientoGerente.Process
 {
     public partial class DialogSearch : Form
     {
+
+        public DataTable DtCustomer { get; set; }
+        public DataTable DtSeries { get; set; }
+        public DataTable DtFolios { get; set; }
+
         private Customer dbCustomer = new Customer();
-        private Account dbAccount = new Account();
+        //private Account dbAccount = new Account();
 
         private bool inCustSelection = false;
         private bool inCustNameTyping = false;
@@ -27,23 +32,22 @@ namespace SeguimientoGerente.Process
         private void DialogSearch_Load(object sender, EventArgs e)
         {
             try {
-                DataTable dtCustomers = dbCustomer.ReadCustomers();
-                comboBoxClient.DataSource = dtCustomers;
+                comboBoxClient.DataSource = DtCustomer;
                 comboBoxClient.DisplayMember = "cd_cliente";
                 comboBoxClient.ValueMember = "id_cliente";
-
-                comboBoxSerie.DataSource = dbAccount.ReadSeries();
+                
+                comboBoxSerie.DataSource = DtSeries;
                 comboBoxSerie.DisplayMember = "serie_doco";
                 comboBoxSerie.ValueMember = "serie_doco";
 
-                foreach (DataRow dr in dtCustomers.Rows)
+                foreach (DataRow dr in DtCustomer.Rows)
                 {
                     if (!textBoxClient.AutoCompleteCustomSource.Contains(dr["nombre_cliente"].ToString()))
                         textBoxClient.AutoCompleteCustomSource.Add(dr["nombre_cliente"].ToString());
                 }
 
-                DataTable dtFolios = dbAccount.ReadFolios();
-                foreach (DataRow dr in dtFolios.Rows)
+               // DataTable dtFolios = dbAccount.ReadFolios();
+                foreach (DataRow dr in DtFolios.Rows)
                 {
                     if (!textBoxFolio.AutoCompleteCustomSource.Contains(dr["folio_doco"].ToString()))
                         textBoxFolio.AutoCompleteCustomSource.Add(dr["folio_doco"].ToString());

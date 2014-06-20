@@ -85,24 +85,6 @@
     <Compile Include="AboutBox.Designer.cs">
       <DependentUpon>AboutBox.cs</DependentUpon>
     </Compile>
-    <Compile Include="Catalogs\DialogAssign.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Catalogs\DialogAssign.Designer.cs">
-      <DependentUpon>DialogAssign.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Catalogs\FormClientes.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Catalogs\FormClientes.Designer.cs">
-      <DependentUpon>FormClientes.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Catalogs\FormCobradores.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Catalogs\FormCobradores.Designer.cs">
-      <DependentUpon>FormCobradores.cs</DependentUpon>
-    </Compile>
     <Compile Include="Collectable\AdminPaqImp.cs" />
     <Compile Include="Collectable\CollectableDTO.cs" />
     <Compile Include="Collectable\PostgresImpl\Account.cs" />
@@ -168,17 +150,23 @@
       <DependentUpon>ReportViewer.cs</DependentUpon>
     </Compile>
     <Compile Include="Settings.cs" />
+    <None Include="Resources\unlock-icon.png" />
+    <None Include="Resources\undo-icon.png" />
+    <None Include="Resources\Save-icon.png" />
+    <None Include="Resources\refresh-icon.png" />
+    <None Include="Resources\open-file-icon.png" />
+    <None Include="Resources\Notes-icon.png" />
+    <None Include="Resources\Emblems-emblem-locked-icon.png" />
+    <None Include="Resources\customer-service-icon.png" />
+    <None Include="Resources\Close-2-icon.png" />
+    <None Include="Resources\calendar-icon.png" />
+    <None Include="Resources\arrow-down-icon.png" />
+    <None Include="Resources\tasks.png" />
+    <None Include="Resources\no.png" />
+    <None Include="Resources\Printer-icon.png" />
+    <None Include="Resources\Print.png" />
     <EmbeddedResource Include="AboutBox.resx">
       <DependentUpon>AboutBox.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Catalogs\DialogAssign.resx">
-      <DependentUpon>DialogAssign.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Catalogs\FormClientes.resx">
-      <DependentUpon>FormClientes.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Catalogs\FormCobradores.resx">
-      <DependentUpon>FormCobradores.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Config\FormConfig.resx">
       <DependentUpon>FormConfig.cs</DependentUpon>
@@ -212,6 +200,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <Content Include="Reports\ReportCustomerAccounts.rdlc">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
