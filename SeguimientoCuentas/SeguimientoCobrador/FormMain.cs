@@ -12,19 +12,32 @@ using SeguimientoCobrador.Config;
 using SeguimientoCobrador.Process;
 using SeguimientoCobrador.Collectable.PostgresImpl;
 using CommonAdminPaq;
+using System.Threading;
+using Npgsql;
+using SeguimientoCobrador.Properties;
 
 namespace SeguimientoCobrador
 {
     public partial class FormMain : Form
     {
+
+        public DataTable DtCustomer { get; set; }
+        public DataTable DtSeries { get; set; }
+        public DataTable DtFolios { get; set; }
+
         private AdminPaqImp api;
 
         private FormConfig fConfig;
         private AboutBox about;
         private Dictionary<int, FormFollowup> followups = new Dictionary<int, FormFollowup>();
+        List<Collectable.Account> adminPaqAccounts = new List<Collectable.Account>();
+
+        readonly object stateLock = new object();
+        Collectable.PostgresImpl.Account AccountInterface = new Collectable.PostgresImpl.Account();
+        Customer CustomerInterface = new Customer();
 
         private FormProcess fProcess;
-        
+
         public FormMain()
         {
             InitializeComponent();
@@ -47,7 +60,7 @@ namespace SeguimientoCobrador
         public void ShowFollowUp(SeguimientoCobrador.Collectable.Account account)
         {
             FormFollowup currentFollowing;
-            bool following = followups.TryGetValue(account.DocId, out currentFollowing); 
+            bool following = followups.TryGetValue(account.DocId, out currentFollowing);
 
             if (!following)
             {
@@ -73,6 +86,50 @@ namespace SeguimientoCobrador
         private void FormMain_Load(object sender, EventArgs e)
         {
             api = new AdminPaqImp();
+            Enterprise dbEnterprise = new Enterprise();
+            foreach (Empresa enterprise in api.Empresas)
+            {
+                try
+                {
+                    if (ValidateDBConfig())
+                    {
+                        dbEnterprise.SaveEnterprise(enterprise);
+                        DtCustomer = CustomerInterface.ReadCustomers();
+                        DtSeries = AccountInterface.ReadSeries();
+                        DtFolios = AccountInterface.ReadFolios();
+                    }   
+                    else
+                        OpenConfig();
+                }
+                catch (Exception ex)
+                {
+                    ErrLogger.Log(ex.Message);
+                }
+            }
+        }
+
+        private bool ValidateDBConfig()
+        {
+            try
+            {
+                NpgsqlConnection conn;
+                Settings set = Settings.Default;
+
+                string connString = String.Format("Server={0};Port={1};" +
+                        "User Id={2};Password={3};Database={4};",
+                        set.server, set.port, set.user,
+                        set.password, set.database);
+                conn = new NpgsqlConnection(connString);
+                conn.Open();
+                conn.Close();
+                return true;
+            }
+            catch (Exception err)
+            {
+                MessageBox.Show("No fue posible establecer una conexión con la base de datos:\n" + err.Message,
+                    "Sin conexion", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            }
         }
 
         private void acercaDeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -86,7 +143,7 @@ namespace SeguimientoCobrador
             about.Show();
         }
 
-        private void configuracionToolStripMenuItem_Click(object sender, EventArgs e)
+        private void OpenConfig()
         {
             if (fConfig == null || fConfig.IsDisposed)
             {
@@ -95,6 +152,11 @@ namespace SeguimientoCobrador
                 fConfig.MdiParent = this;
             }
             fConfig.Show();
+        }
+
+        private void configuracionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenConfig();
         }
 
         private void processToolStripMenuItem_Click(object sender, EventArgs e)
@@ -107,5 +169,26 @@ namespace SeguimientoCobrador
             }
             fProcess.Show();
         }
+
+        private void buscarToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DialogSearch search = new DialogSearch();
+            search.DtCustomer = DtCustomer;
+            search.DtSeries = DtSeries;
+            search.DtFolios = DtFolios;
+            search.ShowDialog();
+
+            if (search.DialogResult == DialogResult.Cancel) return;
+
+            if (!IsProcessOpen)
+            {
+                fProcess = new FormProcess();
+                fProcess.API = api;
+                fProcess.MdiParent = this;
+            }
+            fProcess.Show();
+            fProcess.SearchData(search.comboBoxClient.Text, search.comboBoxSerie.Text, search.textBoxFolio.Text);
+        }
+
     }
 }

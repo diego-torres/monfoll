@@ -30,9 +30,6 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.catalogsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.clientesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.cobradoresToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cuentasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.processToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.buscarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -52,7 +49,6 @@
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.catalogsToolStripMenuItem,
             this.cuentasToolStripMenuItem,
             this.toolStripMenuItemConfig});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
@@ -60,29 +56,6 @@
             this.menuStrip1.Size = new System.Drawing.Size(744, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
-            // 
-            // catalogsToolStripMenuItem
-            // 
-            this.catalogsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.clientesToolStripMenuItem,
-            this.cobradoresToolStripMenuItem});
-            this.catalogsToolStripMenuItem.Name = "catalogsToolStripMenuItem";
-            this.catalogsToolStripMenuItem.Size = new System.Drawing.Size(67, 20);
-            this.catalogsToolStripMenuItem.Text = "&Catálogos";
-            // 
-            // clientesToolStripMenuItem
-            // 
-            this.clientesToolStripMenuItem.Name = "clientesToolStripMenuItem";
-            this.clientesToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
-            this.clientesToolStripMenuItem.Text = "Cli&entes";
-            this.clientesToolStripMenuItem.Click += new System.EventHandler(this.clientesToolStripMenuItem_Click);
-            // 
-            // cobradoresToolStripMenuItem
-            // 
-            this.cobradoresToolStripMenuItem.Name = "cobradoresToolStripMenuItem";
-            this.cobradoresToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
-            this.cobradoresToolStripMenuItem.Text = "C&obradores";
-            this.cobradoresToolStripMenuItem.Click += new System.EventHandler(this.cobradoresToolStripMenuItem_Click);
             // 
             // cuentasToolStripMenuItem
             // 
@@ -166,7 +139,7 @@
             // 
             this.mainStatus.Name = "mainStatus";
             this.mainStatus.Size = new System.Drawing.Size(318, 17);
-            this.mainStatus.Text = "Seguimiento a cuentas por cobrar - módulo de supervisor V 2.1.1";
+            this.mainStatus.Text = "Seguimiento a cuentas por cobrar - módulo de supervisor V 3.0.0";
             // 
             // mainProgressBar
             // 
@@ -204,9 +177,6 @@
         #endregion
 
         private System.Windows.Forms.MenuStrip menuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem catalogsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem clientesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem cobradoresToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem cuentasToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem processToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem descargarToolStripMenuItem;

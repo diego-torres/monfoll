@@ -9,6 +9,7 @@ namespace SeguimientoCobrador.Collectable.PostgresImpl
 {
     public class Enterprise : CommonBase
     {
+
         public string[] ConceptosPago(int enterpriseId)
         {
             List<string> conceptos = new List<string>();

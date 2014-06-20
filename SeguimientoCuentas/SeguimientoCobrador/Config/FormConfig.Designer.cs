@@ -32,8 +32,6 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormConfig));
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.comboBoxCobrador = new System.Windows.Forms.ComboBox();
-            this.label3 = new System.Windows.Forms.Label();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripButtonSave = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonUndo = new System.Windows.Forms.ToolStripButton();
@@ -58,7 +56,6 @@
             this.toolStripButtonUndoChanges = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonCheckDB = new System.Windows.Forms.ToolStripButton();
             this.label7 = new System.Windows.Forms.Label();
-            this.bindingSourceCollectors = new System.Windows.Forms.BindingSource(this.components);
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -66,7 +63,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.bindingSourceEmpresas)).BeginInit();
             this.tabPage2.SuspendLayout();
             this.toolStrip2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.bindingSourceCollectors)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -84,8 +80,6 @@
             // 
             // tabPage1
             // 
-            this.tabPage1.Controls.Add(this.comboBoxCobrador);
-            this.tabPage1.Controls.Add(this.label3);
             this.tabPage1.Controls.Add(this.toolStrip1);
             this.tabPage1.Controls.Add(this.groupBox1);
             this.tabPage1.Location = new System.Drawing.Point(4, 25);
@@ -96,24 +90,6 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "AdminPaq";
             this.tabPage1.UseVisualStyleBackColor = true;
-            // 
-            // comboBoxCobrador
-            // 
-            this.comboBoxCobrador.DataSource = this.bindingSourceCollectors;
-            this.comboBoxCobrador.FormattingEnabled = true;
-            this.comboBoxCobrador.Location = new System.Drawing.Point(133, 161);
-            this.comboBoxCobrador.Name = "comboBoxCobrador";
-            this.comboBoxCobrador.Size = new System.Drawing.Size(193, 24);
-            this.comboBoxCobrador.TabIndex = 3;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(59, 164);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(68, 16);
-            this.label3.TabIndex = 2;
-            this.label3.Text = "Cobrador:";
             // 
             // toolStrip1
             // 
@@ -370,7 +346,6 @@
             this.tabPage2.PerformLayout();
             this.toolStrip2.ResumeLayout(false);
             this.toolStrip2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.bindingSourceCollectors)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -403,8 +378,5 @@
         private System.Windows.Forms.ToolStripButton toolStripButtonCheckDB;
         private System.Windows.Forms.ToolStripButton toolStripButtonUndo;
         private System.Windows.Forms.ToolStripButton toolStripButtonUndoChanges;
-        private System.Windows.Forms.ComboBox comboBoxCobrador;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.BindingSource bindingSourceCollectors;
     }
 }

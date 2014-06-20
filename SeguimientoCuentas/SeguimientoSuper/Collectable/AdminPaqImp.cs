@@ -217,6 +217,12 @@ namespace SeguimientoSuper.Collectable
         }
 
         public List<Account> DownloadCollectables()
+        {   
+            Settings set = Settings.Default;
+            return DownloadCollectables(set.fecha_inicio, set.fecha_fin);
+        }
+
+        public List<Account> DownloadCollectables(DateTime fromDate, DateTime toDate)
         {
             List<Account> result = new List<Account>();
             cancelados.Clear();
@@ -259,8 +265,8 @@ namespace SeguimientoSuper.Collectable
                 return result;
             }
 
-            startDate = set.fecha_inicio.ToString(IndexNames.DATE_FORMAT_PATTERN);
-            endDate = set.fecha_fin.ToString(IndexNames.DATE_FORMAT_PATTERN);
+            startDate = fromDate.ToString(IndexNames.DATE_FORMAT_PATTERN);
+            endDate = toDate.ToString(IndexNames.DATE_FORMAT_PATTERN);
 
             tipo_doc = collectableDocType.ToString().PadLeft(11);
             dbResponse = AdvanceConnectionIndex(tipo_doc, startDate, set.fecha_doco, connDocos);
@@ -412,7 +418,7 @@ namespace SeguimientoSuper.Collectable
             int connection, dbResponse, fieldResponse;
             string key;
 
-            int cancelled = 0, folioDoc = 0, currencyId = 0;
+            int cancelled = 0, folioDoc = 0, currencyId = 0, companyId = 0;
             double saldoPendiente = 0, totalDoc = 0;
             StringBuilder sbFechaDoco = new StringBuilder(9);
             StringBuilder sbFechaCobro = new StringBuilder(9);
@@ -421,9 +427,11 @@ namespace SeguimientoSuper.Collectable
             StringBuilder sbSerieDoc = new StringBuilder(12);
             StringBuilder sbTipoCobro = new StringBuilder(51);
             StringBuilder sbObservations = new StringBuilder(51);
-            string sFechaDoco, sFechaCobro, sFechaVenc, sSerieDoc, sTipoCobro, sObservations;
+            string sFechaDoco, sFechaCobro, sFechaVenc, sSerieDoc, sTipoCobro, sObservations, sCompanyName;
 
             Empresa configuredCompany = ConfiguredCompany();
+
+            Dictionary<int, Company> companies = new Dictionary<int, Company>();
 
             if (configuredCompany == null)
             {
@@ -488,7 +496,17 @@ namespace SeguimientoSuper.Collectable
                 fieldResponse = AdminPaqLib.dbFieldLong(connection, TableNames.DOCUMENTOS, 15, ref currencyId);
                 source.Currency = CurrencyName(currencyId, configuredCompany.Ruta);
 
-                source.Company = source.Company;
+
+                fieldResponse = AdminPaqLib.dbFieldLong(connection, TableNames.DOCUMENTOS, 7, ref companyId);
+                fieldResponse = AdminPaqLib.dbFieldChar(connection, TableNames.DOCUMENTOS, 8, sbCompanyName, 61);
+                sCompanyName = sbCompanyName.ToString().Substring(0,60).Trim();
+
+                source.Company = new Company();
+                source.Company.ApId = companyId;
+                source.Company.Name = sCompanyName;
+                source.Company.EnterpriseId = configuredCompany.Id;
+                
+                FillCompany(source.Company, configuredCompany.Ruta);
                 FillPayments(source, configuredCompany.Ruta, conceptosAbono);
             }
             else

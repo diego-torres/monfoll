@@ -7,22 +7,25 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-using SeguimientoGerente.Catalogs;
 using SeguimientoGerente.Collectable;
 using SeguimientoGerente.Config;
 using SeguimientoGerente.Process;
 using SeguimientoGerente.Collectable.PostgresImpl;
 using CommonAdminPaq;
 using System.Threading;
+using Npgsql;
+using SeguimientoGerente.Properties;
 
 namespace SeguimientoGerente
 {
     public partial class FormMain : Form
     {
-        private AdminPaqImp api;
 
-        private FormCobradores fCobradores;
-        private FormClientes fClientes;
+        public DataTable DtCustomer { get; set; }
+        public DataTable DtSeries { get; set; }
+        public DataTable DtFolios { get; set; }
+
+        private AdminPaqImp api;
 
         private FormConfig fConfig;
         private AboutBox about;
@@ -32,6 +35,7 @@ namespace SeguimientoGerente
 
         readonly object stateLock = new object();
         Collectable.PostgresImpl.Account AccountInterface = new Collectable.PostgresImpl.Account();
+        Customer CustomerInterface = new Customer();
 
         private FormProcess fProcess;
 
@@ -48,38 +52,10 @@ namespace SeguimientoGerente
             }
         }
 
-        public bool IsClientesOpen
-        {
-            get
-            {
-                return !(fClientes == null || fClientes.IsDisposed);
-            }
-        }
-
-        public bool IsCollectorsOpen
-        {
-            get
-            {
-                return !(fCobradores == null || fCobradores.IsDisposed);
-            }
-        }
-
         public void RefreshProcessAccounts()
         {
             if (IsProcessOpen)
                 fProcess.Refresh();
-        }
-
-        public void RefreshAccountsInCollectors()
-        {
-            if (IsCollectorsOpen)
-                fCobradores.RefreshAccounts();
-        }
-
-        public void RefreshAccountsInClientes()
-        {
-            if (IsClientesOpen)
-                fClientes.RefreshAccounts();
         }
 
         public void ShowFollowUp(SeguimientoGerente.Collectable.Account account)
@@ -123,27 +99,6 @@ namespace SeguimientoGerente
             fDownload.Close();
         }
 
-        private void cobradoresToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (fCobradores == null || fCobradores.IsDisposed)
-            {
-                fCobradores = new FormCobradores();
-                fCobradores.MdiParent = this;
-            }
-            fCobradores.Show();
-        }
-
-        private void clientesToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (fClientes == null || fClientes.IsDisposed)
-            {
-                fClientes = new FormClientes();
-                fClientes.MdiParent = this;
-            }
-
-            fClientes.Show();
-        }
-
         private void FormMain_Load(object sender, EventArgs e)
         {
             api = new AdminPaqImp();
@@ -152,12 +107,44 @@ namespace SeguimientoGerente
             {
                 try
                 {
-                    dbEnterprise.SaveEnterprise(enterprise);
+                    if (ValidateDBConfig())
+                    {
+                        dbEnterprise.SaveEnterprise(enterprise);
+                        DtCustomer = CustomerInterface.ReadCustomers();
+                        DtSeries = AccountInterface.ReadSeries();
+                        DtFolios = AccountInterface.ReadFolios();
+                    }   
+                    else
+                        OpenConfig();
                 }
                 catch (Exception ex)
                 {
                     ErrLogger.Log(ex.Message);
                 }
+            }
+        }
+
+        private bool ValidateDBConfig()
+        {
+            try
+            {
+                NpgsqlConnection conn;
+                Settings set = Settings.Default;
+
+                string connString = String.Format("Server={0};Port={1};" +
+                        "User Id={2};Password={3};Database={4};",
+                        set.server, set.port, set.user,
+                        set.password, set.database);
+                conn = new NpgsqlConnection(connString);
+                conn.Open();
+                conn.Close();
+                return true;
+            }
+            catch (Exception err)
+            {
+                MessageBox.Show("No fue posible establecer una conexión con la base de datos:\n" + err.Message,
+                    "Sin conexion", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
             }
         }
 
@@ -172,7 +159,7 @@ namespace SeguimientoGerente
             about.Show();
         }
 
-        private void configuracionToolStripMenuItem_Click(object sender, EventArgs e)
+        private void OpenConfig()
         {
             if (fConfig == null || fConfig.IsDisposed)
             {
@@ -183,6 +170,11 @@ namespace SeguimientoGerente
             fConfig.Show();
         }
 
+        private void configuracionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenConfig();
+        }
+
         private void descargarToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
@@ -190,6 +182,11 @@ namespace SeguimientoGerente
                 ShowDownload();
                 List<Collectable.Account> adminPaqAccounts = api.DownloadCollectables();
                 AccountInterface.UploadAccounts(adminPaqAccounts, api.Cancelados, api.Saldados, api.Conceptos);
+                AccountInterface.SetCollectDate(api);
+
+                DtCustomer = CustomerInterface.ReadCustomers();
+                DtSeries = AccountInterface.ReadSeries();
+                DtFolios = AccountInterface.ReadFolios();
             }
             catch (Exception ex)
             {
@@ -222,6 +219,9 @@ namespace SeguimientoGerente
         private void buscarToolStripMenuItem_Click(object sender, EventArgs e)
         {
             DialogSearch search = new DialogSearch();
+            search.DtCustomer = DtCustomer;
+            search.DtSeries = DtSeries;
+            search.DtFolios = DtFolios;
             search.ShowDialog();
 
             if (search.DialogResult == DialogResult.Cancel) return;

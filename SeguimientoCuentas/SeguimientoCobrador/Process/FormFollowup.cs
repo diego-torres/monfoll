@@ -181,9 +181,13 @@ namespace SeguimientoCobrador.Process
                 MessageBox.Show("Los datos han sido grabados exitosamente.", "Datos Guardados", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 FormMain fMain = (FormMain)this.MdiParent;
-                fMain.RefreshProcessAccounts();
+
+                if (fMain.IsProcessOpen)
+                    fMain.RefreshProcessAccounts();
+
 
                 adminPaqDirty = false;
+
                 return true;
             }
             catch (Exception ex)
@@ -424,7 +428,7 @@ namespace SeguimientoCobrador.Process
             Settings set = Settings.Default;
 
             bool cancelled = false;
-            try 
+            try
             {
                 api.DownloadCollectable(ref account, dbEnterprise.ConceptosPago(set.empresa), out cancelled);
                 Collectable.PostgresImpl.Account dbAccount = new Collectable.PostgresImpl.Account();
@@ -438,14 +442,22 @@ namespace SeguimientoCobrador.Process
 
                 if (cancelled) dbAccount.CancelAccount(account.DocId);
 
+                LoadDates();
+                LoadCustomer();
+                LoadDocument();
+                LoadPayments();
                 RefreshFollowUpGrid();
-                adminPaqDirty = false;
 
+                adminPaqDirty = false;
+                followUpDirty = false;
+
+                MessageBox.Show("Datos extraidos de adminPaq existosamente.", "Actualizado", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
+                ErrLogger.Log(ex.StackTrace);
                 MessageBox.Show("Error al obtener los datos de AdminPaq para la cuenta, intentelo mas tarde: \n " + ex.Message, "No se puede obtener la cuenta", MessageBoxButtons.OK, MessageBoxIcon.Hand);
             }
-            
         }
     }
 }

@@ -13,10 +13,12 @@ namespace SeguimientoCobrador.Collectable
         private AdminPaqLib lib;
         private IList<Empresa> empresas = new List<Empresa>();
         private List<int> cancelados = new List<int>();
+        private List<int> saldados = new List<int>();
         private Dictionary<int, Concepto> conceptos = new Dictionary<int, Concepto>();
 
         public IList<Empresa> Empresas { get { return empresas; } set { empresas = value; } }
         public List<int> Cancelados { get { return cancelados; } }
+        public List<int> Saldados { get { return saldados; } }
         public Dictionary<int, Concepto> Conceptos { get { return conceptos; } }
 
         public AdminPaqImp()
@@ -117,11 +119,6 @@ namespace SeguimientoCobrador.Collectable
             if (dbResponse == 0)
             {
                 string sCollectDate = collectDate.ToString("yyyyMMdd");
-                if (collectDate.Ticks == 0)
-                {
-                    sCollectDate = "18991230";
-                }
-
                 command = string.Format("UPDATE {0}(CFECHAEX01=\"{1}\");",
                     TableNames.DOCUMENTOS, sCollectDate);
 
@@ -177,14 +174,17 @@ namespace SeguimientoCobrador.Collectable
 
             if (dbResponse == 0)
             {
-                string sCollectDate = "18991230";
                 if (account.CollectDate.Ticks > 0)
                 {
-                    sCollectDate = account.CollectDate.ToString("yyyyMMdd");
-                    
-                }
-                command = string.Format("UPDATE {0}(CFECHAEX01=\"{1}\",CTEXTOEX01=\"{2}\",CTEXTOEX02=\"{3}\");",
+                    string sCollectDate = account.CollectDate.ToString("yyyyMMdd");
+                    command = string.Format("UPDATE {0}(CFECHAEX01=\"{1}\",CTEXTOEX01=\"{2}\",CTEXTOEX02=\"{3}\");",
                         TableNames.DOCUMENTOS, sCollectDate, account.CollectType, account.Note);
+                }
+                else
+                {
+                    command = string.Format("UPDATE {0}(CTEXTOEX01=\"{1}\",CTEXTOEX02=\"{2}\");",
+                        TableNames.DOCUMENTOS, account.CollectType, account.Note);
+                }
 
 
 
@@ -221,7 +221,7 @@ namespace SeguimientoCobrador.Collectable
             int connection, dbResponse, fieldResponse;
             string key;
 
-            int cancelled = 0, folioDoc = 0, currencyId = 0;
+            int cancelled = 0, folioDoc = 0, currencyId = 0, companyId = 0;
             double saldoPendiente = 0, totalDoc = 0;
             StringBuilder sbFechaDoco = new StringBuilder(9);
             StringBuilder sbFechaCobro = new StringBuilder(9);
@@ -230,9 +230,11 @@ namespace SeguimientoCobrador.Collectable
             StringBuilder sbSerieDoc = new StringBuilder(12);
             StringBuilder sbTipoCobro = new StringBuilder(51);
             StringBuilder sbObservations = new StringBuilder(51);
-            string sFechaDoco, sFechaCobro, sFechaVenc, sSerieDoc, sTipoCobro, sObservations;
+            string sFechaDoco, sFechaCobro, sFechaVenc, sSerieDoc, sTipoCobro, sObservations, sCompanyName;
 
             Empresa configuredCompany = ConfiguredCompany();
+
+            Dictionary<int, Company> companies = new Dictionary<int, Company>();
 
             if (configuredCompany == null)
             {
@@ -255,7 +257,7 @@ namespace SeguimientoCobrador.Collectable
                 // Obtener datos de la cuenta
                 fieldResponse = AdminPaqLib.dbFieldLong(connection, TableNames.DOCUMENTOS, 26, ref cancelled);
                 isCancelled = cancelled != 0;
-                
+
 
                 fieldResponse = AdminPaqLib.dbFieldDouble(connection, TableNames.DOCUMENTOS, 44, ref saldoPendiente);
 
@@ -297,7 +299,17 @@ namespace SeguimientoCobrador.Collectable
                 fieldResponse = AdminPaqLib.dbFieldLong(connection, TableNames.DOCUMENTOS, 15, ref currencyId);
                 source.Currency = CurrencyName(currencyId, configuredCompany.Ruta);
 
-                source.Company = source.Company;
+
+                fieldResponse = AdminPaqLib.dbFieldLong(connection, TableNames.DOCUMENTOS, 7, ref companyId);
+                fieldResponse = AdminPaqLib.dbFieldChar(connection, TableNames.DOCUMENTOS, 8, sbCompanyName, 61);
+                sCompanyName = sbCompanyName.ToString().Substring(0,60).Trim();
+
+                source.Company = new Company();
+                source.Company.ApId = companyId;
+                source.Company.Name = sCompanyName;
+                source.Company.EnterpriseId = configuredCompany.Id;
+                
+                FillCompany(source.Company, configuredCompany.Ruta);
                 FillPayments(source, configuredCompany.Ruta, conceptosAbono);
             }
             else

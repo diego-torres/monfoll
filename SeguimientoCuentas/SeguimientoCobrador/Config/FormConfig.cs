@@ -37,18 +37,13 @@ namespace SeguimientoCobrador.Config
             comboBoxEmpresas.DisplayMember = "Nombre";
             comboBoxEmpresas.ValueMember = "Id";
             try 
-            {
-                bindingSourceCollectors.DataSource = dbCollector.ReadCollectors();
-                comboBoxCobrador.DataSource = bindingSourceCollectors;
-                comboBoxCobrador.DisplayMember = "nombre_cobrador";
-                comboBoxCobrador.ValueMember = "id_cobrador";
-
+            {  
                 loadConfiguration();
             }
             catch (Exception ex) 
             {
                 ErrLogger.Log(ex.Message);
-                MessageBox.Show("No se encontraron registros de cobradores en la base de datos. Pida a su supervisor que agregue los usuarios necesarios", "No hay cobradores", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("No se encontraron registros de empresas en la base de datos. Pida a su supervisor que descargue las cuentas de adminPaq utilizando el Modulo de Supervisor de Cuentas por cobrar.", "No hay cobradores", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 this.Close();
             }
         }
@@ -211,7 +206,6 @@ namespace SeguimientoCobrador.Config
             Settings set = Settings.Default;
 
             set.empresa = int.Parse(comboBoxEmpresas.SelectedValue.ToString());
-            set.cobrador = int.Parse(comboBoxCobrador.SelectedValue.ToString());
             set.Save();
 
             adminPaqConfigDirty = false;
@@ -235,16 +229,6 @@ namespace SeguimientoCobrador.Config
                 if (itemEmpresa.Id == set.empresa)
                 {
                     comboBoxEmpresas.SelectedIndex = i;
-                }
-            }
-
-            for (int i = 0; i < comboBoxCobrador.Items.Count; i++)
-            {
-                DataRowView itemCollector = (DataRowView)comboBoxCobrador.Items[i];
-                
-                if (itemCollector["id_cobrador"].ToString().Equals(set.cobrador.ToString()))
-                {
-                    comboBoxCobrador.SelectedIndex = i;
                 }
             }
 

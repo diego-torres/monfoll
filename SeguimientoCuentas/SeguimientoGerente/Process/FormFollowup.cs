@@ -182,12 +182,6 @@ namespace SeguimientoGerente.Process
 
                 FormMain fMain = (FormMain)this.MdiParent;
 
-                if (fMain.IsClientesOpen)
-                    fMain.RefreshAccountsInClientes();
-
-                if (fMain.IsCollectorsOpen)
-                    fMain.RefreshAccountsInCollectors();
-
                 if (fMain.IsProcessOpen)
                     fMain.RefreshProcessAccounts();
 
@@ -448,9 +442,16 @@ namespace SeguimientoGerente.Process
 
                 if (cancelled) dbAccount.CancelAccount(account.DocId);
 
+                LoadDates();
+                LoadCustomer();
+                LoadDocument();
+                LoadPayments();
                 RefreshFollowUpGrid();
-                adminPaqDirty = false;
 
+                adminPaqDirty = false;
+                followUpDirty = false;
+
+                MessageBox.Show("Datos extraidos de adminPaq existosamente.", "Actualizado", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
