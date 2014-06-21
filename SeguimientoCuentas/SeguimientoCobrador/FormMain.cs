@@ -187,7 +187,7 @@ namespace SeguimientoCobrador
                 fProcess.MdiParent = this;
             }
             fProcess.Show();
-            fProcess.SearchData(search.comboBoxClient.Text, search.comboBoxSerie.Text, search.textBoxFolio.Text);
+            fProcess.SearchData(search.comboBoxClient.Text, search.comboBoxSerie.Text, search.comboBoxFolios.Text);
         }
 
     }

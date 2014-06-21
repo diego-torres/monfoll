@@ -40,21 +40,23 @@ namespace SeguimientoSuper.Process
                 comboBoxSerie.DisplayMember = "serie_doco";
                 comboBoxSerie.ValueMember = "serie_doco";
 
-                foreach (DataRow dr in DtCustomer.Rows)
-                {
-                    if (!textBoxClient.AutoCompleteCustomSource.Contains(dr["nombre_cliente"].ToString()))
-                        textBoxClient.AutoCompleteCustomSource.Add(dr["nombre_cliente"].ToString());
-                }
+                comboBoxClientName.DataSource = DtCustomer;
+                comboBoxClientName.DisplayMember = "nombre_cliente";
+                comboBoxClientName.ValueMember = "id_cliente";
 
-               // DataTable dtFolios = dbAccount.ReadFolios();
-                foreach (DataRow dr in DtFolios.Rows)
-                {
-                    if (!textBoxFolio.AutoCompleteCustomSource.Contains(dr["folio_doco"].ToString()))
-                        textBoxFolio.AutoCompleteCustomSource.Add(dr["folio_doco"].ToString());
-                }
+                comboBoxFolios.DataSource = DtFolios;
+                comboBoxFolios.DisplayMember = "folio_doco";
+                comboBoxFolios.ValueMember = "folio_doco";
 
                 comboBoxClient.SelectedIndex = -1;
                 comboBoxClient.Text = "";
+                
+                comboBoxClientName.SelectedIndex = -1;
+                comboBoxClientName.Text = "";
+
+                comboBoxFolios.SelectedIndex = -1;
+                comboBoxFolios.Text = "";
+
             }catch(Exception ex){
                 ErrLogger.Log(ex.StackTrace);
                 MessageBox.Show("No fue posible consultar algunos datos en la base de datos. Intente más tarde: \n" +
@@ -76,7 +78,7 @@ namespace SeguimientoSuper.Process
         {
             if (comboBoxClient.Text.Equals(string.Empty)||inCustNameTyping) return;
             try {
-                textBoxClient.Text = dbCustomer.CustomerNameByCode(comboBoxClient.Text);
+                comboBoxClientName.Text = dbCustomer.CustomerNameByCode(comboBoxClient.Text);
                 inCustSelection = false;
             }catch(Exception ex){
                 ErrLogger.Log(ex.StackTrace);
@@ -87,12 +89,12 @@ namespace SeguimientoSuper.Process
 
         private void textBoxClient_TextChanged(object sender, EventArgs e)
         {
-            if (textBoxClient.Text.Trim().Equals(string.Empty) || inCustSelection) return;
+            if (comboBoxClientName.Text.Trim().Equals(string.Empty) || inCustSelection) return;
             try {
                 DataTable dtCustomers = dbCustomer.ReadCustomers();
                 foreach(DataRow dr in dtCustomers.Rows)
                 {
-                    if(dr["nombre_cliente"].ToString().ToLower().Equals(textBoxClient.Text.Trim().ToLower()))
+                    if (dr["nombre_cliente"].ToString().ToLower().Equals(comboBoxClientName.Text.Trim().ToLower()))
                         comboBoxClient.Text = dr["cd_cliente"].ToString();
                 }
 

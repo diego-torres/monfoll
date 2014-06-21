@@ -182,7 +182,7 @@ namespace SeguimientoSuper.Collectable
                 }
                 else
                 {
-                    command = string.Format("UPDATE {0}(CTEXTOEX01=\"{1}\",CTEXTOEX02=\"{2}\");",
+                    command = string.Format("UPDATE {0}(CFECHAEX01=\"18991230\",CTEXTOEX01=\"{2}\",CTEXTOEX02=\"{3}\");",
                         TableNames.DOCUMENTOS, account.CollectType, account.Note);
                 }
 

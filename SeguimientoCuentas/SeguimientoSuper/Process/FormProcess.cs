@@ -245,6 +245,15 @@ namespace SeguimientoSuper.Process
             if (IsNumericColumn(columnName))
                 return string.Format("{0}<>{1}", columnName, columnValue);
 
+            if (IsDateColumn(columnName))
+            {
+                if (string.Empty.Equals(columnValue.Trim()))
+                    return string.Format("CONVERT(Isnull({0},''), System.String) <> ''", columnName);
+                IFormatProvider culture = new System.Globalization.CultureInfo("es-MX", false);
+                DateTime dValue = DateTime.Parse(columnValue, culture, System.Globalization.DateTimeStyles.AssumeLocal);
+                return string.Format("{0}<>#{1}#", columnName, dValue.ToString("MM/dd/yyyy"));
+            }
+
             return string.Format("{0}<>'{1}'", columnName, columnValue);
         }
 
@@ -253,7 +262,23 @@ namespace SeguimientoSuper.Process
             if (IsNumericColumn(columnName))
                 return string.Format("{0}={1}", columnName, columnValue);
 
+            if (IsDateColumn(columnName))
+            {
+                if (string.Empty.Equals(columnValue.Trim()))
+                    return string.Format("CONVERT(Isnull({0},''), System.String) = ''", columnName);
+                IFormatProvider culture = new System.Globalization.CultureInfo("es-MX", false);
+                DateTime dValue = DateTime.Parse(columnValue, culture, System.Globalization.DateTimeStyles.AssumeLocal);
+                return string.Format("{0}=#{1}#", columnName, dValue.ToString("MM/dd/yyyy"));
+            }
+
+
             return string.Format("{0}='{1}'", columnName, columnValue);
+        }
+
+        private bool IsDateColumn(string columnName)
+        {
+            string[] datedColumns = { "f_documento", "f_vencimiento", "f_cobro", "f_cobro_esperada" };
+            return datedColumns.Contains(columnName);
         }
 
         private bool IsNumericColumn(string columnName)
@@ -306,9 +331,12 @@ namespace SeguimientoSuper.Process
 
                 DataGridView dgvSender = (DataGridView)sender;
                 var hti = dgvSender.HitTest(e.X, e.Y);
-                dgvSender.ClearSelection();
-                dgvSender.Rows[hti.RowIndex].Cells[hti.ColumnIndex].Selected = true;
-                dgvSender.CurrentCell = dgvSender.Rows[hti.RowIndex].Cells[hti.ColumnIndex];
+                if (hti.RowIndex >= 0 && hti.ColumnIndex >= 0)
+                {
+                    dgvSender.ClearSelection();
+                    dgvSender.Rows[hti.RowIndex].Cells[hti.ColumnIndex].Selected = true;
+                    dgvSender.CurrentCell = dgvSender.Rows[hti.RowIndex].Cells[hti.ColumnIndex];
+                }
             }
         }
 
@@ -769,8 +797,18 @@ namespace SeguimientoSuper.Process
 
             foreach(Collectable.Account account in selectedIds)
             {
-                dbAccount.SetCollectDate(account.DocId, dlgCollectDate.dateTimePickerCollectDate.Value);
-                api.SetCollectDate(account.ApId, dlgCollectDate.dateTimePickerCollectDate.Value);
+                if (!dlgCollectDate.dateTimePickerCollectDate.Checked)
+                {
+                    //18991230
+                    DateTime dt = new DateTime(1899, 12, 30);
+                    dbAccount.SetCollectDate(account.DocId, dt);
+                    api.SetCollectDate(account.ApId, dt);
+                }
+                else
+                {
+                    dbAccount.SetCollectDate(account.DocId, dlgCollectDate.dateTimePickerCollectDate.Value);
+                    api.SetCollectDate(account.ApId, dlgCollectDate.dateTimePickerCollectDate.Value);
+                }
             }
 
             MessageBox.Show("Fecha de cobro actualizada en AdminPaq.", "Fecha de cobro asignada", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -788,8 +826,18 @@ namespace SeguimientoSuper.Process
 
             foreach (Collectable.Account account in selectedIds)
             {
-                dbAccount.SetCollectDate(account.DocId, dlgCollectDate.dateTimePickerCollectDate.Value);
-                api.SetCollectDate(account.ApId, dlgCollectDate.dateTimePickerCollectDate.Value);
+                if (!dlgCollectDate.dateTimePickerCollectDate.Checked)
+                {
+                    //18991230
+                    DateTime dt = new DateTime(1899, 12, 30);
+                    dbAccount.SetCollectDate(account.DocId, dt);
+                    api.SetCollectDate(account.ApId, dt);
+                }
+                else
+                {
+                    dbAccount.SetCollectDate(account.DocId, dlgCollectDate.dateTimePickerCollectDate.Value);
+                    api.SetCollectDate(account.ApId, dlgCollectDate.dateTimePickerCollectDate.Value);
+                }
             }
 
             MessageBox.Show("Fecha de cobro actualizada en AdminPaq.", "Fecha de cobro asignada", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -807,8 +855,18 @@ namespace SeguimientoSuper.Process
 
             foreach (Collectable.Account account in selectedIds)
             {
-                dbAccount.SetCollectDate(account.DocId, dlgCollectDate.dateTimePickerCollectDate.Value);
-                api.SetCollectDate(account.ApId, dlgCollectDate.dateTimePickerCollectDate.Value);
+                if (!dlgCollectDate.dateTimePickerCollectDate.Checked)
+                {
+                    //18991230
+                    DateTime dt = new DateTime(1899, 12, 30);
+                    dbAccount.SetCollectDate(account.DocId, dt);
+                    api.SetCollectDate(account.ApId, dt);
+                }
+                else
+                {
+                    dbAccount.SetCollectDate(account.DocId, dlgCollectDate.dateTimePickerCollectDate.Value);
+                    api.SetCollectDate(account.ApId, dlgCollectDate.dateTimePickerCollectDate.Value);
+                }
             }
 
             MessageBox.Show("Fecha de cobro actualizada en AdminPaq.", "Fecha de cobro asignada", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -826,8 +884,18 @@ namespace SeguimientoSuper.Process
 
             foreach (Collectable.Account account in selectedIds)
             {
-                dbAccount.SetCollectDate(account.DocId, dlgCollectDate.dateTimePickerCollectDate.Value);
-                api.SetCollectDate(account.ApId, dlgCollectDate.dateTimePickerCollectDate.Value);
+                if (!dlgCollectDate.dateTimePickerCollectDate.Checked)
+                {
+                    //18991230
+                    DateTime dt = new DateTime(1899, 12, 30);
+                    dbAccount.SetCollectDate(account.DocId, dt);
+                    api.SetCollectDate(account.ApId, dt);
+                }
+                else
+                {
+                    dbAccount.SetCollectDate(account.DocId, dlgCollectDate.dateTimePickerCollectDate.Value);
+                    api.SetCollectDate(account.ApId, dlgCollectDate.dateTimePickerCollectDate.Value);
+                }
             }
 
             MessageBox.Show("Fecha de cobro actualizada en AdminPaq.", "Fecha de cobro asignada", MessageBoxButtons.OK, MessageBoxIcon.Information);
