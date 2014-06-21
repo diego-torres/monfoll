@@ -202,8 +202,7 @@ namespace SeguimientoCobrador.Process
             {
                 if (string.Empty.Equals(columnValue.Trim()))
                     return string.Format("CONVERT(Isnull({0},''), System.String) <> ''", columnName);
-                IFormatProvider culture = new System.Globalization.CultureInfo("es-MX", false);
-                DateTime dValue = DateTime.Parse(columnValue, culture, System.Globalization.DateTimeStyles.AssumeLocal);
+                DateTime dValue = DateTime.Parse(columnValue);
                 return string.Format("{0}<>#{1}#", columnName, dValue.ToString("MM/dd/yyyy"));
             }
 
@@ -219,8 +218,7 @@ namespace SeguimientoCobrador.Process
             {
                 if (string.Empty.Equals(columnValue.Trim()))
                     return string.Format("CONVERT(Isnull({0},''), System.String) = ''", columnName);
-                IFormatProvider culture = new System.Globalization.CultureInfo("es-MX", false);
-                DateTime dValue = DateTime.Parse(columnValue, culture, System.Globalization.DateTimeStyles.AssumeLocal);
+                DateTime dValue = DateTime.Parse(columnValue);
                 return string.Format("{0}=#{1}#", columnName, dValue.ToString("MM/dd/yyyy"));
             }
 
@@ -402,7 +400,13 @@ namespace SeguimientoCobrador.Process
                     ra.TotalDolares = double.Parse(documentRow.Cells["facturado"].Value.ToString());
                 }
 
-                ra.CollectDate = DateTime.Parse(documentRow.Cells["f_cobro"].Value.ToString());
+                if (documentRow.Cells["f_cobro"].Value.ToString() == "")
+                {
+                    ra.CollectDate = new DateTime(1899, 12, 30);
+                }else{
+                    ra.CollectDate = DateTime.Parse(documentRow.Cells["f_cobro"].Value.ToString());
+                }
+               
                 ra.CollectType = documentRow.Cells["tipo_cobro"].Value.ToString();
                 ra.CompanyCode = documentRow.Cells["cd_cliente"].Value.ToString();
                 ra.DocDate = DateTime.Parse(documentRow.Cells["f_documento"].Value.ToString());
