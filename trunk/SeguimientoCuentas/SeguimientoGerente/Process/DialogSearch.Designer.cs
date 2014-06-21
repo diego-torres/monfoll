@@ -33,10 +33,10 @@
             this.label2 = new System.Windows.Forms.Label();
             this.comboBoxSerie = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.textBoxFolio = new System.Windows.Forms.TextBox();
             this.buttonOk = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
-            this.textBoxClient = new System.Windows.Forms.TextBox();
+            this.comboBoxClientName = new System.Windows.Forms.ComboBox();
+            this.comboBoxFolios = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // label1
@@ -85,16 +85,6 @@
             this.label3.TabIndex = 5;
             this.label3.Text = "Folio:";
             // 
-            // textBoxFolio
-            // 
-            this.textBoxFolio.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
-            this.textBoxFolio.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
-            this.textBoxFolio.Location = new System.Drawing.Point(210, 53);
-            this.textBoxFolio.MaxLength = 10;
-            this.textBoxFolio.Name = "textBoxFolio";
-            this.textBoxFolio.Size = new System.Drawing.Size(92, 20);
-            this.textBoxFolio.TabIndex = 6;
-            // 
             // buttonOk
             // 
             this.buttonOk.Location = new System.Drawing.Point(74, 89);
@@ -116,16 +106,24 @@
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
             // 
-            // textBoxClient
+            // comboBoxClientName
             // 
-            this.textBoxClient.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
-            this.textBoxClient.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
-            this.textBoxClient.Location = new System.Drawing.Point(160, 19);
-            this.textBoxClient.Name = "textBoxClient";
-            this.textBoxClient.Size = new System.Drawing.Size(288, 20);
-            this.textBoxClient.TabIndex = 2;
-            this.textBoxClient.TextChanged += new System.EventHandler(this.textBoxClient_TextChanged);
-            this.textBoxClient.Enter += new System.EventHandler(this.textBoxClient_Enter);
+            this.comboBoxClientName.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.comboBoxClientName.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.comboBoxClientName.Location = new System.Drawing.Point(159, 19);
+            this.comboBoxClientName.Name = "comboBoxClientName";
+            this.comboBoxClientName.Size = new System.Drawing.Size(288, 21);
+            this.comboBoxClientName.TabIndex = 13;
+            this.comboBoxClientName.SelectionChangeCommitted += new System.EventHandler(this.textBoxClient_TextChanged);
+            // 
+            // comboBoxFolios
+            // 
+            this.comboBoxFolios.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.comboBoxFolios.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.comboBoxFolios.Location = new System.Drawing.Point(210, 52);
+            this.comboBoxFolios.Name = "comboBoxFolios";
+            this.comboBoxFolios.Size = new System.Drawing.Size(127, 21);
+            this.comboBoxFolios.TabIndex = 14;
             // 
             // DialogSearch
             // 
@@ -135,10 +133,10 @@
             this.CancelButton = this.buttonCancel;
             this.ClientSize = new System.Drawing.Size(460, 156);
             this.ControlBox = false;
-            this.Controls.Add(this.textBoxClient);
+            this.Controls.Add(this.comboBoxFolios);
+            this.Controls.Add(this.comboBoxClientName);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOk);
-            this.Controls.Add(this.textBoxFolio);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.comboBoxSerie);
             this.Controls.Add(this.label2);
@@ -162,7 +160,7 @@
         private System.Windows.Forms.Button buttonCancel;
         public System.Windows.Forms.ComboBox comboBoxClient;
         public System.Windows.Forms.ComboBox comboBoxSerie;
-        public System.Windows.Forms.TextBox textBoxFolio;
-        private System.Windows.Forms.TextBox textBoxClient;
+        private System.Windows.Forms.ComboBox comboBoxClientName;
+        public System.Windows.Forms.ComboBox comboBoxFolios;
     }
 }

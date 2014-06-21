@@ -23,7 +23,7 @@ namespace SeguimientoGerente.Collectable.PostgresImpl
             NpgsqlCommand cmd = new NpgsqlCommand(sqlString, conn);
             NpgsqlDataReader reader = cmd.ExecuteReader();
             Dictionary<int, DateTime> sugeridasPorDocId = new Dictionary<int, DateTime>();
-            Dictionary<int, DateTime> fechasCobroByApId = new Dictionary<int, DateTime>();
+            //Dictionary<int, DateTime> fechasCobroByApId = new Dictionary<int, DateTime>();
 
             if (reader.HasRows)
             {
@@ -48,23 +48,29 @@ namespace SeguimientoGerente.Collectable.PostgresImpl
                         for (i = 0; i <= 7; i++)
                         {
                             string dow = fSugerida.ToString("ddd", new CultureInfo("es-MX"));
+                            dow = dow.Replace('á', 'a');
+                            dow = dow.Replace('é', 'e');
                             if (diaPago.ToUpper().Contains(dow.ToUpper()))
                             {
                                 found = true;
                                 break;
                             }
-                            fSugerida.AddDays(1);
+                            fSugerida = fSugerida.AddDays(1);
                         }
 
                         if (!found)
                         {
                             i = i * -1;
-                            fSugerida.AddDays(i);
+                            fSugerida = fSugerida.AddDays(i);
                         }
                     }
 
+                    string dayOfWeek = fSugerida.ToString("ddd", new CultureInfo("es-MX"));
+                    if ("DOM".Equals(dayOfWeek.ToUpper()))
+                        fSugerida = fSugerida.AddDays(1);
+
                     sugeridasPorDocId.Add(idDoco, fSugerida);
-                    fechasCobroByApId.Add(apId, fSugerida);
+                    //fechasCobroByApId.Add(apId, fSugerida);
                 }
             }
             reader.Close();
@@ -96,17 +102,17 @@ namespace SeguimientoGerente.Collectable.PostgresImpl
                     updateCommand.Parameters["@documento"].Value = docId;
 
                     updateCommand.ExecuteNonQuery();
-                    SetCollectDate(docId, fSugerida);
+                    //SetCollectDate(docId, fSugerida);
                 }
             }
 
-            foreach (int apId in fechasCobroByApId.Keys)
+            /*foreach (int apId in fechasCobroByApId.Keys)
             {
                 DateTime fCobro;
                 bool gotValue = fechasCobroByApId.TryGetValue(apId, out fCobro);
 
                 api.SetCollectDate(apId, fCobro);
-            }
+            }*/
 
             conn.Close();
         }
@@ -332,6 +338,19 @@ namespace SeguimientoGerente.Collectable.PostgresImpl
             cmd.Parameters["@f_cobro"].Value = collectDate;
             cmd.Parameters["@id"].Value = docId;
 
+            //18991230
+            if (collectDate.Equals(new DateTime(1899, 12, 30)))
+            {
+                sqlString = "UPDATE ctrl_cuenta " +
+                    "SET f_cobro = null " +
+                    "WHERE ID_DOCO = @id";
+
+                cmd = new NpgsqlCommand(sqlString, conn);
+                cmd.Parameters.Add("@id", NpgsqlTypes.NpgsqlDbType.Integer);
+                cmd.Parameters["@id"].Value = docId;
+            }
+
+
             cmd.ExecuteNonQuery();
 
             sqlString = "INSERT INTO ctrl_seguimiento(id_movimiento, id_doco, descripcion) " +
@@ -342,7 +361,7 @@ namespace SeguimientoGerente.Collectable.PostgresImpl
             cmd.Parameters.Add("@detail", NpgsqlTypes.NpgsqlDbType.Varchar, 250);
 
             cmd.Parameters["@doc"].Value = docId;
-            cmd.Parameters["@detail"].Value = string.Format("Fecha de cobro actualizada al {0}", collectDate.ToString("dd-MMM-YYYY"));
+            cmd.Parameters["@detail"].Value = string.Format("Fecha de cobro actualizada al {0}", collectDate.ToString("dd-MMM-yyyy"));
 
             cmd.ExecuteNonQuery();
 
@@ -745,6 +764,18 @@ namespace SeguimientoGerente.Collectable.PostgresImpl
             cmd.Parameters["@id"].Value = adminPaqAccount.DocId;
 
             cmd.ExecuteNonQuery();
+
+            if (adminPaqAccount.CollectDate.Ticks == 0)
+            {
+                sqlString = "UPDATE ctrl_cuenta SET f_cobro = null where id_doco=@id";
+                cmd = new NpgsqlCommand(sqlString, conn);
+
+                cmd.Parameters.Add("@id", NpgsqlTypes.NpgsqlDbType.Integer);
+                cmd.Parameters["@id"].Value = adminPaqAccount.DocId;
+
+                cmd.ExecuteNonQuery();
+            }
+
 
             sqlString = "INSERT INTO ctrl_seguimiento(id_movimiento, id_doco, descripcion) " +
                 "VALUES(2, @documento, 'Cuenta actualizada en AdminPaq por el Gerente.');";

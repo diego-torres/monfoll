@@ -288,11 +288,6 @@
             "AssemblyAsmDisplayName" = "8:Npgsql, Version=2.1.1.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_4BF17127F6C4D1E3C0DB17D8D9B65672"
-                    {
-                    "Name" = "8:Npgsql.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:Npgsql.dll"
             "TargetName" = "8:"
@@ -319,11 +314,6 @@
             "AssemblyAsmDisplayName" = "8:CommonAdminPaq, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_55E41F66EE3A3B7F1FD9025DF956EDB5"
-                    {
-                    "Name" = "8:CommonAdminPaq.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:CommonAdminPaq.dll"
             "TargetName" = "8:"
@@ -350,11 +340,6 @@
             "AssemblyAsmDisplayName" = "8:Microsoft.ReportViewer.Common, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_5ACB34241180CA07641FB7B06B7FD74D"
-                    {
-                    "Name" = "8:Microsoft.ReportViewer.Common.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:Microsoft.ReportViewer.Common.dll"
             "TargetName" = "8:"
@@ -452,11 +437,6 @@
             "AssemblyAsmDisplayName" = "8:Microsoft.ReportViewer.WinForms, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_C23600B4D9DE2C43BB0FB13533FEAB69"
-                    {
-                    "Name" = "8:Microsoft.ReportViewer.WinForms.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:Microsoft.ReportViewer.WinForms.dll"
             "TargetName" = "8:"
@@ -483,11 +463,6 @@
             "AssemblyAsmDisplayName" = "8:Mono.Security, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_C8352F1C0BFA4908A5C88A2751310F5B"
-                    {
-                    "Name" = "8:Mono.Security.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:Mono.Security.dll"
             "TargetName" = "8:"
@@ -574,15 +549,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Seguimiento Supervisor"
-        "ProductCode" = "8:{1E526435-76A8-4EED-9478-FF3F40403065}"
-        "PackageCode" = "8:{DBEB047A-4FB3-47AC-A896-357CD1A616F0}"
+        "ProductCode" = "8:{549745F0-4A6C-4105-953E-5B99719E5352}"
+        "PackageCode" = "8:{4277B747-C417-4279-BCA8-0E78470FBA3F}"
         "UpgradeCode" = "8:{D145EDF6-3734-44BD-B706-A0FAF3619BE7}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:3.0.0"
+        "ProductVersion" = "8:3.1.0"
         "Manufacturer" = "8:Inspiracode"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
