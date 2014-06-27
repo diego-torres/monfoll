@@ -57,6 +57,7 @@ namespace SeguimientoCobrador.Process
                     filterToApply += " AND " + FilterString("folio_doco", folio);
             }
 
+            
             toolStripStatusFilterMaster.Text = "FILTRO: " + filterToApply;
             dtMaster.DefaultView.RowFilter = filterToApply;
             dataGridViewMaster.DataSource = dtMaster;
@@ -67,18 +68,18 @@ namespace SeguimientoCobrador.Process
             dataGridViewAttended.DataSource = dtAttended;
             FormatAccountsGridView(dataGridViewAttended);
 
-            if (dtMaster.Rows.Count >= 1)
+            if (dtMaster.DefaultView.Count >= 1)
+            {
+                tabControlProcess.SelectedIndex = 0;
+                return;
+            }
+
+            if (dtAttended.DefaultView.Count >= 1)
             {
                 tabControlProcess.SelectedIndex = 1;
                 return;
             }
 
-            if (dtAttended.Rows.Count >= 1)
-            {
-                tabControlProcess.SelectedIndex = 2;
-                return;
-            }
-            
             MessageBox.Show("No fue posible encontrar la cuenta con los siguientes datos: \n" +
                 "Cliente: " + client + "\n" +
                 "Serie: " + serie + "\n" +
@@ -90,6 +91,7 @@ namespace SeguimientoCobrador.Process
         
         private void FormProcess_Load(object sender, EventArgs e)
         {
+            
             dtMaster = dbAccount.MasterTable();
             dataGridViewMaster.DataSource = dtMaster;
             FormatAccountsGridView(dataGridViewMaster);
@@ -143,7 +145,8 @@ namespace SeguimientoCobrador.Process
             company.Name = dgv.CurrentRow.Cells["nombre_cliente"].Value.ToString();
             company.AgentCode = dgv.CurrentRow.Cells["ruta"].Value.ToString();
             company.PaymentDay = dgv.CurrentRow.Cells["dia_pago"].Value.ToString();
-            company.EnterpriseId = ConfiguredCompanyId();
+            company.EnterpriseId = int.Parse(dgv.CurrentRow.Cells["id_empresa"].Value.ToString());
+            company.EnterprisePath = dgv.CurrentRow.Cells["ruta_e"].Value.ToString();
             account.Company = company;
 
             return account;
@@ -154,6 +157,8 @@ namespace SeguimientoCobrador.Process
             dgv.Columns["id_cliente"].Visible = false;
             dgv.Columns["id_doco"].Visible = false;
             dgv.Columns["ap_id"].Visible = false;
+            dgv.Columns["id_empresa"].Visible = false;
+            dgv.Columns["ruta_e"].Visible = false;
 
             FixColumn(dgv.Columns["f_documento"], 0, "Fecha Documento", 80);
             FixColumn(dgv.Columns["f_vencimiento"], 1, "Fecha Vencimiento", 80);
@@ -183,6 +188,7 @@ namespace SeguimientoCobrador.Process
 
             dgv.Columns["facturado"].DefaultCellStyle.Format = "c";
             dgv.Columns["saldo"].DefaultCellStyle.Format = "c";
+
         }
 
         private void FixColumn(DataGridViewColumn column, int displayedIndex, string HeaderText, int width)
@@ -261,10 +267,14 @@ namespace SeguimientoCobrador.Process
                 DataGridViewRow selectedRow = dgv.Rows[cell.RowIndex];
                 int selectedId = int.Parse(selectedRow.Cells["ap_id"].Value.ToString());
                 int selectedPgDocId = int.Parse(selectedRow.Cells["id_doco"].Value.ToString());
+                string rutaEmpresa = selectedRow.Cells["ruta_e"].Value.ToString();
 
                 Collectable.Account pgDoco = new Collectable.Account();
                 pgDoco.ApId = selectedId;
                 pgDoco.DocId = selectedPgDocId;
+                Company co = new Company();
+                co.EnterprisePath = rutaEmpresa;
+                pgDoco.Company = co;
 
                 if (!selectedAdminId.Contains(pgDoco))
                     selectedAdminId.Add(pgDoco);
@@ -403,10 +413,11 @@ namespace SeguimientoCobrador.Process
                 if (documentRow.Cells["f_cobro"].Value.ToString() == "")
                 {
                     ra.CollectDate = new DateTime(1899, 12, 30);
-                }else{
+                }
+                else
+                {
                     ra.CollectDate = DateTime.Parse(documentRow.Cells["f_cobro"].Value.ToString());
                 }
-               
                 ra.CollectType = documentRow.Cells["tipo_cobro"].Value.ToString();
                 ra.CompanyCode = documentRow.Cells["cd_cliente"].Value.ToString();
                 ra.DocDate = DateTime.Parse(documentRow.Cells["f_documento"].Value.ToString());
@@ -463,6 +474,7 @@ namespace SeguimientoCobrador.Process
         }
         #endregion
 
+
         #region DATE_SETTERS
         private void toolStripButtonSetDateMaster_Click(object sender, EventArgs e)
         {
@@ -479,19 +491,18 @@ namespace SeguimientoCobrador.Process
                     //18991230
                     DateTime dt = new DateTime(1899, 12, 30);
                     dbAccount.SetCollectDate(account.DocId, dt);
-                    api.SetCollectDate(account.ApId, dt);
+                    api.SetCollectDate(account.ApId, dt, account.Company.EnterprisePath);
                 }
                 else
                 {
                     dbAccount.SetCollectDate(account.DocId, dlgCollectDate.dateTimePickerCollectDate.Value);
-                    api.SetCollectDate(account.ApId, dlgCollectDate.dateTimePickerCollectDate.Value);
+                    api.SetCollectDate(account.ApId, dlgCollectDate.dateTimePickerCollectDate.Value, account.Company.EnterprisePath);
                 }
             }
 
             MessageBox.Show("Fecha de cobro actualizada en AdminPaq.", "Fecha de cobro asignada", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             RefreshMaster();
-            RefreshAttended();
         }
 
         private void toolStripButtonSetCollectDateAttended_Click(object sender, EventArgs e)
@@ -509,12 +520,12 @@ namespace SeguimientoCobrador.Process
                     //18991230
                     DateTime dt = new DateTime(1899, 12, 30);
                     dbAccount.SetCollectDate(account.DocId, dt);
-                    api.SetCollectDate(account.ApId, dt);
+                    api.SetCollectDate(account.ApId, dt, account.Company.EnterprisePath);
                 }
                 else
                 {
                     dbAccount.SetCollectDate(account.DocId, dlgCollectDate.dateTimePickerCollectDate.Value);
-                    api.SetCollectDate(account.ApId, dlgCollectDate.dateTimePickerCollectDate.Value);
+                    api.SetCollectDate(account.ApId, dlgCollectDate.dateTimePickerCollectDate.Value, account.Company.EnterprisePath);
                 }
             }
 
@@ -525,7 +536,6 @@ namespace SeguimientoCobrador.Process
         #endregion
 
         #region NOTE_SETTERS
-        
         private void toolStripButtonSetObservationsMaster_Click(object sender, EventArgs e)
         {
             DialogObservations dlgObs = new DialogObservations();
@@ -537,12 +547,11 @@ namespace SeguimientoCobrador.Process
             foreach (Collectable.Account account in selectedIds)
             {
                 dbAccount.SetObservations(account.DocId, dlgObs.textBoxCollectType.Text, dlgObs.textBoxObservations.Text);
-                api.SetObservations(account.ApId, dlgObs.textBoxCollectType.Text, dlgObs.textBoxObservations.Text);
+                api.SetObservations(account.ApId, dlgObs.textBoxCollectType.Text, dlgObs.textBoxObservations.Text, account.Company.EnterprisePath);
             }
             MessageBox.Show("Observaciones actualizadas exitosamente en AdminPaq.", "Observaciones actualizadas", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             RefreshMaster();
-            RefreshAttended();
         }
 
         private void toolStripButtonSetObservationsAttended_Click(object sender, EventArgs e)
@@ -556,14 +565,14 @@ namespace SeguimientoCobrador.Process
             foreach (Collectable.Account account in selectedIds)
             {
                 dbAccount.SetObservations(account.DocId, dlgObs.textBoxCollectType.Text, dlgObs.textBoxObservations.Text);
-                api.SetObservations(account.ApId, dlgObs.textBoxCollectType.Text, dlgObs.textBoxObservations.Text);
+                api.SetObservations(account.ApId, dlgObs.textBoxCollectType.Text, dlgObs.textBoxObservations.Text, account.Company.EnterprisePath);
             }
             MessageBox.Show("Observaciones actualizadas exitosamente en AdminPaq.", "Observaciones actualizadas", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             RefreshAttended();
         }
         #endregion
-
+        
         #region FILTER_REMOVERS
         private void toolStripButtonRemoveFilterMaster_Click(object sender, EventArgs e)
         {
@@ -669,6 +678,9 @@ namespace SeguimientoCobrador.Process
         private void toolStripButtonAdminPaqDownloadMaster_Click(object sender, EventArgs e)
         {
             UpdateFromAdminPaq(dataGridViewMaster);
+            List<Collectable.Account> adminPaqAccounts = api.DownloadCollectables(DateTime.Today, DateTime.Today);
+            dbAccount.UploadAccounts(adminPaqAccounts, api.Cancelados, api.Saldados, api.Conceptos);
+            dbAccount.SetCollectDate(api);
             RefreshMaster();
             MessageBox.Show("Datos extraidos de adminPaq existosamente.", "Actualizado", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
@@ -712,7 +724,6 @@ namespace SeguimientoCobrador.Process
             if (!dtAttended.DefaultView.RowFilter.Equals(string.Empty))
                 SaveFilter(dtAttended.DefaultView.RowFilter);
         }
-
         #endregion
 
         private string ReadFilter()

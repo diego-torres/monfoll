@@ -146,6 +146,7 @@ namespace SeguimientoCobrador.Collectable
         public int Id { get { return companyId; } set { companyId = value; } }
         public int ApId { get { return apId; } set { apId = value; } }
         public int EnterpriseId { get { return enterpriseId; } set { enterpriseId = value; } }
+        public string EnterprisePath { get; set; }
         public string Code { get { return code; } set { code = value; } }
         public string Name { get { return name; } set { name = value; } }
         public string PaymentDay { get { return paymentDay; } set { paymentDay = value; } }

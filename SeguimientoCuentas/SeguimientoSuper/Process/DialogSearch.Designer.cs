@@ -74,7 +74,7 @@
             this.comboBoxSerie.Location = new System.Drawing.Point(69, 52);
             this.comboBoxSerie.Name = "comboBoxSerie";
             this.comboBoxSerie.Size = new System.Drawing.Size(97, 21);
-            this.comboBoxSerie.TabIndex = 12;
+            this.comboBoxSerie.TabIndex = 4;
             // 
             // label3
             // 
@@ -90,7 +90,7 @@
             this.buttonOk.Location = new System.Drawing.Point(74, 89);
             this.buttonOk.Name = "buttonOk";
             this.buttonOk.Size = new System.Drawing.Size(130, 44);
-            this.buttonOk.TabIndex = 10;
+            this.buttonOk.TabIndex = 7;
             this.buttonOk.Text = "Buscar";
             this.buttonOk.UseVisualStyleBackColor = true;
             this.buttonOk.Click += new System.EventHandler(this.buttonOk_Click);
@@ -101,7 +101,7 @@
             this.buttonCancel.Location = new System.Drawing.Point(210, 89);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(127, 44);
-            this.buttonCancel.TabIndex = 11;
+            this.buttonCancel.TabIndex = 8;
             this.buttonCancel.Text = "Cancelar Búsqueda";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
@@ -113,7 +113,7 @@
             this.comboBoxClientName.Location = new System.Drawing.Point(159, 19);
             this.comboBoxClientName.Name = "comboBoxClientName";
             this.comboBoxClientName.Size = new System.Drawing.Size(288, 21);
-            this.comboBoxClientName.TabIndex = 13;
+            this.comboBoxClientName.TabIndex = 2;
             this.comboBoxClientName.SelectionChangeCommitted += new System.EventHandler(this.textBoxClient_TextChanged);
             // 
             // comboBoxFolios
@@ -123,7 +123,7 @@
             this.comboBoxFolios.Location = new System.Drawing.Point(210, 52);
             this.comboBoxFolios.Name = "comboBoxFolios";
             this.comboBoxFolios.Size = new System.Drawing.Size(127, 21);
-            this.comboBoxFolios.TabIndex = 14;
+            this.comboBoxFolios.TabIndex = 6;
             // 
             // DialogSearch
             // 

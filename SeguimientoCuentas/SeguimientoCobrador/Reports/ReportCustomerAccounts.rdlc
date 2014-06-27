@@ -416,7 +416,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>Vto.</Value>
+                              <Value>Doc.</Value>
                               <Style>
                                 <FontFamily>Verdana</FontFamily>
                                 <FontSize>9pt</FontSize>
@@ -466,7 +466,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>Doc</Value>
+                              <Value>Vto.</Value>
                               <Style>
                                 <FontFamily>Verdana</FontFamily>
                                 <FontSize>9pt</FontSize>
@@ -794,6 +794,40 @@
               <TablixCells>
                 <TablixCell>
                   <CellContents>
+                    <Textbox Name="DocDate1">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=Fields!DocDate.Value</Value>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                                <FontSize>8pt</FontSize>
+                                <Format>d</Format>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>DocDate1</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>#e5e5e5</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
                     <Textbox Name="DueDate">
                       <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
@@ -824,40 +858,7 @@
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
-                  </CellContents>
-                </TablixCell>
-                <TablixCell>
-                  <CellContents>
-                    <Textbox Name="DocDate">
-                      <CanGrow>true</CanGrow>
-                      <KeepTogether>true</KeepTogether>
-                      <Paragraphs>
-                        <Paragraph>
-                          <TextRuns>
-                            <TextRun>
-                              <Value>=Fields!DocDate.Value</Value>
-                              <Style>
-                                <FontFamily>Verdana</FontFamily>
-                                <FontSize>8pt</FontSize>
-                                <Format>d</Format>
-                              </Style>
-                            </TextRun>
-                          </TextRuns>
-                          <Style />
-                        </Paragraph>
-                      </Paragraphs>
-                      <rd:DefaultName>DocDate</rd:DefaultName>
-                      <Style>
-                        <Border>
-                          <Color>#e5e5e5</Color>
-                          <Style>Solid</Style>
-                        </Border>
-                        <PaddingLeft>2pt</PaddingLeft>
-                        <PaddingRight>2pt</PaddingRight>
-                        <PaddingTop>2pt</PaddingTop>
-                        <PaddingBottom>2pt</PaddingBottom>
-                      </Style>
-                    </Textbox>
+                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
                 <TablixCell>
@@ -2544,6 +2545,11 @@
                       <TablixMembers>
                         <TablixMember>
                           <Group Name="Details" />
+                          <SortExpressions>
+                            <SortExpression>
+                              <Value>=Fields!Folio.Value</Value>
+                            </SortExpression>
+                          </SortExpressions>
                           <Visibility>
                             <ToggleItem>Name</ToggleItem>
                           </Visibility>

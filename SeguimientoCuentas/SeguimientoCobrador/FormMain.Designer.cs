@@ -33,6 +33,8 @@
             this.cuentasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.processToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.buscarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.descargarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemConfig = new System.Windows.Forms.ToolStripMenuItem();
             this.configuracionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
@@ -59,7 +61,9 @@
             // 
             this.cuentasToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.processToolStripMenuItem,
-            this.buscarToolStripMenuItem});
+            this.buscarToolStripMenuItem,
+            this.toolStripSeparator1,
+            this.descargarToolStripMenuItem});
             this.cuentasToolStripMenuItem.Name = "cuentasToolStripMenuItem";
             this.cuentasToolStripMenuItem.Size = new System.Drawing.Size(59, 20);
             this.cuentasToolStripMenuItem.Text = "C&uentas";
@@ -78,6 +82,18 @@
             this.buscarToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
             this.buscarToolStripMenuItem.Text = "Buscar";
             this.buscarToolStripMenuItem.Click += new System.EventHandler(this.buscarToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(133, 6);
+            // 
+            // descargarToolStripMenuItem
+            // 
+            this.descargarToolStripMenuItem.Name = "descargarToolStripMenuItem";
+            this.descargarToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
+            this.descargarToolStripMenuItem.Text = "&Descargar";
+            this.descargarToolStripMenuItem.Click += new System.EventHandler(this.descargarToolStripMenuItem_Click);
             // 
             // toolStripMenuItemConfig
             // 
@@ -123,7 +139,7 @@
             // 
             this.mainStatus.Name = "mainStatus";
             this.mainStatus.Size = new System.Drawing.Size(311, 17);
-            this.mainStatus.Text = "Seguimiento a cuentas por cobrar - módulo de cobrador V 3.1.1";
+            this.mainStatus.Text = "Seguimiento a cuentas por cobrar - módulo de cobrador V 3.2.0";
             // 
             // mainProgressBar
             // 
@@ -163,6 +179,7 @@
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem cuentasToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem processToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem descargarToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemConfig;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem acercaDeToolStripMenuItem;
@@ -171,6 +188,7 @@
         private System.Windows.Forms.ToolStripMenuItem configuracionToolStripMenuItem;
         private System.Windows.Forms.ToolStripStatusLabel mainStatus;
         private System.Windows.Forms.ToolStripMenuItem buscarToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
     }
 }
 

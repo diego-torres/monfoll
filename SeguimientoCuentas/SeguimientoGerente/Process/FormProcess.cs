@@ -82,31 +82,31 @@ namespace SeguimientoGerente.Process
             dataGridViewUncollectable.DataSource = dtUncollectable;
             FormatAccountsGridView(dataGridViewUncollectable);
 
-            if (dtBlackList.Rows.Count >= 1)
+            if (dtBlackList.DefaultView.Count >= 1)
             {
                 tabControlProcess.SelectedIndex = 0;
                 return;
             }
 
-            if (dtMaster.Rows.Count >= 1)
+            if (dtMaster.DefaultView.Count >= 1)
             {
                 tabControlProcess.SelectedIndex = 1;
                 return;
             }
 
-            if (dtAttended.Rows.Count >= 1)
+            if (dtAttended.DefaultView.Count >= 1)
             {
                 tabControlProcess.SelectedIndex = 2;
                 return;
             }
 
-            if (dtEscalated.Rows.Count >= 1)
+            if (dtEscalated.DefaultView.Count >= 1)
             {
                 tabControlProcess.SelectedIndex = 3;
                 return;
             }
 
-            if (dtUncollectable.Rows.Count >= 1)
+            if (dtUncollectable.DefaultView.Count >= 1)
             {
                 tabControlProcess.SelectedIndex = 4;
                 return;
@@ -190,7 +190,8 @@ namespace SeguimientoGerente.Process
             company.Name = dgv.CurrentRow.Cells["nombre_cliente"].Value.ToString();
             company.AgentCode = dgv.CurrentRow.Cells["ruta"].Value.ToString();
             company.PaymentDay = dgv.CurrentRow.Cells["dia_pago"].Value.ToString();
-            company.EnterpriseId = ConfiguredCompanyId();
+            company.EnterpriseId = int.Parse(dgv.CurrentRow.Cells["id_empresa"].Value.ToString());
+            company.EnterprisePath = dgv.CurrentRow.Cells["ruta_e"].Value.ToString();
             account.Company = company;
 
             return account;
@@ -201,6 +202,8 @@ namespace SeguimientoGerente.Process
             dgv.Columns["id_cliente"].Visible = false;
             dgv.Columns["id_doco"].Visible = false;
             dgv.Columns["ap_id"].Visible = false;
+            dgv.Columns["id_empresa"].Visible = false;
+            dgv.Columns["ruta_e"].Visible = false;
 
             FixColumn(dgv.Columns["f_documento"], 0, "Fecha Documento", 80);
             FixColumn(dgv.Columns["f_vencimiento"], 1, "Fecha Vencimiento", 80);
@@ -308,10 +311,14 @@ namespace SeguimientoGerente.Process
                 DataGridViewRow selectedRow = dgv.Rows[cell.RowIndex];
                 int selectedId = int.Parse(selectedRow.Cells["ap_id"].Value.ToString());
                 int selectedPgDocId = int.Parse(selectedRow.Cells["id_doco"].Value.ToString());
+                string rutaEmpresa = selectedRow.Cells["ruta_e"].Value.ToString();
 
                 Collectable.Account pgDoco = new Collectable.Account();
                 pgDoco.ApId = selectedId;
                 pgDoco.DocId = selectedPgDocId;
+                Company co = new Company();
+                co.EnterprisePath = rutaEmpresa;
+                pgDoco.Company = co;
 
                 if (!selectedAdminId.Contains(pgDoco))
                     selectedAdminId.Add(pgDoco);
@@ -807,12 +814,12 @@ namespace SeguimientoGerente.Process
                     //18991230
                     DateTime dt = new DateTime(1899, 12, 30);
                     dbAccount.SetCollectDate(account.DocId, dt);
-                    api.SetCollectDate(account.ApId, dt);
+                    api.SetCollectDate(account.ApId, dt, account.Company.EnterprisePath);
                 }
                 else
                 {
                     dbAccount.SetCollectDate(account.DocId, dlgCollectDate.dateTimePickerCollectDate.Value);
-                    api.SetCollectDate(account.ApId, dlgCollectDate.dateTimePickerCollectDate.Value);
+                    api.SetCollectDate(account.ApId, dlgCollectDate.dateTimePickerCollectDate.Value, account.Company.EnterprisePath);
                 }
             }
 
@@ -836,12 +843,12 @@ namespace SeguimientoGerente.Process
                     //18991230
                     DateTime dt = new DateTime(1899, 12, 30); 
                     dbAccount.SetCollectDate(account.DocId, dt);
-                    api.SetCollectDate(account.ApId, dt);
+                    api.SetCollectDate(account.ApId, dt, account.Company.EnterprisePath);
                 }
                 else 
                 {
                     dbAccount.SetCollectDate(account.DocId, dlgCollectDate.dateTimePickerCollectDate.Value);
-                    api.SetCollectDate(account.ApId, dlgCollectDate.dateTimePickerCollectDate.Value);
+                    api.SetCollectDate(account.ApId, dlgCollectDate.dateTimePickerCollectDate.Value, account.Company.EnterprisePath);
                 }
             }
 
@@ -865,12 +872,12 @@ namespace SeguimientoGerente.Process
                     //18991230
                     DateTime dt = new DateTime(1899, 12, 30);
                     dbAccount.SetCollectDate(account.DocId, dt);
-                    api.SetCollectDate(account.ApId, dt);
+                    api.SetCollectDate(account.ApId, dt, account.Company.EnterprisePath);
                 }
                 else
                 {
                     dbAccount.SetCollectDate(account.DocId, dlgCollectDate.dateTimePickerCollectDate.Value);
-                    api.SetCollectDate(account.ApId, dlgCollectDate.dateTimePickerCollectDate.Value);
+                    api.SetCollectDate(account.ApId, dlgCollectDate.dateTimePickerCollectDate.Value, account.Company.EnterprisePath);
                 }
             }
 
@@ -894,12 +901,12 @@ namespace SeguimientoGerente.Process
                     //18991230
                     DateTime dt = new DateTime(1899, 12, 30);
                     dbAccount.SetCollectDate(account.DocId, dt);
-                    api.SetCollectDate(account.ApId, dt);
+                    api.SetCollectDate(account.ApId, dt, account.Company.EnterprisePath);
                 }
                 else
                 {
                     dbAccount.SetCollectDate(account.DocId, dlgCollectDate.dateTimePickerCollectDate.Value);
-                    api.SetCollectDate(account.ApId, dlgCollectDate.dateTimePickerCollectDate.Value);
+                    api.SetCollectDate(account.ApId, dlgCollectDate.dateTimePickerCollectDate.Value, account.Company.EnterprisePath);
                 }
             }
 
@@ -921,7 +928,7 @@ namespace SeguimientoGerente.Process
             foreach (Collectable.Account account in selectedIds)
             {
                 dbAccount.SetObservations(account.DocId, dlgObs.textBoxCollectType.Text, dlgObs.textBoxObservations.Text);
-                api.SetObservations(account.ApId, dlgObs.textBoxCollectType.Text, dlgObs.textBoxObservations.Text);
+                api.SetObservations(account.ApId, dlgObs.textBoxCollectType.Text, dlgObs.textBoxObservations.Text, account.Company.EnterprisePath);
             }
             MessageBox.Show("Observaciones actualizadas exitosamente en AdminPaq.", "Observaciones actualizadas", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
@@ -939,7 +946,7 @@ namespace SeguimientoGerente.Process
             foreach (Collectable.Account account in selectedIds)
             {
                 dbAccount.SetObservations(account.DocId, dlgObs.textBoxCollectType.Text, dlgObs.textBoxObservations.Text);
-                api.SetObservations(account.ApId, dlgObs.textBoxCollectType.Text, dlgObs.textBoxObservations.Text);
+                api.SetObservations(account.ApId, dlgObs.textBoxCollectType.Text, dlgObs.textBoxObservations.Text, account.Company.EnterprisePath);
             }
             MessageBox.Show("Observaciones actualizadas exitosamente en AdminPaq.", "Observaciones actualizadas", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
@@ -957,7 +964,7 @@ namespace SeguimientoGerente.Process
             foreach (Collectable.Account account in selectedIds)
             {
                 dbAccount.SetObservations(account.DocId, dlgObs.textBoxCollectType.Text, dlgObs.textBoxObservations.Text);
-                api.SetObservations(account.ApId, dlgObs.textBoxCollectType.Text, dlgObs.textBoxObservations.Text);
+                api.SetObservations(account.ApId, dlgObs.textBoxCollectType.Text, dlgObs.textBoxObservations.Text, account.Company.EnterprisePath);
             }
             MessageBox.Show("Observaciones actualizadas exitosamente en AdminPaq.", "Observaciones actualizadas", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
@@ -975,7 +982,7 @@ namespace SeguimientoGerente.Process
             foreach (Collectable.Account account in selectedIds)
             {
                 dbAccount.SetObservations(account.DocId, dlgObs.textBoxCollectType.Text, dlgObs.textBoxObservations.Text);
-                api.SetObservations(account.ApId, dlgObs.textBoxCollectType.Text, dlgObs.textBoxObservations.Text);
+                api.SetObservations(account.ApId, dlgObs.textBoxCollectType.Text, dlgObs.textBoxObservations.Text, account.Company.EnterprisePath);
             }
             MessageBox.Show("Observaciones actualizadas exitosamente en AdminPaq.", "Observaciones actualizadas", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
@@ -993,7 +1000,7 @@ namespace SeguimientoGerente.Process
             foreach (Collectable.Account account in selectedIds)
             {
                 dbAccount.SetObservations(account.DocId, dlgObs.textBoxCollectType.Text, dlgObs.textBoxObservations.Text);
-                api.SetObservations(account.ApId, dlgObs.textBoxCollectType.Text, dlgObs.textBoxObservations.Text);
+                api.SetObservations(account.ApId, dlgObs.textBoxCollectType.Text, dlgObs.textBoxObservations.Text, account.Company.EnterprisePath);
             }
             MessageBox.Show("Observaciones actualizadas exitosamente en AdminPaq.", "Observaciones actualizadas", MessageBoxButtons.OK, MessageBoxIcon.Information);
 

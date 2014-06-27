@@ -9,7 +9,6 @@ using System.Windows.Forms;
 using SeguimientoCobrador.Collectable;
 using SeguimientoCobrador.Properties;
 using Npgsql;
-using CommonAdminPaq;
 
 namespace SeguimientoCobrador.Config
 {
@@ -17,7 +16,6 @@ namespace SeguimientoCobrador.Config
     {
         private AdminPaqImp api;
         private Collectable.PostgresImpl.Account AccountInterface = new Collectable.PostgresImpl.Account();
-        private Collectable.PostgresImpl.Collector dbCollector = new Collectable.PostgresImpl.Collector();
         private bool adminPaqConfigDirty = false;
         private bool dbConfigDirty = false;
 
@@ -34,18 +32,11 @@ namespace SeguimientoCobrador.Config
         {
             bindingSourceEmpresas.DataSource = api.Empresas;
             comboBoxEmpresas.DataSource = bindingSourceEmpresas;
+
             comboBoxEmpresas.DisplayMember = "Nombre";
             comboBoxEmpresas.ValueMember = "Id";
-            try 
-            {  
-                loadConfiguration();
-            }
-            catch (Exception ex) 
-            {
-                ErrLogger.Log(ex.Message);
-                MessageBox.Show("No se encontraron registros de empresas en la base de datos. Pida a su supervisor que descargue las cuentas de adminPaq utilizando el Modulo de Supervisor de Cuentas por cobrar.", "No hay cobradores", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                this.Close();
-            }
+
+            loadConfiguration();
         }
 
         private void comboBoxEmpresas_SelectionChangeCommitted(object sender, EventArgs e)
@@ -72,6 +63,46 @@ namespace SeguimientoCobrador.Config
             adminPaqConfigDirty = true;
         }
 
+        private void buttonAddFactura_Click(object sender, EventArgs e)
+        {
+            if (textBoxConceptoFactura.Text.Trim().Length == 0) return;
+
+            listBoxConceptosFactura.Items.Add(textBoxConceptoFactura.Text);
+            adminPaqConfigDirty = true;
+        }
+
+        private void buttonRemoveFactura_Click(object sender, EventArgs e)
+        {
+            if (listBoxConceptosFactura.SelectedItems.Count == 0) return;
+
+            for (int i = listBoxConceptosFactura.SelectedIndices.Count - 1; i >= 0; i--)
+            {
+                listBoxConceptosFactura.Items.RemoveAt(listBoxConceptosFactura.SelectedIndices[i]);
+            }
+
+            adminPaqConfigDirty = true;
+        }
+
+        private void buttonAddAbono_Click(object sender, EventArgs e)
+        {
+            if (textBoxConceptoAbono.Text.Trim().Length == 0) return;
+
+            listBoxConceptosAbono.Items.Add(textBoxConceptoAbono.Text);
+            adminPaqConfigDirty = true;
+        }
+
+        private void buttonRemoveAbono_Click(object sender, EventArgs e)
+        {
+            if (listBoxConceptosAbono.SelectedItems.Count == 0) return;
+
+            for (int i = listBoxConceptosAbono.SelectedIndices.Count - 1; i >= 0; i--)
+            {
+                listBoxConceptosAbono.Items.RemoveAt(listBoxConceptosAbono.SelectedIndices[i]);
+            }
+
+            adminPaqConfigDirty = true;
+        }
+
         private void FormConfig_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (!ConfirmNSaveAdminPaqConfig())
@@ -80,17 +111,36 @@ namespace SeguimientoCobrador.Config
             }
         }
 
+        private void toolStripButtonDownload_Click(object sender, EventArgs e)
+        {
+            if (!ConfirmNSaveAdminPaqConfig())
+            {
+                MessageBox.Show("Operación de descarga cancelada por el usuario", "Descarga cancelada", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            adminPaqConfigDirty = false;
+            dbConfigDirty = false;
+            FormMain parent = (FormMain)MdiParent;
+            parent.ShowDownload();
+
+            List<Collectable.Account> adminPaqAccounts = api.DownloadCollectables();
+            AccountInterface.UploadAccounts(adminPaqAccounts, api.Cancelados, api.Saldados, api.Conceptos);
+            parent.CloseDownload();
+            this.Close();
+        }
+
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
             switch (tabControl1.SelectedIndex)
             {
                 case 0:
-                    if (!ConfirmNSaveDBConfig())
-                        tabControl1.SelectedIndex = 1;
-                    break;
-                case 1:
                     if (!ConfirmNSaveAdminPaqConfig())
                         tabControl1.SelectedIndex = 0;
+                    break;
+                case 1:
+                    if (!ConfirmNSaveDBConfig())
+                        tabControl1.SelectedIndex = 1;
                     break;
             }
         }
@@ -112,7 +162,7 @@ namespace SeguimientoCobrador.Config
 
         private void toolStripButtonCheckDB_Click(object sender, EventArgs e)
         {
-            if(ValidateDBConfig())
+            if (ValidateDBConfig())
                 MessageBox.Show("La configuración de la base de datos es válida", "Conexión exitosa", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
         }
 
@@ -127,10 +177,10 @@ namespace SeguimientoCobrador.Config
         {
             if (!adminPaqConfigDirty) return true;
 
-            DialogResult confirm = MessageBox.Show("¿Desea guardar los cambios realizados a la configuración de descarga de cuentas de AdminPaq?", 
+            DialogResult confirm = MessageBox.Show("¿Desea guardar los cambios realizados a la configuración de descarga de cuentas de AdminPaq?",
                 "¿Guardar cambios?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
 
-            switch(confirm)
+            switch (confirm)
             {
                 case DialogResult.Yes:
                     SaveAdminPaqConfig();
@@ -144,6 +194,8 @@ namespace SeguimientoCobrador.Config
 
         private bool ConfirmNSaveDBConfig()
         {
+            if (!ValidateDBConfig()) return false;
+
             if (!dbConfigDirty) return true;
 
             DialogResult confirm = MessageBox.Show("¿Desea guardar los cambios realizados a la configuración de base de datos de cuentas por cobrar?",
@@ -206,6 +258,27 @@ namespace SeguimientoCobrador.Config
             Settings set = Settings.Default;
 
             set.empresa = int.Parse(comboBoxEmpresas.SelectedValue.ToString());
+            set.fecha_inicio = dateTimePickerFrom.Value;
+            set.fecha_fin = dateTimePickerTo.Value;
+            set.fecha_doco = radioButtonUseDocDate.Checked;
+            set.con_saldo = radioButtonWithAmount.Checked;
+
+            string facturas = "";
+            foreach (var listboxItem in listBoxConceptosFactura.Items)
+            {
+                facturas = facturas + listboxItem + ",";
+            }
+
+            facturas = facturas.Substring(0, facturas.Length - 1);
+            set.facturas = facturas;
+
+            string abonos = "";
+            foreach (var listboxItem in listBoxConceptosAbono.Items)
+            {
+                abonos = abonos + listboxItem.ToString() + ",";
+            }
+            abonos = abonos.Substring(0, abonos.Length - 1);
+            set.abonos = abonos;
             set.Save();
 
             adminPaqConfigDirty = false;
@@ -230,6 +303,31 @@ namespace SeguimientoCobrador.Config
                 {
                     comboBoxEmpresas.SelectedIndex = i;
                 }
+            }
+
+            AsignarRutaEmpresa(set.empresa);
+            dateTimePickerFrom.Value = set.fecha_inicio;
+            dateTimePickerTo.Value = set.fecha_fin;
+
+            radioButtonUseDocDate.Checked = set.fecha_doco;
+            radioButtonUseCollectDate.Checked = !set.fecha_doco;
+
+            radioButtonWithAmount.Checked = set.con_saldo;
+            radioButtonAllDocuments.Checked = !set.con_saldo;
+
+            string[] facturas = set.facturas.Split(',');
+            string[] abonos = set.abonos.Split(',');
+
+            listBoxConceptosFactura.Items.Clear();
+            foreach (string codigoFactura in facturas)
+            {
+                listBoxConceptosFactura.Items.Add(codigoFactura);
+            }
+
+            listBoxConceptosAbono.Items.Clear();
+            foreach (string codigoAbono in abonos)
+            {
+                listBoxConceptosAbono.Items.Add(codigoAbono);
             }
 
             textBoxServer.Text = set.server;
