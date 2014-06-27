@@ -37,23 +37,15 @@ namespace SeguimientoCobrador.Collectable
             InitializeSDK();
         }
 
-        public void SetObservations(int docId, string collectType, string observations)
+        public void SetObservations(int docId, string collectType, string observations, string rutaEmpresa)
         {
             int connection, dbResponse;
             string key, command;
-
-            Empresa configuredCompany = ConfiguredCompany();
-
-            if (configuredCompany == null)
-            {
-                ErrLogger.Log("Wrong Company configuration.");
-                return;
-            }
-
-            connection = AdminPaqLib.dbLogIn("", configuredCompany.Ruta);
+            
+            connection = AdminPaqLib.dbLogIn("", rutaEmpresa);
             if (connection == 0)
             {
-                ErrLogger.Log("Unable to open connection to documents table for company [" + configuredCompany.Nombre + "]");
+                ErrLogger.Log("Unable to open connection to documents table for company [" + rutaEmpresa + "]");
                 return;
             }
 
@@ -93,23 +85,15 @@ namespace SeguimientoCobrador.Collectable
             AdminPaqLib.dbLogOut(connection);
         }
 
-        public void SetCollectDate(int docId, DateTime collectDate)
+        public void SetCollectDate(int docId, DateTime collectDate, string rutaEmpresa)
         {
             int connection, dbResponse;
             string key, command;
 
-            Empresa configuredCompany = ConfiguredCompany();
-
-            if (configuredCompany == null)
-            {
-                ErrLogger.Log("Wrong Company configuration.");
-                return;
-            }
-
-            connection = AdminPaqLib.dbLogIn("", configuredCompany.Ruta);
+            connection = AdminPaqLib.dbLogIn("", rutaEmpresa);
             if (connection == 0)
             {
-                ErrLogger.Log("Unable to open connection to documents table for company [" + configuredCompany.Nombre + "]");
+                ErrLogger.Log("Unable to open connection to documents table for company [" + rutaEmpresa + "]");
                 return;
             }
 
@@ -154,18 +138,10 @@ namespace SeguimientoCobrador.Collectable
             int connection, dbResponse;
             string key, command;
 
-            Empresa configuredCompany = ConfiguredCompany();
-
-            if (configuredCompany == null)
-            {
-                ErrLogger.Log("Wrong Company configuration.");
-                return;
-            }
-
-            connection = AdminPaqLib.dbLogIn("", configuredCompany.Ruta);
+            connection = AdminPaqLib.dbLogIn("", account.Company.EnterprisePath);
             if (connection == 0)
             {
-                ErrLogger.Log("Unable to open connection to documents table for company [" + configuredCompany.Nombre + "]");
+                ErrLogger.Log("Unable to open connection to documents table for company [" + account.Company.EnterprisePath + "]");
                 return;
             }
 
@@ -182,8 +158,8 @@ namespace SeguimientoCobrador.Collectable
                 }
                 else
                 {
-                    command = string.Format("UPDATE {0}(CFECHAEX01=\"18991230\",CTEXTOEX01=\"{2}\",CTEXTOEX02=\"{3}\");",
-                        TableNames.DOCUMENTOS, account.CollectType, account.Note);
+                    command = string.Format("UPDATE {0}(CFECHAEX01=\"{1}\",CTEXTOEX01=\"{2}\",CTEXTOEX02=\"{3}\");",
+                        TableNames.DOCUMENTOS, "18991230", account.CollectType, account.Note);
                 }
 
 
@@ -214,6 +190,204 @@ namespace SeguimientoCobrador.Collectable
 
             AdminPaqLib.dbLogOut(connection);
 
+        }
+
+        public List<Account> DownloadCollectables()
+        {   
+            Settings set = Settings.Default;
+            return DownloadCollectables(set.fecha_inicio, set.fecha_fin);
+        }
+
+        public List<Account> DownloadCollectables(DateTime fromDate, DateTime toDate)
+        {
+            List<Account> result = new List<Account>();
+            cancelados.Clear();
+            conceptos.Clear();
+
+            Settings set = Settings.Default;
+            int connDocos, dbResponse, fieldResponse, collectableDocType = 4;
+            string startDate, endDate, tipo_doc;
+
+            int docType = collectableDocType, cancelled = 0, conceptId = 0, docId = 0, folioDoc = 0, currencyId = 0, companyId = 0;
+            double saldoPendiente = 0, totalDoc = 0;
+            StringBuilder sbFechaDoco = new StringBuilder(9);
+            StringBuilder sbFechaCobro = new StringBuilder(9);
+            StringBuilder sbFechaVenc = new StringBuilder(9);
+            StringBuilder sbCompanyName = new StringBuilder(61);
+            StringBuilder sbSerieDoc = new StringBuilder(12);
+            StringBuilder sbTipoCobro = new StringBuilder(51);
+            StringBuilder sbObservations = new StringBuilder(51);
+            string sFechaDoco, sFechaCobro, sFechaVenc, sCompanyName, sSerieDoc, sTipoCobro, sObservations, currencyName;
+
+            string[] conceptosFactura = set.facturas.Split(',');
+            string[] conceptosAbono = set.abonos.Split(',');
+            bool isFactura = false;
+
+            Dictionary<int, string> currencies = new Dictionary<int, string>();
+            Dictionary<int, Company> companies = new Dictionary<int, Company>();
+            Company documentCo;
+            Empresa configuredCompany = ConfiguredCompany();
+
+            if (configuredCompany == null)
+            {
+                ErrLogger.Log("Wrong Company configuration.");
+                return result;
+            }
+
+            connDocos = AdminPaqLib.dbLogIn("", configuredCompany.Ruta);
+            if (connDocos == 0)
+            {
+                ErrLogger.Log("Unable to open connection to documents table for company [" + configuredCompany.Nombre + "]");
+                return result;
+            }
+
+            startDate = fromDate.ToString(IndexNames.DATE_FORMAT_PATTERN);
+            endDate = toDate.ToString(IndexNames.DATE_FORMAT_PATTERN);
+
+            tipo_doc = collectableDocType.ToString().PadLeft(11);
+            dbResponse = AdvanceConnectionIndex(tipo_doc, startDate, set.fecha_doco, connDocos);
+
+            while (dbResponse == 0)
+            {
+                fieldResponse = AdminPaqLib.dbFieldLong(connDocos, TableNames.DOCUMENTOS, 2, ref docType);
+                if (docType != collectableDocType) break;
+
+                fieldResponse = AdminPaqLib.dbFieldLong(connDocos, TableNames.DOCUMENTOS, 1, ref docId);
+                fieldResponse = AdminPaqLib.dbFieldLong(connDocos, TableNames.DOCUMENTOS, 26, ref cancelled);
+                if (cancelled != 0)
+                {
+                    cancelados.Add(docId);
+                    dbResponse = AdminPaqLib.dbSkip(connDocos, TableNames.DOCUMENTOS, IndexNames.DOCUMENTOS_ID_DOCUMENTO01, 1);
+                    continue;
+                }
+
+                fieldResponse = AdminPaqLib.dbFieldDouble(connDocos, TableNames.DOCUMENTOS, 44, ref saldoPendiente);
+
+                if (saldoPendiente <= 0 && set.con_saldo)
+                {
+                    saldados.Add(docId);
+                    dbResponse = AdminPaqLib.dbSkip(connDocos, TableNames.DOCUMENTOS, IndexNames.DOCUMENTOS_ID_DOCUMENTO01, 1);
+                    continue;
+                }
+
+                fieldResponse = AdminPaqLib.dbFieldChar(connDocos, TableNames.DOCUMENTOS, 6, sbFechaDoco, 9);
+                fieldResponse = AdminPaqLib.dbFieldChar(connDocos, TableNames.DOCUMENTOS, 56, sbFechaCobro, 9);
+
+                sFechaDoco = sbFechaDoco.ToString().Substring(0, 8);
+                sFechaCobro = sbFechaCobro.ToString().Substring(0, 8);
+
+                if (set.fecha_doco)
+                {
+                    if (!(sFechaDoco.CompareTo(startDate) >= 0 && sFechaDoco.CompareTo(endDate) <= 0))
+                    {
+                        dbResponse = AdminPaqLib.dbSkip(connDocos, TableNames.DOCUMENTOS, IndexNames.DOCUMENTOS_ID_DOCUMENTO01, 1);
+                        continue;
+                    }
+                }
+                else
+                {
+                    if (!(sFechaCobro.CompareTo(startDate) >= 0 && sFechaCobro.CompareTo(endDate) <= 0))
+                    {
+                        dbResponse = AdminPaqLib.dbSkip(connDocos, TableNames.DOCUMENTOS, IndexNames.DOCUMENTOS_ID_DOCUMENTO01, 1);
+                        continue;
+                    }
+                }
+
+                fieldResponse = AdminPaqLib.dbFieldLong(connDocos, TableNames.DOCUMENTOS, 3, ref conceptId);
+                DocumentConcept concept = GetDocumentConcept(conceptId, configuredCompany.Ruta);
+                if (concept == null)
+                {
+                    dbResponse = AdminPaqLib.dbSkip(connDocos, TableNames.DOCUMENTOS, IndexNames.DOCUMENTOS_ID_DOCUMENTO01, 1);
+                    continue;
+                }
+
+                isFactura = conceptosFactura.Contains(concept.Code);
+
+                if (!isFactura)
+                {
+                    dbResponse = AdminPaqLib.dbSkip(connDocos, TableNames.DOCUMENTOS, IndexNames.DOCUMENTOS_ID_DOCUMENTO01, 1);
+                    continue;
+                }
+
+                if (!conceptos.ContainsKey(conceptId))
+                {
+                    Concepto concepto = new Concepto();
+                    concepto.APId = conceptId;
+                    concepto.Codigo = concept.Code;
+                    concepto.Nombre = concept.Name;
+                    concepto.IdEmpresa = configuredCompany.Id;
+                    concepto.Razon = "COBRO";
+
+                    conceptos.Add(conceptId, concepto);
+                }
+
+                Account account = new Account();
+                account.DocDate = DateTime.ParseExact(sFechaDoco, IndexNames.DATE_FORMAT_PATTERN, CultureInfo.InvariantCulture);
+
+                if (!string.Empty.Equals(sFechaCobro.Trim()) && !"18991230".Equals(sFechaCobro.Trim()))
+                    account.CollectDate = DateTime.ParseExact(sFechaCobro, IndexNames.DATE_FORMAT_PATTERN, CultureInfo.InvariantCulture);
+
+                account.Balance = saldoPendiente;
+                account.DocType = concept.Name;
+
+                account.ApId = docId;
+
+                fieldResponse = AdminPaqLib.dbFieldChar(connDocos, TableNames.DOCUMENTOS, 11, sbFechaVenc, 9);
+                sFechaVenc = sbFechaVenc.ToString().Substring(0, 8).Trim();
+                account.DueDate = DateTime.ParseExact(sFechaVenc, IndexNames.DATE_FORMAT_PATTERN, CultureInfo.InvariantCulture);
+
+                fieldResponse = AdminPaqLib.dbFieldChar(connDocos, TableNames.DOCUMENTOS, 4, sbSerieDoc, 12);
+                sSerieDoc = sbSerieDoc.ToString().Substring(0, 11).Trim();
+                account.Serie = sSerieDoc;
+
+                fieldResponse = AdminPaqLib.dbFieldLong(connDocos, TableNames.DOCUMENTOS, 5, ref folioDoc);
+                account.Folio = folioDoc;
+
+                fieldResponse = AdminPaqLib.dbFieldDouble(connDocos, TableNames.DOCUMENTOS, 43, ref totalDoc);
+                account.Amount = totalDoc;
+
+                fieldResponse = AdminPaqLib.dbFieldChar(connDocos, TableNames.DOCUMENTOS, 53, sbTipoCobro, 51);
+                sTipoCobro = sbTipoCobro.ToString().Substring(0, 50).Trim();
+                account.CollectType = sTipoCobro;
+
+                fieldResponse = AdminPaqLib.dbFieldChar(connDocos, TableNames.DOCUMENTOS, 54, sbObservations, 51);
+                sObservations = sbObservations.ToString().Substring(0, 50).Trim();
+                account.Note = sObservations;
+
+                fieldResponse = AdminPaqLib.dbFieldLong(connDocos, TableNames.DOCUMENTOS, 15, ref currencyId);
+                if (!currencies.ContainsKey(currencyId))
+                {
+                    currencyName = CurrencyName(currencyId, configuredCompany.Ruta);
+                    if (currencyName != null)
+                        currencies.Add(currencyId, currencyName);
+                }
+                account.Currency = currencies[currencyId];
+
+                fieldResponse = AdminPaqLib.dbFieldLong(connDocos, TableNames.DOCUMENTOS, 7, ref companyId);
+
+                if (!companies.ContainsKey(companyId))
+                {
+                    fieldResponse = AdminPaqLib.dbFieldChar(connDocos, TableNames.DOCUMENTOS, 8, sbCompanyName, 61);
+                    sCompanyName = sbCompanyName.ToString().Substring(0, 60).Trim();
+
+                    documentCo = new Company();
+                    documentCo.ApId = companyId;
+                    documentCo.Name = sCompanyName;
+                    documentCo.EnterpriseId = configuredCompany.Id;
+                    documentCo.EnterprisePath = configuredCompany.Ruta;
+                    FillCompany(documentCo, configuredCompany.Ruta);
+
+                    companies.Add(companyId, documentCo);
+                }
+
+                account.Company = companies[companyId];
+                FillPayments(account, configuredCompany.Ruta, conceptosAbono);
+                result.Add(account);
+
+                dbResponse = AdminPaqLib.dbSkip(connDocos, TableNames.DOCUMENTOS, IndexNames.DOCUMENTOS_ID_DOCUMENTO01, 1);
+            }
+            AdminPaqLib.dbLogOut(connDocos);
+            return result;
         }
 
         public void DownloadCollectable(ref Account source, string[] conceptosAbono, out bool isCancelled)
@@ -308,6 +482,7 @@ namespace SeguimientoCobrador.Collectable
                 source.Company.ApId = companyId;
                 source.Company.Name = sCompanyName;
                 source.Company.EnterpriseId = configuredCompany.Id;
+                source.Company.EnterprisePath = configuredCompany.Ruta;
                 
                 FillCompany(source.Company, configuredCompany.Ruta);
                 FillPayments(source, configuredCompany.Ruta, conceptosAbono);

@@ -37,23 +37,15 @@ namespace SeguimientoSuper.Collectable
             InitializeSDK();
         }
 
-        public void SetObservations(int docId, string collectType, string observations)
+        public void SetObservations(int docId, string collectType, string observations, string rutaEmpresa)
         {
             int connection, dbResponse;
             string key, command;
-
-            Empresa configuredCompany = ConfiguredCompany();
-
-            if (configuredCompany == null)
-            {
-                ErrLogger.Log("Wrong Company configuration.");
-                return;
-            }
-
-            connection = AdminPaqLib.dbLogIn("", configuredCompany.Ruta);
+            
+            connection = AdminPaqLib.dbLogIn("", rutaEmpresa);
             if (connection == 0)
             {
-                ErrLogger.Log("Unable to open connection to documents table for company [" + configuredCompany.Nombre + "]");
+                ErrLogger.Log("Unable to open connection to documents table for company [" + rutaEmpresa + "]");
                 return;
             }
 
@@ -93,23 +85,15 @@ namespace SeguimientoSuper.Collectable
             AdminPaqLib.dbLogOut(connection);
         }
 
-        public void SetCollectDate(int docId, DateTime collectDate)
+        public void SetCollectDate(int docId, DateTime collectDate, string rutaEmpresa)
         {
             int connection, dbResponse;
             string key, command;
 
-            Empresa configuredCompany = ConfiguredCompany();
-
-            if (configuredCompany == null)
-            {
-                ErrLogger.Log("Wrong Company configuration.");
-                return;
-            }
-
-            connection = AdminPaqLib.dbLogIn("", configuredCompany.Ruta);
+            connection = AdminPaqLib.dbLogIn("", rutaEmpresa);
             if (connection == 0)
             {
-                ErrLogger.Log("Unable to open connection to documents table for company [" + configuredCompany.Nombre + "]");
+                ErrLogger.Log("Unable to open connection to documents table for company [" + rutaEmpresa + "]");
                 return;
             }
 
@@ -154,18 +138,10 @@ namespace SeguimientoSuper.Collectable
             int connection, dbResponse;
             string key, command;
 
-            Empresa configuredCompany = ConfiguredCompany();
-
-            if (configuredCompany == null)
-            {
-                ErrLogger.Log("Wrong Company configuration.");
-                return;
-            }
-
-            connection = AdminPaqLib.dbLogIn("", configuredCompany.Ruta);
+            connection = AdminPaqLib.dbLogIn("", account.Company.EnterprisePath);
             if (connection == 0)
             {
-                ErrLogger.Log("Unable to open connection to documents table for company [" + configuredCompany.Nombre + "]");
+                ErrLogger.Log("Unable to open connection to documents table for company [" + account.Company.EnterprisePath + "]");
                 return;
             }
 
@@ -182,8 +158,8 @@ namespace SeguimientoSuper.Collectable
                 }
                 else
                 {
-                    command = string.Format("UPDATE {0}(CFECHAEX01=\"18991230\",CTEXTOEX01=\"{2}\",CTEXTOEX02=\"{3}\");",
-                        TableNames.DOCUMENTOS, account.CollectType, account.Note);
+                    command = string.Format("UPDATE {0}(CFECHAEX01=\"{1}\",CTEXTOEX01=\"{2}\",CTEXTOEX02=\"{3}\");",
+                        TableNames.DOCUMENTOS, "18991230", account.CollectType, account.Note);
                 }
 
 
@@ -398,6 +374,7 @@ namespace SeguimientoSuper.Collectable
                     documentCo.ApId = companyId;
                     documentCo.Name = sCompanyName;
                     documentCo.EnterpriseId = configuredCompany.Id;
+                    documentCo.EnterprisePath = configuredCompany.Ruta;
                     FillCompany(documentCo, configuredCompany.Ruta);
 
                     companies.Add(companyId, documentCo);
@@ -505,6 +482,7 @@ namespace SeguimientoSuper.Collectable
                 source.Company.ApId = companyId;
                 source.Company.Name = sCompanyName;
                 source.Company.EnterpriseId = configuredCompany.Id;
+                source.Company.EnterprisePath = configuredCompany.Ruta;
                 
                 FillCompany(source.Company, configuredCompany.Ruta);
                 FillPayments(source, configuredCompany.Ruta, conceptosAbono);

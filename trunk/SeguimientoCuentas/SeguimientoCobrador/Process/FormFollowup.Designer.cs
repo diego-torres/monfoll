@@ -32,6 +32,7 @@
             this.splitContainerMain = new System.Windows.Forms.SplitContainer();
             this.toolStripMainMenu = new System.Windows.Forms.ToolStrip();
             this.toolStripButtonSave = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonDownload = new System.Windows.Forms.ToolStripButton();
             this.label1 = new System.Windows.Forms.Label();
             this.labelDueDays = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
@@ -86,7 +87,6 @@
             this.toolStripButtonUndoFollowUp = new System.Windows.Forms.ToolStripButton();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.dataGridViewPayments = new System.Windows.Forms.DataGridView();
-            this.toolStripButtonDownload = new System.Windows.Forms.ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMain)).BeginInit();
             this.splitContainerMain.Panel1.SuspendLayout();
             this.splitContainerMain.Panel2.SuspendLayout();
@@ -153,6 +153,16 @@
             this.toolStripButtonSave.Size = new System.Drawing.Size(23, 22);
             this.toolStripButtonSave.Text = "Grabar Documento";
             this.toolStripButtonSave.Click += new System.EventHandler(this.toolStripButtonSave_Click);
+            // 
+            // toolStripButtonDownload
+            // 
+            this.toolStripButtonDownload.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonDownload.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonDownload.Image")));
+            this.toolStripButtonDownload.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonDownload.Name = "toolStripButtonDownload";
+            this.toolStripButtonDownload.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonDownload.Text = "Actualizar desde AdminPaq";
+            this.toolStripButtonDownload.Click += new System.EventHandler(this.toolStripButtonDownload_Click);
             // 
             // label1
             // 
@@ -624,8 +634,7 @@
             "Llamada",
             "Visita",
             "Email",
-            "Otro",
-            "Cerrado"});
+            "Otro"});
             this.comboBoxFollowUpType.Location = new System.Drawing.Point(81, 95);
             this.comboBoxFollowUpType.Name = "comboBoxFollowUpType";
             this.comboBoxFollowUpType.Size = new System.Drawing.Size(121, 24);
@@ -742,16 +751,6 @@
             this.dataGridViewPayments.ReadOnly = true;
             this.dataGridViewPayments.Size = new System.Drawing.Size(1243, 393);
             this.dataGridViewPayments.TabIndex = 0;
-            // 
-            // toolStripButtonDownload
-            // 
-            this.toolStripButtonDownload.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonDownload.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonDownload.Image")));
-            this.toolStripButtonDownload.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonDownload.Name = "toolStripButtonDownload";
-            this.toolStripButtonDownload.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonDownload.Text = "Actualizar desde AdminPaq";
-            this.toolStripButtonDownload.Click += new System.EventHandler(this.toolStripButtonDownload_Click);
             // 
             // FormFollowup
             // 

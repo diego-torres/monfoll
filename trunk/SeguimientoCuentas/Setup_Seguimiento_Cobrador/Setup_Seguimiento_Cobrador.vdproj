@@ -106,6 +106,12 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_0ECB0487C343FB780D382EF715A3E585"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_08D26E7AADB47D328CE33A1A9093B520"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -113,12 +119,6 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_CBD746E024C846E983358CB540402D8F"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_0ECB0487C343FB780D382EF715A3E585"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -574,15 +574,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Seguimiento Cobrador"
-        "ProductCode" = "8:{9B441C66-ECF3-4EAA-9175-F3247E21CFF2}"
-        "PackageCode" = "8:{198B2C6F-4018-483E-910E-DFF662728FA7}"
+        "ProductCode" = "8:{8C6E27B4-C5FF-4958-8D62-4A518DF5F716}"
+        "PackageCode" = "8:{E502A0B3-1288-42D4-913C-CD7E259A5115}"
         "UpgradeCode" = "8:{623FCAD3-E1F4-4931-9B47-D7B15E642E9E}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:3.1.1"
+        "ProductVersion" = "8:3.2.0"
         "Manufacturer" = "8:Inspiracode"
         "ARPHELPTELEPHONE" = "8:656 642-3887"
         "ARPHELPLINK" = "8:"

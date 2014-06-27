@@ -29,6 +29,7 @@ namespace SeguimientoCobrador
 
         private FormConfig fConfig;
         private AboutBox about;
+        private FormDownload fDownload;
         private Dictionary<int, FormFollowup> followups = new Dictionary<int, FormFollowup>();
         List<Collectable.Account> adminPaqAccounts = new List<Collectable.Account>();
 
@@ -81,6 +82,21 @@ namespace SeguimientoCobrador
 
             currentFollowing.Show();
             currentFollowing.Focus();
+        }
+
+        public void ShowDownload()
+        {
+            if (fDownload == null || fDownload.IsDisposed)
+            {
+                fDownload = new FormDownload();
+                fDownload.MdiParent = this;
+            }
+            fDownload.Show();
+        }
+
+        internal void CloseDownload()
+        {
+            fDownload.Close();
         }
 
         private void FormMain_Load(object sender, EventArgs e)
@@ -157,6 +173,36 @@ namespace SeguimientoCobrador
         private void configuracionToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenConfig();
+        }
+
+        private void descargarToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                ShowDownload();
+                List<Collectable.Account> adminPaqAccounts = api.DownloadCollectables();
+                AccountInterface.UploadAccounts(adminPaqAccounts, api.Cancelados, api.Saldados, api.Conceptos);
+                AccountInterface.SetCollectDate(api);
+
+                DtCustomer = CustomerInterface.ReadCustomers();
+                DtSeries = AccountInterface.ReadSeries();
+                DtFolios = AccountInterface.ReadFolios();
+            }
+            catch (Exception ex)
+            {
+                ErrLogger.Log("Unable to download data from AdminPaq: \n" +
+                    ex.StackTrace);
+                MessageBox.Show("Se ha detectado un error al intentar descargar las cuentas de AdminPaq:\n"
+                    + ex.Message + "\n"
+                    + ex.StackTrace,
+                    "Error al descargar de AdminPaq",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
+            finally 
+            {
+                CloseDownload();
+            }
         }
 
         private void processToolStripMenuItem_Click(object sender, EventArgs e)
