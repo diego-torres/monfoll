@@ -129,7 +129,10 @@ namespace SeguimientoCobrador.Process
             account.ApId = int.Parse(dgv.CurrentRow.Cells["ap_id"].Value.ToString());
             account.DocDate = DateTime.Parse(dgv.CurrentRow.Cells["f_documento"].Value.ToString());
             account.DueDate = DateTime.Parse(dgv.CurrentRow.Cells["f_vencimiento"].Value.ToString());
-            account.CollectDate = DateTime.Parse(dgv.CurrentRow.Cells["f_cobro"].Value.ToString());
+
+            if (!string.Empty.Equals(dgv.CurrentRow.Cells["f_cobro"].Value.ToString()))
+                account.CollectDate = DateTime.Parse(dgv.CurrentRow.Cells["f_cobro"].Value.ToString());
+            
             account.Serie = dgv.CurrentRow.Cells["serie_doco"].Value.ToString();
             account.Folio = int.Parse(dgv.CurrentRow.Cells["folio_doco"].Value.ToString());
             account.DocType = dgv.CurrentRow.Cells["tipo_documento"].Value.ToString();

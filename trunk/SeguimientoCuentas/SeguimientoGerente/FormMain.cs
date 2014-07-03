@@ -113,9 +113,12 @@ namespace SeguimientoGerente
                         DtCustomer = CustomerInterface.ReadCustomers();
                         DtSeries = AccountInterface.ReadSeries();
                         DtFolios = AccountInterface.ReadFolios();
-                    }   
+                    }
                     else
+                    {
                         OpenConfig();
+                        return;
+                    }   
                 }
                 catch (Exception ex)
                 {

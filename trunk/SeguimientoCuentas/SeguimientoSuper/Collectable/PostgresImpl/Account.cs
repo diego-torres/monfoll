@@ -138,7 +138,7 @@ namespace SeguimientoSuper.Collectable.PostgresImpl
                 DateTime dueDate = DateTime.Parse(row["f_vencimiento"].ToString());
                 TimeSpan elapsed = now.Subtract(dueDate);
 
-                row["dias_vencido"] = int.Parse(elapsed.TotalDays.ToString("0"));
+                row["dias_vencido"] = int.Parse(elapsed.TotalDays.ToString("0")) - 1;
             }
 
 
@@ -178,7 +178,7 @@ namespace SeguimientoSuper.Collectable.PostgresImpl
                 DateTime dueDate = DateTime.Parse(row["f_vencimiento"].ToString());
                 TimeSpan elapsed = now.Subtract(dueDate);
 
-                row["dias_vencido"] = int.Parse(elapsed.TotalDays.ToString("0"));
+                row["dias_vencido"] = int.Parse(elapsed.TotalDays.ToString("0")) - 1;
             }
 
             return ds.Tables[0];
@@ -217,7 +217,7 @@ namespace SeguimientoSuper.Collectable.PostgresImpl
                 DateTime dueDate = DateTime.Parse(row["f_vencimiento"].ToString());
                 TimeSpan elapsed = now.Subtract(dueDate);
 
-                row["dias_vencido"] = int.Parse(elapsed.TotalDays.ToString("0"));
+                row["dias_vencido"] = int.Parse(elapsed.TotalDays.ToString("0")) - 1;
             }
 
             return ds.Tables[0];
@@ -255,7 +255,7 @@ namespace SeguimientoSuper.Collectable.PostgresImpl
                 DateTime dueDate = DateTime.Parse(row["f_vencimiento"].ToString());
                 TimeSpan elapsed = now.Subtract(dueDate);
 
-                row["dias_vencido"] = int.Parse(elapsed.TotalDays.ToString("0"));
+                row["dias_vencido"] = int.Parse(elapsed.TotalDays.ToString("0")) - 1;
             }
 
             return ds.Tables[0];
@@ -293,7 +293,7 @@ namespace SeguimientoSuper.Collectable.PostgresImpl
                 DateTime dueDate = DateTime.Parse(row["f_vencimiento"].ToString());
                 TimeSpan elapsed = now.Subtract(dueDate);
 
-                row["dias_vencido"] = int.Parse(elapsed.TotalDays.ToString("0"));
+                row["dias_vencido"] = int.Parse(elapsed.TotalDays.ToString("0")) - 1;
             }
 
             return ds.Tables[0];
