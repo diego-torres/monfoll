@@ -37,6 +37,7 @@ namespace SeguimientoCobrador.Process
                 comboBoxClient.ValueMember = "id_cliente";
                 
                 comboBoxSerie.DataSource = DtSeries;
+                DtSeries.DefaultView.Sort = "serie_doco ASC";
                 comboBoxSerie.DisplayMember = "serie_doco";
                 comboBoxSerie.ValueMember = "serie_doco";
 
