@@ -60,6 +60,13 @@ namespace SeguimientoSuper.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap Actions_document_edit_icon {
+            get {
+                object obj = ResourceManager.GetObject("Actions-document-edit-icon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap arrow_down_icon {
             get {
                 object obj = ResourceManager.GetObject("arrow_down_icon", resourceCulture);

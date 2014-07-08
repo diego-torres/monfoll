@@ -175,7 +175,7 @@ namespace SeguimientoSuper.Process
             account.DocDate = DateTime.Parse(dgv.CurrentRow.Cells["f_documento"].Value.ToString());
             account.DueDate = DateTime.Parse(dgv.CurrentRow.Cells["f_vencimiento"].Value.ToString());
 
-            if (!string.Empty.Equals(dgv.CurrentRow.Cells["f_cobro"].Value.ToString()))
+            if(!string.Empty.Equals(dgv.CurrentRow.Cells["f_cobro"].Value.ToString()))
                 account.CollectDate = DateTime.Parse(dgv.CurrentRow.Cells["f_cobro"].Value.ToString());
 
             account.Serie = dgv.CurrentRow.Cells["serie_doco"].Value.ToString();
@@ -236,7 +236,6 @@ namespace SeguimientoSuper.Process
 
             dgv.Columns["facturado"].DefaultCellStyle.Format = "c";
             dgv.Columns["saldo"].DefaultCellStyle.Format = "c";
-
         }
 
         private void FixColumn(DataGridViewColumn column, int displayedIndex, string HeaderText, int width)
@@ -268,14 +267,14 @@ namespace SeguimientoSuper.Process
             if (IsNumericColumn(columnName))
                 return string.Format("{0}={1}", columnName, columnValue);
 
-            if (IsDateColumn(columnName))
+            if (IsDateColumn(columnName)) 
             {
                 if (string.Empty.Equals(columnValue.Trim()))
                     return string.Format("CONVERT(Isnull({0},''), System.String) = ''", columnName);
                 DateTime dValue = DateTime.Parse(columnValue);
                 return string.Format("{0}=#{1}#", columnName, dValue.ToString("MM/dd/yyyy"));
             }
-
+                
 
             return string.Format("{0}='{1}'", columnName, columnValue);
         }
@@ -391,7 +390,6 @@ namespace SeguimientoSuper.Process
             string columnName = dgvSender.Columns[dgvSender.CurrentCell.ColumnIndex].Name;
             string filterValue = dgvSender.CurrentCell.Value.ToString();
 
-
             if (string.Empty.Equals(filterToApply))
                 filterToApply = FilterString(columnName, filterValue);
             else
@@ -496,6 +494,7 @@ namespace SeguimientoSuper.Process
                 {
                     ra.CollectDate = DateTime.Parse(documentRow.Cells["f_cobro"].Value.ToString());
                 }
+                
                 ra.CollectType = documentRow.Cells["tipo_cobro"].Value.ToString();
                 ra.CompanyCode = documentRow.Cells["cd_cliente"].Value.ToString();
                 ra.DocDate = DateTime.Parse(documentRow.Cells["f_documento"].Value.ToString());
@@ -546,7 +545,7 @@ namespace SeguimientoSuper.Process
         #endregion
 
         #region GRID_REFRESHERS
-        private void RefreshBlackList()
+        public void RefreshBlackList()
         {
             string prevFilter = dtBlackList.DefaultView.RowFilter;
             dtBlackList = dbAccount.BlackListed();
@@ -556,7 +555,7 @@ namespace SeguimientoSuper.Process
             FormatAccountsGridView(dataGridViewBlackList);
         }
 
-        private void RefreshMaster()
+        public void RefreshMaster()
         {
             string prevFilter = dtMaster.DefaultView.RowFilter;
             dtMaster = dbAccount.MasterTable();
@@ -566,7 +565,7 @@ namespace SeguimientoSuper.Process
             FormatAccountsGridView(dataGridViewMaster);
         }
 
-        private void RefreshAttended()
+        public void RefreshAttended()
         {
             string prevFilter = dtAttended.DefaultView.RowFilter;
             dtAttended = dbAccount.Attended();
@@ -576,7 +575,7 @@ namespace SeguimientoSuper.Process
             FormatAccountsGridView(dataGridViewAttended);
         }
 
-        private void RefreshEscalated()
+        public void RefreshEscalated()
         {
             string prevFilter = dtEscalated.DefaultView.RowFilter;
             dtEscalated = dbAccount.Escalated();
@@ -586,7 +585,7 @@ namespace SeguimientoSuper.Process
             FormatAccountsGridView(dataGridViewEscalated);
         }
 
-        private void RefreshUncollectable()
+        public void RefreshUncollectable()
         {
             string prevFilter = dtUncollectable.DefaultView.RowFilter;
             dtUncollectable = dbAccount.Uncollectable();
@@ -845,11 +844,11 @@ namespace SeguimientoSuper.Process
                 if (!dlgCollectDate.dateTimePickerCollectDate.Checked)
                 {
                     //18991230
-                    DateTime dt = new DateTime(1899, 12, 30);
+                    DateTime dt = new DateTime(1899, 12, 30); 
                     dbAccount.SetCollectDate(account.DocId, dt);
                     api.SetCollectDate(account.ApId, dt, account.Company.EnterprisePath);
                 }
-                else
+                else 
                 {
                     dbAccount.SetCollectDate(account.DocId, dlgCollectDate.dateTimePickerCollectDate.Value);
                     api.SetCollectDate(account.ApId, dlgCollectDate.dateTimePickerCollectDate.Value, account.Company.EnterprisePath);
@@ -1190,6 +1189,48 @@ namespace SeguimientoSuper.Process
         }
         #endregion
 
+        #region FOLLOW_UPPERS
+        private void SetGroupFollowUp(DataGridView dgv)
+        {
+            DialogFollowUp dlgFollow = new DialogFollowUp();
+            dlgFollow.ShowDialog();
+            if (dlgFollow.DialogResult == DialogResult.Cancel) return;
+
+            List<Collectable.Account> selectedIds = SelectedAdminId(dgv);
+
+            foreach (Collectable.Account account in selectedIds)
+            {
+                dbAccount.AddFollowUp(dlgFollow.comboBoxType.Text, dlgFollow.textBoxNote.Text, account.DocId);
+            }
+            MessageBox.Show("Seguimiento enviado exitosamente a la base de datos.", "Seguimiento actualizado", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void toolStripButtonAddFollowUpBlackListed_Click(object sender, EventArgs e)
+        {
+            SetGroupFollowUp(dataGridViewBlackList);
+        }
+
+        private void toolStripButtonAddFollowUpMaster_Click(object sender, EventArgs e)
+        {
+            SetGroupFollowUp(dataGridViewMaster);
+        }
+
+        private void toolStripButtonAddFollowUpAttended_Click(object sender, EventArgs e)
+        {
+            SetGroupFollowUp(dataGridViewAttended);
+        }
+
+        private void toolStripButtonAddFollowUpEscalated_Click(object sender, EventArgs e)
+        {
+            SetGroupFollowUp(dataGridViewEscalated);
+        }
+
+        private void toolStripButtonAddFollowUpUncollectable_Click(object sender, EventArgs e)
+        {
+            SetGroupFollowUp(dataGridViewUncollectable);
+        }
+        #endregion
+
         #region ADMIN_PAQ_DOWNLOADERS
         private void UpdateFromAdminPaq(DataGridView dgv)
         {
@@ -1402,6 +1443,5 @@ namespace SeguimientoSuper.Process
                 toolStripStatusFilterUncollectable.Text = "FILTRO: " + filter;
             }
         }
-
     }
 }

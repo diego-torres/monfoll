@@ -57,7 +57,6 @@ namespace SeguimientoCobrador.Process
                     filterToApply += " AND " + FilterString("folio_doco", folio);
             }
 
-            
             toolStripStatusFilterMaster.Text = "FILTRO: " + filterToApply;
             dtMaster.DefaultView.RowFilter = filterToApply;
             dataGridViewMaster.DataSource = dtMaster;
@@ -91,7 +90,6 @@ namespace SeguimientoCobrador.Process
         
         private void FormProcess_Load(object sender, EventArgs e)
         {
-            
             dtMaster = dbAccount.MasterTable();
             dataGridViewMaster.DataSource = dtMaster;
             FormatAccountsGridView(dataGridViewMaster);
@@ -130,9 +128,9 @@ namespace SeguimientoCobrador.Process
             account.DocDate = DateTime.Parse(dgv.CurrentRow.Cells["f_documento"].Value.ToString());
             account.DueDate = DateTime.Parse(dgv.CurrentRow.Cells["f_vencimiento"].Value.ToString());
 
-            if (!string.Empty.Equals(dgv.CurrentRow.Cells["f_cobro"].Value.ToString()))
+            if(!string.Empty.Equals(dgv.CurrentRow.Cells["f_cobro"].Value.ToString()))
                 account.CollectDate = DateTime.Parse(dgv.CurrentRow.Cells["f_cobro"].Value.ToString());
-            
+
             account.Serie = dgv.CurrentRow.Cells["serie_doco"].Value.ToString();
             account.Folio = int.Parse(dgv.CurrentRow.Cells["folio_doco"].Value.ToString());
             account.DocType = dgv.CurrentRow.Cells["tipo_documento"].Value.ToString();
@@ -191,7 +189,6 @@ namespace SeguimientoCobrador.Process
 
             dgv.Columns["facturado"].DefaultCellStyle.Format = "c";
             dgv.Columns["saldo"].DefaultCellStyle.Format = "c";
-
         }
 
         private void FixColumn(DataGridViewColumn column, int displayedIndex, string HeaderText, int width)
@@ -223,14 +220,14 @@ namespace SeguimientoCobrador.Process
             if (IsNumericColumn(columnName))
                 return string.Format("{0}={1}", columnName, columnValue);
 
-            if (IsDateColumn(columnName))
+            if (IsDateColumn(columnName)) 
             {
                 if (string.Empty.Equals(columnValue.Trim()))
                     return string.Format("CONVERT(Isnull({0},''), System.String) = ''", columnName);
                 DateTime dValue = DateTime.Parse(columnValue);
                 return string.Format("{0}=#{1}#", columnName, dValue.ToString("MM/dd/yyyy"));
             }
-
+                
 
             return string.Format("{0}='{1}'", columnName, columnValue);
         }
@@ -331,7 +328,6 @@ namespace SeguimientoCobrador.Process
             string columnName = dgvSender.Columns[dgvSender.CurrentCell.ColumnIndex].Name;
             string filterValue = dgvSender.CurrentCell.Value.ToString();
 
-
             if (string.Empty.Equals(filterToApply))
                 filterToApply = FilterString(columnName, filterValue);
             else
@@ -421,6 +417,7 @@ namespace SeguimientoCobrador.Process
                 {
                     ra.CollectDate = DateTime.Parse(documentRow.Cells["f_cobro"].Value.ToString());
                 }
+                
                 ra.CollectType = documentRow.Cells["tipo_cobro"].Value.ToString();
                 ra.CompanyCode = documentRow.Cells["cd_cliente"].Value.ToString();
                 ra.DocDate = DateTime.Parse(documentRow.Cells["f_documento"].Value.ToString());
@@ -456,7 +453,7 @@ namespace SeguimientoCobrador.Process
         #endregion
 
         #region GRID_REFRESHERS
-        private void RefreshMaster()
+        public void RefreshMaster()
         {
             string prevFilter = dtMaster.DefaultView.RowFilter;
             dtMaster = dbAccount.MasterTable();
@@ -466,7 +463,7 @@ namespace SeguimientoCobrador.Process
             FormatAccountsGridView(dataGridViewMaster);
         }
 
-        private void RefreshAttended()
+        public void RefreshAttended()
         {
             string prevFilter = dtAttended.DefaultView.RowFilter;
             dtAttended = dbAccount.Attended();
@@ -476,7 +473,6 @@ namespace SeguimientoCobrador.Process
             FormatAccountsGridView(dataGridViewAttended);
         }
         #endregion
-
 
         #region DATE_SETTERS
         private void toolStripButtonSetDateMaster_Click(object sender, EventArgs e)
@@ -492,11 +488,11 @@ namespace SeguimientoCobrador.Process
                 if (!dlgCollectDate.dateTimePickerCollectDate.Checked)
                 {
                     //18991230
-                    DateTime dt = new DateTime(1899, 12, 30);
+                    DateTime dt = new DateTime(1899, 12, 30); 
                     dbAccount.SetCollectDate(account.DocId, dt);
                     api.SetCollectDate(account.ApId, dt, account.Company.EnterprisePath);
                 }
-                else
+                else 
                 {
                     dbAccount.SetCollectDate(account.DocId, dlgCollectDate.dateTimePickerCollectDate.Value);
                     api.SetCollectDate(account.ApId, dlgCollectDate.dateTimePickerCollectDate.Value, account.Company.EnterprisePath);
@@ -575,7 +571,7 @@ namespace SeguimientoCobrador.Process
             RefreshAttended();
         }
         #endregion
-        
+
         #region FILTER_REMOVERS
         private void toolStripButtonRemoveFilterMaster_Click(object sender, EventArgs e)
         {
@@ -644,6 +640,33 @@ namespace SeguimientoCobrador.Process
         }
         #endregion
 
+        #region FOLLOW_UPPERS
+        private void SetGroupFollowUp(DataGridView dgv)
+        {
+            DialogFollowUp dlgFollow = new DialogFollowUp();
+            dlgFollow.ShowDialog();
+            if (dlgFollow.DialogResult == DialogResult.Cancel) return;
+
+            List<Collectable.Account> selectedIds = SelectedAdminId(dgv);
+
+            foreach (Collectable.Account account in selectedIds)
+            {
+                dbAccount.AddFollowUp(dlgFollow.comboBoxType.Text, dlgFollow.textBoxNote.Text, account.DocId);
+            }
+            MessageBox.Show("Seguimiento enviado exitosamente a la base de datos.", "Seguimiento actualizado", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void toolStripButtonAddFollowUpMaster_Click(object sender, EventArgs e)
+        {
+            SetGroupFollowUp(dataGridViewMaster);
+        }
+
+        private void toolStripButtonAddFollowUpAttended_Click(object sender, EventArgs e)
+        {
+            SetGroupFollowUp(dataGridViewAttended);
+        }
+        #endregion
+
         #region ADMIN_PAQ_DOWNLOADERS
         private void UpdateFromAdminPaq(DataGridView dgv)
         {
@@ -677,7 +700,7 @@ namespace SeguimientoCobrador.Process
                     dbAccount.CancelAccount(pgDoco.DocId);
             }
         }
-
+        
         private void toolStripButtonAdminPaqDownloadMaster_Click(object sender, EventArgs e)
         {
             UpdateFromAdminPaq(dataGridViewMaster);

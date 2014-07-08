@@ -33,6 +33,7 @@
             this.cuentasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.processToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.buscarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.actualizarTodoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.descargarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemConfig = new System.Windows.Forms.ToolStripMenuItem();
@@ -42,6 +43,7 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.mainStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.mainProgressBar = new System.Windows.Forms.ToolStripProgressBar();
+            this.backgroundWorkerDownloadAdminPaq = new System.ComponentModel.BackgroundWorker();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -62,6 +64,7 @@
             this.cuentasToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.processToolStripMenuItem,
             this.buscarToolStripMenuItem,
+            this.actualizarTodoToolStripMenuItem,
             this.toolStripSeparator1,
             this.descargarToolStripMenuItem});
             this.cuentasToolStripMenuItem.Name = "cuentasToolStripMenuItem";
@@ -71,7 +74,7 @@
             // processToolStripMenuItem
             // 
             this.processToolStripMenuItem.Name = "processToolStripMenuItem";
-            this.processToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
+            this.processToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
             this.processToolStripMenuItem.Text = "&Proceso";
             this.processToolStripMenuItem.Click += new System.EventHandler(this.processToolStripMenuItem_Click);
             // 
@@ -79,19 +82,27 @@
             // 
             this.buscarToolStripMenuItem.Name = "buscarToolStripMenuItem";
             this.buscarToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F3;
-            this.buscarToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
+            this.buscarToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
             this.buscarToolStripMenuItem.Text = "Buscar";
             this.buscarToolStripMenuItem.Click += new System.EventHandler(this.buscarToolStripMenuItem_Click);
+            // 
+            // actualizarTodoToolStripMenuItem
+            // 
+            this.actualizarTodoToolStripMenuItem.Name = "actualizarTodoToolStripMenuItem";
+            this.actualizarTodoToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F5;
+            this.actualizarTodoToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.actualizarTodoToolStripMenuItem.Text = "&Actualizar Todo";
+            this.actualizarTodoToolStripMenuItem.Click += new System.EventHandler(this.actualizarTodoToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(133, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(175, 6);
             // 
             // descargarToolStripMenuItem
             // 
             this.descargarToolStripMenuItem.Name = "descargarToolStripMenuItem";
-            this.descargarToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
+            this.descargarToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
             this.descargarToolStripMenuItem.Text = "&Descargar";
             this.descargarToolStripMenuItem.Click += new System.EventHandler(this.descargarToolStripMenuItem_Click);
             // 
@@ -139,13 +150,18 @@
             // 
             this.mainStatus.Name = "mainStatus";
             this.mainStatus.Size = new System.Drawing.Size(318, 17);
-            this.mainStatus.Text = "Seguimiento a cuentas por cobrar - módulo de supervisor V 3.2.2";
+            this.mainStatus.Text = "Seguimiento a cuentas por cobrar - módulo de supervisor V 3.3.0";
             // 
             // mainProgressBar
             // 
             this.mainProgressBar.Name = "mainProgressBar";
             this.mainProgressBar.Size = new System.Drawing.Size(100, 16);
             this.mainProgressBar.Visible = false;
+            // 
+            // backgroundWorkerDownloadAdminPaq
+            // 
+            this.backgroundWorkerDownloadAdminPaq.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorkerDownloadAdminPaq_DoWork);
+            this.backgroundWorkerDownloadAdminPaq.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorkerDownloadAdminPaq_RunWorkerCompleted);
             // 
             // FormMain
             // 
@@ -189,6 +205,8 @@
         private System.Windows.Forms.ToolStripStatusLabel mainStatus;
         private System.Windows.Forms.ToolStripMenuItem buscarToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.ComponentModel.BackgroundWorker backgroundWorkerDownloadAdminPaq;
+        private System.Windows.Forms.ToolStripMenuItem actualizarTodoToolStripMenuItem;
     }
 }
 
