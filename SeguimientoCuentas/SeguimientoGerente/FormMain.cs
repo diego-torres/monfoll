@@ -55,7 +55,14 @@ namespace SeguimientoGerente
         public void RefreshProcessAccounts()
         {
             if (IsProcessOpen)
-                fProcess.Refresh();
+            {
+                fProcess.RefreshBlackList();
+                fProcess.RefreshMaster();
+                fProcess.RefreshAttended();
+                fProcess.RefreshEscalated();
+                fProcess.RefreshUncollectable();
+            }
+                
         }
 
         public void ShowFollowUp(SeguimientoGerente.Collectable.Account account)
@@ -180,32 +187,8 @@ namespace SeguimientoGerente
 
         private void descargarToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            try
-            {
-                ShowDownload();
-                List<Collectable.Account> adminPaqAccounts = api.DownloadCollectables();
-                AccountInterface.UploadAccounts(adminPaqAccounts, api.Cancelados, api.Saldados, api.Conceptos);
-                AccountInterface.SetCollectDate(api);
-
-                DtCustomer = CustomerInterface.ReadCustomers();
-                DtSeries = AccountInterface.ReadSeries();
-                DtFolios = AccountInterface.ReadFolios();
-            }
-            catch (Exception ex)
-            {
-                ErrLogger.Log("Unable to download data from AdminPaq: \n" +
-                    ex.StackTrace);
-                MessageBox.Show("Se ha detectado un error al intentar descargar las cuentas de AdminPaq:\n"
-                    + ex.Message + "\n"
-                    + ex.StackTrace,
-                    "Error al descargar de AdminPaq",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
-            }
-            finally 
-            {
-                CloseDownload();
-            }
+            ShowDownload();
+            backgroundWorkerDownloadAdminPaq.RunWorkerAsync();
         }
 
         private void processToolStripMenuItem_Click(object sender, EventArgs e)
@@ -237,6 +220,47 @@ namespace SeguimientoGerente
             }
             fProcess.Show();
             fProcess.SearchData(search.comboBoxClient.Text, search.comboBoxSerie.Text, search.comboBoxFolios.Text);
+        }
+
+        private void backgroundWorkerDownloadAdminPaq_DoWork(object sender, DoWorkEventArgs e)
+        {
+            List<Collectable.Account> adminPaqAccounts = api.DownloadCollectables();
+            AccountInterface.UploadAccounts(adminPaqAccounts, api.Cancelados, api.Saldados, api.Conceptos);
+            AccountInterface.SetCollectDate(api);
+
+            DtCustomer = CustomerInterface.ReadCustomers();
+            DtSeries = AccountInterface.ReadSeries();
+            DtFolios = AccountInterface.ReadFolios();
+        }
+
+        private void backgroundWorkerDownloadAdminPaq_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (e.Error != null)
+            {
+                ErrLogger.Log("Unable to download data from AdminPaq: \n" +
+                    e.Error.StackTrace);
+                MessageBox.Show("Se ha detectado un error al intentar descargar las cuentas de AdminPaq:\n"
+                    + e.Error.Message + "\n"
+                    + e.Error.StackTrace,
+                    "Error al descargar de AdminPaq",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
+
+            if(!fDownload.IsDisposed)
+                CloseDownload();
+        }
+
+        private void actualizarTodoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (IsProcessOpen)
+            {
+                fProcess.RefreshBlackList();
+                fProcess.RefreshMaster();
+                fProcess.RefreshAttended();
+                fProcess.RefreshEscalated();
+                fProcess.RefreshUncollectable();
+            }
         }
 
     }

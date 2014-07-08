@@ -545,7 +545,7 @@ namespace SeguimientoGerente.Process
         #endregion
 
         #region GRID_REFRESHERS
-        private void RefreshBlackList()
+        public void RefreshBlackList()
         {
             string prevFilter = dtBlackList.DefaultView.RowFilter;
             dtBlackList = dbAccount.BlackListed();
@@ -555,7 +555,7 @@ namespace SeguimientoGerente.Process
             FormatAccountsGridView(dataGridViewBlackList);
         }
 
-        private void RefreshMaster()
+        public void RefreshMaster()
         {
             string prevFilter = dtMaster.DefaultView.RowFilter;
             dtMaster = dbAccount.MasterTable();
@@ -565,7 +565,7 @@ namespace SeguimientoGerente.Process
             FormatAccountsGridView(dataGridViewMaster);
         }
 
-        private void RefreshAttended()
+        public void RefreshAttended()
         {
             string prevFilter = dtAttended.DefaultView.RowFilter;
             dtAttended = dbAccount.Attended();
@@ -575,7 +575,7 @@ namespace SeguimientoGerente.Process
             FormatAccountsGridView(dataGridViewAttended);
         }
 
-        private void RefreshEscalated()
+        public void RefreshEscalated()
         {
             string prevFilter = dtEscalated.DefaultView.RowFilter;
             dtEscalated = dbAccount.Escalated();
@@ -585,7 +585,7 @@ namespace SeguimientoGerente.Process
             FormatAccountsGridView(dataGridViewEscalated);
         }
 
-        private void RefreshUncollectable()
+        public void RefreshUncollectable()
         {
             string prevFilter = dtUncollectable.DefaultView.RowFilter;
             dtUncollectable = dbAccount.Uncollectable();
@@ -1189,6 +1189,48 @@ namespace SeguimientoGerente.Process
         }
         #endregion
 
+        #region FOLLOW_UPPERS
+        private void SetGroupFollowUp(DataGridView dgv)
+        {
+            DialogFollowUp dlgFollow = new DialogFollowUp();
+            dlgFollow.ShowDialog();
+            if (dlgFollow.DialogResult == DialogResult.Cancel) return;
+
+            List<Collectable.Account> selectedIds = SelectedAdminId(dgv);
+
+            foreach (Collectable.Account account in selectedIds)
+            {
+                dbAccount.AddFollowUp(dlgFollow.comboBoxType.Text, dlgFollow.textBoxNote.Text, account.DocId);
+            }
+            MessageBox.Show("Seguimiento enviado exitosamente a la base de datos.", "Seguimiento actualizado", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void toolStripButtonAddFollowUpBlackListed_Click(object sender, EventArgs e)
+        {
+            SetGroupFollowUp(dataGridViewBlackList);
+        }
+
+        private void toolStripButtonAddFollowUpMaster_Click(object sender, EventArgs e)
+        {
+            SetGroupFollowUp(dataGridViewMaster);
+        }
+
+        private void toolStripButtonAddFollowUpAttended_Click(object sender, EventArgs e)
+        {
+            SetGroupFollowUp(dataGridViewAttended);
+        }
+
+        private void toolStripButtonAddFollowUpEscalated_Click(object sender, EventArgs e)
+        {
+            SetGroupFollowUp(dataGridViewEscalated);
+        }
+
+        private void toolStripButtonAddFollowUpUncollectable_Click(object sender, EventArgs e)
+        {
+            SetGroupFollowUp(dataGridViewUncollectable);
+        }
+        #endregion
+
         #region ADMIN_PAQ_DOWNLOADERS
         private void UpdateFromAdminPaq(DataGridView dgv)
         {
@@ -1401,6 +1443,5 @@ namespace SeguimientoGerente.Process
                 toolStripStatusFilterUncollectable.Text = "FILTRO: " + filter;
             }
         }
-
     }
 }

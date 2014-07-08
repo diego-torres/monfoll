@@ -97,6 +97,12 @@
     <Compile Include="Process\DialogCollectDate.Designer.cs">
       <DependentUpon>DialogCollectDate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Process\DialogFollowUp.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Process\DialogFollowUp.Designer.cs">
+      <DependentUpon>DialogFollowUp.cs</DependentUpon>
+    </Compile>
     <Compile Include="Process\DialogObservations.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -130,6 +136,7 @@
     <Compile Include="Reports\ReportViewer.Designer.cs">
       <DependentUpon>ReportViewer.cs</DependentUpon>
     </Compile>
+    <None Include="Resources\Actions-document-edit-icon.png" />
     <None Include="Resources\Close-2-icon.png" />
     <None Include="Resources\tasks.png" />
     <None Include="Resources\unlock-icon.png" />
@@ -158,6 +165,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Process\DialogCollectDate.resx">
       <DependentUpon>DialogCollectDate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Process\DialogFollowUp.resx">
+      <DependentUpon>DialogFollowUp.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Process\DialogObservations.resx">
       <DependentUpon>DialogObservations.cs</DependentUpon>

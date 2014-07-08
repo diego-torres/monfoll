@@ -79,7 +79,9 @@ namespace SeguimientoSuper.Collectable
             else
             {
                 AdminPaqLib.dbLogOut(connection);
-                throw new Exception("El registro del documento se encuentra bloqueado por otro usuario.");
+                throw new Exception("El registro del documento se encuentra bloqueado por otro usuario. \n" +
+                    "folio: " + docId + "\n" +
+                    "ruta empresa: " + rutaEmpresa);
             }
 
             AdminPaqLib.dbLogOut(connection);
@@ -127,7 +129,9 @@ namespace SeguimientoSuper.Collectable
             else
             {
                 AdminPaqLib.dbLogOut(connection);
-                throw new Exception("El registro del documento se encuentra bloqueado por otro usuario.");
+                throw new Exception("El registro del documento se encuentra bloqueado por otro usuario. \n" +
+                    "folio: " + docId + "\n" +
+                    "ruta empresa: " + rutaEmpresa);
             }
 
             AdminPaqLib.dbLogOut(connection);
@@ -185,7 +189,9 @@ namespace SeguimientoSuper.Collectable
             else
             {
                 AdminPaqLib.dbLogOut(connection);
-                throw new Exception("El registro del documento se encuentra bloqueado por otro usuario.");
+                throw new Exception("El registro del documento se encuentra bloqueado por otro usuario. \n" +
+                    "folio: " + account.ApId.ToString() + "\n" +
+                    "ruta empresa: " + account.Company.EnterprisePath);
             }
 
             AdminPaqLib.dbLogOut(connection);
