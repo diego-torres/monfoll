@@ -100,6 +100,7 @@ namespace SeguimientoCobrador
 
         internal void CloseDownload()
         {
+            fDownload.WindowState = FormWindowState.Normal;
             fDownload.Close();
         }
 
@@ -254,6 +255,11 @@ namespace SeguimientoCobrador
             {
                 fProcess.RefreshMaster();
                 fProcess.RefreshAttended();
+                MessageBox.Show("Datos actualizados en las cadrículas de proceso desde la base de datos.", "Actualización exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                MessageBox.Show("Debe entrar a la ventana de proceso para iniciar actualización desde la base de datos.", "Imposible Actualizar", MessageBoxButtons.OK, MessageBoxIcon.Hand);
             }
         }
 

@@ -276,7 +276,8 @@ namespace SeguimientoGerente.Collectable.PostgresImpl
                 "FROM ctrl_cuenta " +
                 "INNER JOIN cat_cliente ON ctrl_cuenta.id_cliente = cat_cliente.id_cliente " +
                 "INNER JOIN cat_empresa ON cat_cliente.id_empresa = cat_empresa.id_empresa " + 
-                "WHERE ctrl_cuenta.lista_negra = false AND ctrl_cuenta.id_doco NOT IN(SELECT id_doco FROM ctrl_seguimiento WHERE id_movimiento IN(4,6,7));";
+                "WHERE ctrl_cuenta.lista_negra = false AND ctrl_cuenta.id_doco NOT IN(SELECT id_doco FROM ctrl_seguimiento WHERE id_movimiento IN(4,6,7))" +
+                "ORDER BY f_documento, folio_doco;";
 
             if (conn == null || conn.State != ConnectionState.Open)
                 connect();

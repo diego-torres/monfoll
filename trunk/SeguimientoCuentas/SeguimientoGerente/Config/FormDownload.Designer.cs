@@ -51,7 +51,10 @@
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "FormDownload";
+            this.ShowIcon = false;
+            this.ShowInTaskbar = false;
             this.Text = "FormDownload";
+            this.TopMost = true;
             this.UseWaitCursor = true;
             this.ResumeLayout(false);
             this.PerformLayout();
