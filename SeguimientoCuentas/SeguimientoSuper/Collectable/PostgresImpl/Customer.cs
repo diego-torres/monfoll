@@ -10,6 +10,68 @@ namespace SeguimientoSuper.Collectable.PostgresImpl
 {
     public class Customer : CommonBase
     {
+
+        public int IdEmpresa(int clienteId)
+        {
+            int result = 0;
+
+            Settings set = Settings.Default;
+            NpgsqlDataReader dr;
+            NpgsqlCommand cmd;
+
+
+            string sqlString = "SELECT cat_cliente.id_empresa " +
+                "FROM cat_cliente " +
+                "WHERE cat_cliente.id_cliente = @idCliente;";
+
+            connect();
+            cmd = new NpgsqlCommand(sqlString, conn);
+            cmd.Parameters.Add("@idCliente", NpgsqlTypes.NpgsqlDbType.Integer);
+            cmd.Parameters["@idCliente"].Value = clienteId;
+
+            dr = cmd.ExecuteReader();
+
+            while (dr.Read())
+            {
+                result = int.Parse(dr[0].ToString());
+            }
+
+            conn.Close();
+
+            return result;
+        }
+
+        public string RutaCliente(int clienteId)
+        {
+            string result = "";
+
+            Settings set = Settings.Default;
+            NpgsqlDataReader dr;
+            NpgsqlCommand cmd;
+
+
+            string sqlString = "SELECT DISTINCT cat_empresa.ruta " +
+                "FROM cat_empresa " +
+                "INNER JOIN cat_cliente ON cat_cliente.id_empresa = cat_empresa.id_empresa " +
+                "WHERE cat_cliente.id_cliente = @idCliente;";
+
+            connect();
+            cmd = new NpgsqlCommand(sqlString, conn);
+            cmd.Parameters.Add("@idCliente", NpgsqlTypes.NpgsqlDbType.Integer);
+            cmd.Parameters["@idCliente"].Value = clienteId;
+
+            dr = cmd.ExecuteReader();
+
+            while (dr.Read())
+            {
+                result = dr[0].ToString();
+            }
+
+            conn.Close();
+
+            return result;
+        }
+
         public List<string> SeriesFromCustomer(string customerCode)
         {
             List<string> result = new List<string>();

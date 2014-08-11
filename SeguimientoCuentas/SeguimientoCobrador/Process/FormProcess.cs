@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using SeguimientoCobrador.Collectable.PostgresImpl;
 using SeguimientoCobrador.Collectable;
 using SeguimientoCobrador.Properties;
+using CommonAdminPaq;
 
 namespace SeguimientoCobrador.Process
 {
@@ -488,14 +489,14 @@ namespace SeguimientoCobrador.Process
                 if (!dlgCollectDate.dateTimePickerCollectDate.Checked)
                 {
                     //18991230
-                    DateTime dt = new DateTime(1899, 12, 30); 
-                    dbAccount.SetCollectDate(account.DocId, dt);
+                    DateTime dt = new DateTime(1899, 12, 30);
                     api.SetCollectDate(account.ApId, dt, account.Company.EnterprisePath);
+                    dbAccount.SetCollectDate(account.DocId, dt);
                 }
                 else 
                 {
-                    dbAccount.SetCollectDate(account.DocId, dlgCollectDate.dateTimePickerCollectDate.Value);
                     api.SetCollectDate(account.ApId, dlgCollectDate.dateTimePickerCollectDate.Value, account.Company.EnterprisePath);
+                    dbAccount.SetCollectDate(account.DocId, dlgCollectDate.dateTimePickerCollectDate.Value);
                 }
             }
 
@@ -518,13 +519,13 @@ namespace SeguimientoCobrador.Process
                 {
                     //18991230
                     DateTime dt = new DateTime(1899, 12, 30);
-                    dbAccount.SetCollectDate(account.DocId, dt);
                     api.SetCollectDate(account.ApId, dt, account.Company.EnterprisePath);
+                    dbAccount.SetCollectDate(account.DocId, dt);
                 }
                 else
                 {
-                    dbAccount.SetCollectDate(account.DocId, dlgCollectDate.dateTimePickerCollectDate.Value);
                     api.SetCollectDate(account.ApId, dlgCollectDate.dateTimePickerCollectDate.Value, account.Company.EnterprisePath);
+                    dbAccount.SetCollectDate(account.DocId, dlgCollectDate.dateTimePickerCollectDate.Value);
                 }
             }
 
@@ -545,8 +546,8 @@ namespace SeguimientoCobrador.Process
 
             foreach (Collectable.Account account in selectedIds)
             {
-                dbAccount.SetObservations(account.DocId, dlgObs.textBoxCollectType.Text, dlgObs.textBoxObservations.Text);
                 api.SetObservations(account.ApId, dlgObs.textBoxCollectType.Text, dlgObs.textBoxObservations.Text, account.Company.EnterprisePath);
+                dbAccount.SetObservations(account.DocId, dlgObs.textBoxCollectType.Text, dlgObs.textBoxObservations.Text);
             }
             MessageBox.Show("Observaciones actualizadas exitosamente en AdminPaq.", "Observaciones actualizadas", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
@@ -563,8 +564,8 @@ namespace SeguimientoCobrador.Process
 
             foreach (Collectable.Account account in selectedIds)
             {
-                dbAccount.SetObservations(account.DocId, dlgObs.textBoxCollectType.Text, dlgObs.textBoxObservations.Text);
                 api.SetObservations(account.ApId, dlgObs.textBoxCollectType.Text, dlgObs.textBoxObservations.Text, account.Company.EnterprisePath);
+                dbAccount.SetObservations(account.DocId, dlgObs.textBoxCollectType.Text, dlgObs.textBoxObservations.Text);
             }
             MessageBox.Show("Observaciones actualizadas exitosamente en AdminPaq.", "Observaciones actualizadas", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
@@ -672,6 +673,7 @@ namespace SeguimientoCobrador.Process
         {
             Settings set = Settings.Default;
             SeguimientoCobrador.Collectable.PostgresImpl.Enterprise dbEnterprise = new SeguimientoCobrador.Collectable.PostgresImpl.Enterprise();
+            SeguimientoCobrador.Collectable.PostgresImpl.Customer dbCustomer = new Customer();
 
             foreach (DataGridViewCell cell in dgv.SelectedCells)
             {
@@ -679,15 +681,26 @@ namespace SeguimientoCobrador.Process
 
                 int selectedId = int.Parse(selectedRow.Cells["ap_id"].Value.ToString());
                 int selectedPgDocId = int.Parse(selectedRow.Cells["id_doco"].Value.ToString());
+                int clientId = int.Parse(selectedRow.Cells["id_empresa"].Value.ToString());
 
                 Collectable.Account pgDoco = new Collectable.Account();
                 pgDoco.ApId = selectedId;
                 pgDoco.DocId = selectedPgDocId;
+                pgDoco.Company.Id = clientId;
+                pgDoco.Company.EnterpriseId = dbCustomer.IdEmpresa(clientId);
+                pgDoco.Company.EnterprisePath = dbCustomer.RutaCliente(clientId);
                 
                 bool cancelled = false;
 
-                api.DownloadCollectable(ref pgDoco, dbEnterprise.ConceptosPago(set.empresa), out cancelled);
-                //Collectable.PostgresImpl.Account dbAccount = new Collectable.PostgresImpl.Account();
+                try
+                {
+                    api.DownloadCollectable(ref pgDoco, dbEnterprise.ConceptosPago(set.empresa), out cancelled);
+                }
+                catch (Exception ex)
+                {
+                    ErrLogger.Log(ex.Message);
+                }
+
                 dbAccount.SaveAccount(pgDoco);
 
                 foreach (Collectable.Payment payment in pgDoco.Payments)

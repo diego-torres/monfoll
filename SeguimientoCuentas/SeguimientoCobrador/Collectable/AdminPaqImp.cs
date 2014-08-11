@@ -46,7 +46,7 @@ namespace SeguimientoCobrador.Collectable
             if (connection == 0)
             {
                 ErrLogger.Log("Unable to open connection to documents table for company [" + rutaEmpresa + "]");
-                return;
+                throw new Exception("No se pudo establecer conexión con adminPaq en la siguiente ruta: " + rutaEmpresa);
             }
 
             key = docId.ToString().PadLeft(11);
@@ -96,7 +96,7 @@ namespace SeguimientoCobrador.Collectable
             if (connection == 0)
             {
                 ErrLogger.Log("Unable to open connection to documents table for company [" + rutaEmpresa + "]");
-                return;
+                throw new Exception("No se pudo establecer conexión con adminPaq en la siguiente ruta: " + rutaEmpresa);
             }
 
             key = docId.ToString().PadLeft(11);
@@ -146,7 +146,7 @@ namespace SeguimientoCobrador.Collectable
             if (connection == 0)
             {
                 ErrLogger.Log("Unable to open connection to documents table for company [" + account.Company.EnterprisePath + "]");
-                return;
+                throw new Exception("No se pudo establecer conexión con adminPaq en la siguiente ruta: " + account.Company.EnterprisePath);
             }
 
             key = account.ApId.ToString().PadLeft(11);
@@ -237,14 +237,14 @@ namespace SeguimientoCobrador.Collectable
             if (configuredCompany == null)
             {
                 ErrLogger.Log("Wrong Company configuration.");
-                return result;
+                throw new Exception("La empresa no ha sido correctamente configurada para realizar esta acción.");
             }
 
             connDocos = AdminPaqLib.dbLogIn("", configuredCompany.Ruta);
             if (connDocos == 0)
             {
                 ErrLogger.Log("Unable to open connection to documents table for company [" + configuredCompany.Nombre + "]");
-                return result;
+                throw new Exception("No se pudo establecer conexión con adminPaq en la siguiente ruta: " + configuredCompany.Ruta);
             }
 
             startDate = fromDate.ToString(IndexNames.DATE_FORMAT_PATTERN);
@@ -252,6 +252,14 @@ namespace SeguimientoCobrador.Collectable
 
             tipo_doc = collectableDocType.ToString().PadLeft(11);
             dbResponse = AdvanceConnectionIndex(tipo_doc, startDate, set.fecha_doco, connDocos);
+
+            if (dbResponse != 0)
+            {
+                AdminPaqLib.dbLogOut(connDocos);
+                throw new Exception("No se pudo establecer conexión con adminPaq en la siguiente ruta: " + configuredCompany.Ruta +
+                    " \n Se recibió el siguiente código: " + dbResponse + " \n al intentar obtener datos con la fecha: " + startDate);
+            }
+                
 
             while (dbResponse == 0)
             {
@@ -398,6 +406,7 @@ namespace SeguimientoCobrador.Collectable
 
         public void DownloadCollectable(ref Account source, string[] conceptosAbono, out bool isCancelled)
         {
+            isCancelled = false;
             int connection, dbResponse, fieldResponse;
             string key;
 
@@ -412,7 +421,7 @@ namespace SeguimientoCobrador.Collectable
             StringBuilder sbObservations = new StringBuilder(51);
             string sFechaDoco, sFechaCobro, sFechaVenc, sSerieDoc, sTipoCobro, sObservations, sCompanyName;
 
-            Empresa configuredCompany = ConfiguredCompany();
+            Company configuredCompany = source.Company;
 
             Dictionary<int, Company> companies = new Dictionary<int, Company>();
 
@@ -422,22 +431,30 @@ namespace SeguimientoCobrador.Collectable
                 throw new Exception("Error en la configuración de empresa.");
             }
 
-            connection = AdminPaqLib.dbLogIn("", configuredCompany.Ruta);
+            connection = AdminPaqLib.dbLogIn("", configuredCompany.EnterprisePath);
             if (connection == 0)
             {
-                ErrLogger.Log("Unable to open connection to documents table for company [" + configuredCompany.Nombre + "]");
-                throw new Exception("No fue posible establecer la conexión con la base de datos de la empresa.");
+                ErrLogger.Log("Unable to open connection to documents table for company [" + configuredCompany.EnterprisePath + "]");
+                throw new Exception("No fue posible establecer la conexión con la base de datos de la empresa en la ruta: " + configuredCompany.EnterprisePath);
             }
 
             key = source.ApId.ToString().PadLeft(11);
             dbResponse = AdminPaqLib.dbGet(connection, TableNames.DOCUMENTOS, IndexNames.PRIMARY_KEY, key);
+
+            if (dbResponse != 0) 
+            {
+                AdminPaqLib.dbLogOut(connection);
+                throw new Exception("No se pudo establecer conexión con adminPaq en la siguiente ruta: " + configuredCompany.EnterprisePath +
+                        " \n Se recibió el siguiente código: " + dbResponse + " \n al intentar obtener datos con la llave: " + key);
+
+            }
+                
 
             if (dbResponse == 0)
             {
                 // Obtener datos de la cuenta
                 fieldResponse = AdminPaqLib.dbFieldLong(connection, TableNames.DOCUMENTOS, 26, ref cancelled);
                 isCancelled = cancelled != 0;
-
 
                 fieldResponse = AdminPaqLib.dbFieldDouble(connection, TableNames.DOCUMENTOS, 44, ref saldoPendiente);
 
@@ -453,6 +470,7 @@ namespace SeguimientoCobrador.Collectable
                     source.CollectDate = DateTime.ParseExact(sFechaCobro, IndexNames.DATE_FORMAT_PATTERN, CultureInfo.InvariantCulture);
 
                 source.Balance = saldoPendiente;
+                if (saldoPendiente == 0) isCancelled = true;
 
                 fieldResponse = AdminPaqLib.dbFieldChar(connection, TableNames.DOCUMENTOS, 11, sbFechaVenc, 9);
                 sFechaVenc = sbFechaVenc.ToString().Substring(0, 8).Trim();
@@ -477,26 +495,21 @@ namespace SeguimientoCobrador.Collectable
                 source.Note = sObservations;
 
                 fieldResponse = AdminPaqLib.dbFieldLong(connection, TableNames.DOCUMENTOS, 15, ref currencyId);
-                source.Currency = CurrencyName(currencyId, configuredCompany.Ruta);
+                source.Currency = CurrencyName(currencyId, configuredCompany.EnterprisePath);
 
 
                 fieldResponse = AdminPaqLib.dbFieldLong(connection, TableNames.DOCUMENTOS, 7, ref companyId);
                 fieldResponse = AdminPaqLib.dbFieldChar(connection, TableNames.DOCUMENTOS, 8, sbCompanyName, 61);
                 sCompanyName = sbCompanyName.ToString().Substring(0,60).Trim();
 
-                source.Company = new Company();
+                //source.Company = new Company();
                 source.Company.ApId = companyId;
                 source.Company.Name = sCompanyName;
-                source.Company.EnterpriseId = configuredCompany.Id;
-                source.Company.EnterprisePath = configuredCompany.Ruta;
-                
-                FillCompany(source.Company, configuredCompany.Ruta);
-                FillPayments(source, configuredCompany.Ruta, conceptosAbono);
-            }
-            else
-            {
-                AdminPaqLib.dbLogOut(connection);
-                throw new Exception("El registro del documento se encuentra bloqueado por otro usuario.");
+                /*source.Company.EnterpriseId = configuredCompany.Id;
+                source.Company.EnterprisePath = configuredCompany.EnterprisePath;
+
+                FillCompany(source.Company, configuredCompany.EnterprisePath);*/
+                FillPayments(source, configuredCompany.EnterprisePath, conceptosAbono);
             }
 
             AdminPaqLib.dbLogOut(connection);

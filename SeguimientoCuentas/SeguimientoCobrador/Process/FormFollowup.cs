@@ -430,7 +430,7 @@ namespace SeguimientoCobrador.Process
             bool cancelled = false;
             try
             {
-                api.DownloadCollectable(ref account, dbEnterprise.ConceptosPago(set.empresa), out cancelled);
+                api.DownloadCollectable(ref account, dbEnterprise.ConceptosPago(account.Company.EnterpriseId), out cancelled);
                 Collectable.PostgresImpl.Account dbAccount = new Collectable.PostgresImpl.Account();
                 dbAccount.SaveAccount(account);
 
