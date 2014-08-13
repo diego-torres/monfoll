@@ -351,8 +351,12 @@ namespace SeguimientoGerente.Process
         {
             dataGridViewFollowUp.DataSource = postgresAcct.FollowUp(account.DocId);
 
+            if (dataGridViewFollowUp.DataSource == null || dataGridViewFollowUp.Columns.Count <= 0) return;
+
             dataGridViewFollowUp.Sort(dataGridViewFollowUp.Columns[0], ListSortDirection.Descending);
             FixFollowUpColumns();
+
+            if (dataGridViewFollowUp.Rows.Count <= 0) return;
             LoadFollowUp(dataGridViewFollowUp.Rows[0]);
         }
 

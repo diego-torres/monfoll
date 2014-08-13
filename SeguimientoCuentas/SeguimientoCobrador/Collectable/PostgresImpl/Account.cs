@@ -476,6 +476,9 @@ namespace SeguimientoCobrador.Collectable.PostgresImpl
             ds.Reset();
             da.Fill(ds);
             conn.Close();
+
+            if (ds.Tables.Count == 0) return null;
+
             return ds.Tables[0];
         }
 
