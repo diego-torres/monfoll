@@ -79,12 +79,6 @@
     <Compile Include="Config\FormConfig.Designer.cs">
       <DependentUpon>FormConfig.cs</DependentUpon>
     </Compile>
-    <Compile Include="Config\FormDownload.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Config\FormDownload.Designer.cs">
-      <DependentUpon>FormDownload.cs</DependentUpon>
-    </Compile>
     <Compile Include="FormMain.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -156,9 +150,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Config\FormConfig.resx">
       <DependentUpon>FormConfig.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Config\FormDownload.resx">
-      <DependentUpon>FormDownload.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormMain.resx">
       <DependentUpon>FormMain.cs</DependentUpon>

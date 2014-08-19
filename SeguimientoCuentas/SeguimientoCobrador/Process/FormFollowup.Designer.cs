@@ -32,7 +32,6 @@
             this.splitContainerMain = new System.Windows.Forms.SplitContainer();
             this.toolStripMainMenu = new System.Windows.Forms.ToolStrip();
             this.toolStripButtonSave = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonDownload = new System.Windows.Forms.ToolStripButton();
             this.label1 = new System.Windows.Forms.Label();
             this.labelDueDays = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
@@ -136,8 +135,7 @@
             // toolStripMainMenu
             // 
             this.toolStripMainMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripButtonSave,
-            this.toolStripButtonDownload});
+            this.toolStripButtonSave});
             this.toolStripMainMenu.Location = new System.Drawing.Point(0, 0);
             this.toolStripMainMenu.Name = "toolStripMainMenu";
             this.toolStripMainMenu.Size = new System.Drawing.Size(1255, 25);
@@ -153,16 +151,6 @@
             this.toolStripButtonSave.Size = new System.Drawing.Size(23, 22);
             this.toolStripButtonSave.Text = "Grabar Documento";
             this.toolStripButtonSave.Click += new System.EventHandler(this.toolStripButtonSave_Click);
-            // 
-            // toolStripButtonDownload
-            // 
-            this.toolStripButtonDownload.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonDownload.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonDownload.Image")));
-            this.toolStripButtonDownload.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonDownload.Name = "toolStripButtonDownload";
-            this.toolStripButtonDownload.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonDownload.Text = "Actualizar desde AdminPaq";
-            this.toolStripButtonDownload.Click += new System.EventHandler(this.toolStripButtonDownload_Click);
             // 
             // label1
             // 
@@ -855,6 +843,5 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ToolStrip toolStripMainMenu;
         private System.Windows.Forms.ToolStripButton toolStripButtonSave;
-        private System.Windows.Forms.ToolStripButton toolStripButtonDownload;
     }
 }

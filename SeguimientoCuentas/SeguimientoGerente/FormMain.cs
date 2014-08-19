@@ -29,7 +29,6 @@ namespace SeguimientoGerente
 
         private FormConfig fConfig;
         private AboutBox about;
-        private FormDownload fDownload;
         private Dictionary<int, FormFollowup> followups = new Dictionary<int, FormFollowup>();
         List<Collectable.Account> adminPaqAccounts = new List<Collectable.Account>();
 
@@ -91,22 +90,6 @@ namespace SeguimientoGerente
             currentFollowing.Focus();
         }
 
-        public void ShowDownload()
-        {
-            if (fDownload == null || fDownload.IsDisposed)
-            {
-                fDownload = new FormDownload();
-                fDownload.MdiParent = this;
-            }
-            fDownload.Show();
-        }
-
-        internal void CloseDownload()
-        {
-            fDownload.WindowState = FormWindowState.Normal;
-            fDownload.Close();
-        }
-
         private void FormMain_Load(object sender, EventArgs e)
         {
             api = new AdminPaqImp();
@@ -121,6 +104,15 @@ namespace SeguimientoGerente
                         DtCustomer = CustomerInterface.ReadCustomers();
                         DtSeries = AccountInterface.ReadSeries();
                         DtFolios = AccountInterface.ReadFolios();
+
+                        Settings set = Settings.Default;
+                        if (set.empresa == 1)
+                        {
+                            MessageBox.Show("Por favor seleccione la empresa en la cual desea trabajar.");
+                            OpenConfig();
+                            return;
+                        }
+
                     }
                     else
                     {
@@ -186,12 +178,6 @@ namespace SeguimientoGerente
             OpenConfig();
         }
 
-        private void descargarToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            ShowDownload();
-            backgroundWorkerDownloadAdminPaq.RunWorkerAsync();
-        }
-
         private void processToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (!IsProcessOpen)
@@ -221,35 +207,6 @@ namespace SeguimientoGerente
             }
             fProcess.Show();
             fProcess.SearchData(search.comboBoxClient.Text, search.comboBoxSerie.Text, search.comboBoxFolios.Text);
-        }
-
-        private void backgroundWorkerDownloadAdminPaq_DoWork(object sender, DoWorkEventArgs e)
-        {
-            List<Collectable.Account> adminPaqAccounts = api.DownloadCollectables();
-            AccountInterface.UploadAccounts(adminPaqAccounts, api.Cancelados, api.Saldados, api.Conceptos);
-            AccountInterface.SetCollectDate(api);
-
-            DtCustomer = CustomerInterface.ReadCustomers();
-            DtSeries = AccountInterface.ReadSeries();
-            DtFolios = AccountInterface.ReadFolios();
-        }
-
-        private void backgroundWorkerDownloadAdminPaq_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            if (e.Error != null)
-            {
-                ErrLogger.Log("Unable to download data from AdminPaq: \n" +
-                    e.Error.StackTrace);
-                MessageBox.Show("Se ha detectado un error al intentar descargar las cuentas de AdminPaq:\n"
-                    + e.Error.Message + "\n"
-                    + e.Error.StackTrace,
-                    "Error al descargar de AdminPaq",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
-            }
-
-            if(!fDownload.IsDisposed)
-                CloseDownload();
         }
 
         private void actualizarTodoToolStripMenuItem_Click(object sender, EventArgs e)

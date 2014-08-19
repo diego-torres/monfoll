@@ -34,8 +34,6 @@
             this.processToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.buscarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.actualizarTodoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.descargarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemConfig = new System.Windows.Forms.ToolStripMenuItem();
             this.configuracionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
@@ -43,7 +41,6 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.mainStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.mainProgressBar = new System.Windows.Forms.ToolStripProgressBar();
-            this.backgroundWorkerDownloadAdminPaq = new System.ComponentModel.BackgroundWorker();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -64,9 +61,7 @@
             this.cuentasToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.processToolStripMenuItem,
             this.buscarToolStripMenuItem,
-            this.actualizarTodoToolStripMenuItem,
-            this.toolStripSeparator1,
-            this.descargarToolStripMenuItem});
+            this.actualizarTodoToolStripMenuItem});
             this.cuentasToolStripMenuItem.Name = "cuentasToolStripMenuItem";
             this.cuentasToolStripMenuItem.Size = new System.Drawing.Size(59, 20);
             this.cuentasToolStripMenuItem.Text = "C&uentas";
@@ -93,18 +88,6 @@
             this.actualizarTodoToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
             this.actualizarTodoToolStripMenuItem.Text = "&Actualizar Todo";
             this.actualizarTodoToolStripMenuItem.Click += new System.EventHandler(this.actualizarTodoToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(175, 6);
-            // 
-            // descargarToolStripMenuItem
-            // 
-            this.descargarToolStripMenuItem.Name = "descargarToolStripMenuItem";
-            this.descargarToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
-            this.descargarToolStripMenuItem.Text = "&Descargar";
-            this.descargarToolStripMenuItem.Click += new System.EventHandler(this.descargarToolStripMenuItem_Click);
             // 
             // toolStripMenuItemConfig
             // 
@@ -150,18 +133,13 @@
             // 
             this.mainStatus.Name = "mainStatus";
             this.mainStatus.Size = new System.Drawing.Size(311, 17);
-            this.mainStatus.Text = "Seguimiento a cuentas por cobrar - módulo de cobrador V 3.4.2";
+            this.mainStatus.Text = "Seguimiento a cuentas por cobrar - módulo de cobrador V 4.0.0";
             // 
             // mainProgressBar
             // 
             this.mainProgressBar.Name = "mainProgressBar";
             this.mainProgressBar.Size = new System.Drawing.Size(100, 16);
             this.mainProgressBar.Visible = false;
-            // 
-            // backgroundWorkerDownloadAdminPaq
-            // 
-            this.backgroundWorkerDownloadAdminPaq.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorkerDownloadAdminPaq_DoWork);
-            this.backgroundWorkerDownloadAdminPaq.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorkerDownloadAdminPaq_RunWorkerCompleted);
             // 
             // FormMain
             // 
@@ -195,7 +173,6 @@
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem cuentasToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem processToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem descargarToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemConfig;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem acercaDeToolStripMenuItem;
@@ -204,8 +181,6 @@
         private System.Windows.Forms.ToolStripMenuItem configuracionToolStripMenuItem;
         private System.Windows.Forms.ToolStripStatusLabel mainStatus;
         private System.Windows.Forms.ToolStripMenuItem buscarToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.ComponentModel.BackgroundWorker backgroundWorkerDownloadAdminPaq;
         private System.Windows.Forms.ToolStripMenuItem actualizarTodoToolStripMenuItem;
     }
 }

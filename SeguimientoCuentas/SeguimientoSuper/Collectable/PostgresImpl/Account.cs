@@ -121,7 +121,9 @@ namespace SeguimientoSuper.Collectable.PostgresImpl
                 "FROM ctrl_cuenta " +
                 "INNER JOIN cat_cliente ON ctrl_cuenta.id_cliente = cat_cliente.id_cliente " +
                 "INNER JOIN cat_empresa ON cat_cliente.id_empresa = cat_empresa.id_empresa " +
-                "WHERE ctrl_cuenta.id_doco IN(SELECT id_doco FROM ctrl_seguimiento WHERE id_movimiento=7);";
+                "WHERE ctrl_cuenta.id_doco IN(SELECT id_doco FROM ctrl_seguimiento WHERE id_movimiento=7) " +
+                "AND ctrl_cuenta.enterprise_id = " + ConfiguredCompany() + " " +
+                "ORDER BY f_documento desc, folio_doco;";
 
             if (conn == null || conn.State != ConnectionState.Open)
                 connect();
@@ -161,7 +163,9 @@ namespace SeguimientoSuper.Collectable.PostgresImpl
                 "INNER JOIN cat_cliente ON ctrl_cuenta.id_cliente = cat_cliente.id_cliente " +
                 "INNER JOIN cat_empresa ON cat_cliente.id_empresa = cat_empresa.id_empresa " +
                 "WHERE ctrl_cuenta.id_doco IN(SELECT id_doco FROM ctrl_seguimiento WHERE id_movimiento=6) " +
-                "AND ctrl_cuenta.id_doco NOT IN (SELECT id_doco FROM ctrl_seguimiento WHERE id_movimiento=7);";
+                "AND ctrl_cuenta.id_doco NOT IN (SELECT id_doco FROM ctrl_seguimiento WHERE id_movimiento=7) " +
+                "AND ctrl_cuenta.enterprise_id = " + ConfiguredCompany() + " " +
+                "ORDER BY f_documento desc, folio_doco;";
 
             if (conn == null || conn.State != ConnectionState.Open)
                 connect();
@@ -200,7 +204,9 @@ namespace SeguimientoSuper.Collectable.PostgresImpl
                 "INNER JOIN cat_cliente ON ctrl_cuenta.id_cliente = cat_cliente.id_cliente " +
                 "INNER JOIN cat_empresa ON cat_cliente.id_empresa = cat_empresa.id_empresa " +
                 "WHERE ctrl_cuenta.id_doco IN(SELECT id_doco FROM ctrl_seguimiento WHERE id_movimiento=4) " +
-                "AND ctrl_cuenta.id_doco NOT IN (SELECT id_doco FROM ctrl_seguimiento WHERE id_movimiento IN(6,7));";
+                "AND ctrl_cuenta.id_doco NOT IN (SELECT id_doco FROM ctrl_seguimiento WHERE id_movimiento IN(6,7)) " +
+                "AND ctrl_cuenta.enterprise_id = " + ConfiguredCompany() + " " +
+                "ORDER BY f_documento desc, folio_doco;";
 
             if (conn == null || conn.State != ConnectionState.Open)
                 connect();
@@ -238,7 +244,9 @@ namespace SeguimientoSuper.Collectable.PostgresImpl
                 "FROM ctrl_cuenta " +
                 "INNER JOIN cat_cliente ON ctrl_cuenta.id_cliente = cat_cliente.id_cliente " +
                 "INNER JOIN cat_empresa ON cat_cliente.id_empresa = cat_empresa.id_empresa " +
-                "WHERE ctrl_cuenta.lista_negra = true AND ctrl_cuenta.id_doco NOT IN(SELECT id_doco FROM ctrl_seguimiento WHERE id_movimiento IN(4,6,7));";
+                "WHERE ctrl_cuenta.lista_negra = true AND ctrl_cuenta.id_doco NOT IN(SELECT id_doco FROM ctrl_seguimiento WHERE id_movimiento IN(4,6,7)) " +
+                "AND ctrl_cuenta.enterprise_id = " + ConfiguredCompany() + " " +
+                "ORDER BY f_documento desc, folio_doco;";
 
             if (conn == null || conn.State != ConnectionState.Open)
                 connect();
@@ -276,7 +284,9 @@ namespace SeguimientoSuper.Collectable.PostgresImpl
                 "FROM ctrl_cuenta " +
                 "INNER JOIN cat_cliente ON ctrl_cuenta.id_cliente = cat_cliente.id_cliente " +
                 "INNER JOIN cat_empresa ON cat_cliente.id_empresa = cat_empresa.id_empresa " +
-                "WHERE ctrl_cuenta.lista_negra = false AND ctrl_cuenta.id_doco NOT IN(SELECT id_doco FROM ctrl_seguimiento WHERE id_movimiento IN(4,6,7));";
+                "WHERE ctrl_cuenta.lista_negra = false AND ctrl_cuenta.id_doco NOT IN(SELECT id_doco FROM ctrl_seguimiento WHERE id_movimiento IN(4,6,7)) " +
+                "AND ctrl_cuenta.enterprise_id = " + ConfiguredCompany() + " " +
+                "ORDER BY f_documento desc, folio_doco;";
 
             if (conn == null || conn.State != ConnectionState.Open)
                 connect();
@@ -298,7 +308,6 @@ namespace SeguimientoSuper.Collectable.PostgresImpl
 
             return ds.Tables[0];
         }
-
         public void SetObservations(int docId, string collectType, string observations)
         {
             if (conn == null || conn.State != ConnectionState.Open)

@@ -63,71 +63,12 @@ namespace SeguimientoSuper.Config
             adminPaqConfigDirty = true;
         }
 
-        private void buttonAddFactura_Click(object sender, EventArgs e)
-        {
-            if (textBoxConceptoFactura.Text.Trim().Length == 0) return;
-
-            listBoxConceptosFactura.Items.Add(textBoxConceptoFactura.Text);
-            adminPaqConfigDirty = true;
-        }
-
-        private void buttonRemoveFactura_Click(object sender, EventArgs e)
-        {
-            if (listBoxConceptosFactura.SelectedItems.Count == 0) return;
-
-            for (int i = listBoxConceptosFactura.SelectedIndices.Count - 1; i >= 0; i--)
-            {
-                listBoxConceptosFactura.Items.RemoveAt(listBoxConceptosFactura.SelectedIndices[i]);
-            }
-
-            adminPaqConfigDirty = true;
-        }
-
-        private void buttonAddAbono_Click(object sender, EventArgs e)
-        {
-            if (textBoxConceptoAbono.Text.Trim().Length == 0) return;
-
-            listBoxConceptosAbono.Items.Add(textBoxConceptoAbono.Text);
-            adminPaqConfigDirty = true;
-        }
-
-        private void buttonRemoveAbono_Click(object sender, EventArgs e)
-        {
-            if (listBoxConceptosAbono.SelectedItems.Count == 0) return;
-
-            for (int i = listBoxConceptosAbono.SelectedIndices.Count - 1; i >= 0; i--)
-            {
-                listBoxConceptosAbono.Items.RemoveAt(listBoxConceptosAbono.SelectedIndices[i]);
-            }
-
-            adminPaqConfigDirty = true;
-        }
-
         private void FormConfig_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (!ConfirmNSaveAdminPaqConfig())
             {
                 e.Cancel = true;
             }
-        }
-
-        private void toolStripButtonDownload_Click(object sender, EventArgs e)
-        {
-            if (!ConfirmNSaveAdminPaqConfig())
-            {
-                MessageBox.Show("Operación de descarga cancelada por el usuario", "Descarga cancelada", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
-
-            adminPaqConfigDirty = false;
-            dbConfigDirty = false;
-            FormMain parent = (FormMain)MdiParent;
-            parent.ShowDownload();
-
-            List<Collectable.Account> adminPaqAccounts = api.DownloadCollectables();
-            AccountInterface.UploadAccounts(adminPaqAccounts, api.Cancelados, api.Saldados, api.Conceptos);
-            parent.CloseDownload();
-            this.Close();
         }
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
@@ -258,27 +199,6 @@ namespace SeguimientoSuper.Config
             Settings set = Settings.Default;
 
             set.empresa = int.Parse(comboBoxEmpresas.SelectedValue.ToString());
-            set.fecha_inicio = dateTimePickerFrom.Value;
-            set.fecha_fin = dateTimePickerTo.Value;
-            set.fecha_doco = radioButtonUseDocDate.Checked;
-            set.con_saldo = radioButtonWithAmount.Checked;
-
-            string facturas = "";
-            foreach (var listboxItem in listBoxConceptosFactura.Items)
-            {
-                facturas = facturas + listboxItem + ",";
-            }
-
-            facturas = facturas.Substring(0, facturas.Length - 1);
-            set.facturas = facturas;
-
-            string abonos = "";
-            foreach (var listboxItem in listBoxConceptosAbono.Items)
-            {
-                abonos = abonos + listboxItem.ToString() + ",";
-            }
-            abonos = abonos.Substring(0, abonos.Length - 1);
-            set.abonos = abonos;
             set.Save();
 
             adminPaqConfigDirty = false;
@@ -306,30 +226,7 @@ namespace SeguimientoSuper.Config
             }
 
             AsignarRutaEmpresa(set.empresa);
-            dateTimePickerFrom.Value = set.fecha_inicio;
-            dateTimePickerTo.Value = set.fecha_fin;
-
-            radioButtonUseDocDate.Checked = set.fecha_doco;
-            radioButtonUseCollectDate.Checked = !set.fecha_doco;
-
-            radioButtonWithAmount.Checked = set.con_saldo;
-            radioButtonAllDocuments.Checked = !set.con_saldo;
-
-            string[] facturas = set.facturas.Split(',');
-            string[] abonos = set.abonos.Split(',');
-
-            listBoxConceptosFactura.Items.Clear();
-            foreach (string codigoFactura in facturas)
-            {
-                listBoxConceptosFactura.Items.Add(codigoFactura);
-            }
-
-            listBoxConceptosAbono.Items.Clear();
-            foreach (string codigoAbono in abonos)
-            {
-                listBoxConceptosAbono.Items.Add(codigoAbono);
-            }
-
+            
             textBoxServer.Text = set.server;
             textBoxPort.Text = set.port;
             textBoxDB.Text = set.database;
