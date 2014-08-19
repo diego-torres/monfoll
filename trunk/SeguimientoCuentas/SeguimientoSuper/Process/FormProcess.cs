@@ -551,6 +551,7 @@ namespace SeguimientoSuper.Process
             string prevFilter = dtBlackList.DefaultView.RowFilter;
             dtBlackList = dbAccount.BlackListed();
             dtBlackList.DefaultView.RowFilter = prevFilter;
+            dtBlackList.DefaultView.Sort = "f_documento desc, folio_doco asc";
             dataGridViewBlackList.DataSource = dtBlackList;
 
             FormatAccountsGridView(dataGridViewBlackList);
@@ -561,6 +562,7 @@ namespace SeguimientoSuper.Process
             string prevFilter = dtMaster.DefaultView.RowFilter;
             dtMaster = dbAccount.MasterTable();
             dtMaster.DefaultView.RowFilter = prevFilter;
+            dtMaster.DefaultView.Sort = "f_documento desc, folio_doco asc";
             dataGridViewMaster.DataSource = dtMaster;
 
             FormatAccountsGridView(dataGridViewMaster);
@@ -571,6 +573,7 @@ namespace SeguimientoSuper.Process
             string prevFilter = dtAttended.DefaultView.RowFilter;
             dtAttended = dbAccount.Attended();
             dtAttended.DefaultView.RowFilter = prevFilter;
+            dtAttended.DefaultView.Sort = "f_documento desc, folio_doco asc";
             dataGridViewAttended.DataSource = dtAttended;
 
             FormatAccountsGridView(dataGridViewAttended);
@@ -581,6 +584,7 @@ namespace SeguimientoSuper.Process
             string prevFilter = dtEscalated.DefaultView.RowFilter;
             dtEscalated = dbAccount.Escalated();
             dtEscalated.DefaultView.RowFilter = prevFilter;
+            dtEscalated.DefaultView.Sort = "f_documento desc, folio_doco asc";
             dataGridViewEscalated.DataSource = dtEscalated;
 
             FormatAccountsGridView(dataGridViewEscalated);
@@ -591,6 +595,7 @@ namespace SeguimientoSuper.Process
             string prevFilter = dtUncollectable.DefaultView.RowFilter;
             dtUncollectable = dbAccount.Uncollectable();
             dtUncollectable.DefaultView.RowFilter = prevFilter;
+            dtUncollectable.DefaultView.Sort = "f_documento desc, folio_doco asc";
             dataGridViewUncollectable.DataSource = dtUncollectable;
 
             FormatAccountsGridView(dataGridViewUncollectable);
@@ -1229,91 +1234,6 @@ namespace SeguimientoSuper.Process
         private void toolStripButtonAddFollowUpUncollectable_Click(object sender, EventArgs e)
         {
             SetGroupFollowUp(dataGridViewUncollectable);
-        }
-        #endregion
-
-        #region ADMIN_PAQ_DOWNLOADERS
-        private void UpdateFromAdminPaq(DataGridView dgv)
-        {
-            Settings set = Settings.Default;
-            SeguimientoSuper.Collectable.PostgresImpl.Enterprise dbEnterprise = new SeguimientoSuper.Collectable.PostgresImpl.Enterprise();
-            SeguimientoSuper.Collectable.PostgresImpl.Customer dbCustomer = new Customer();
-
-            foreach (DataGridViewCell cell in dgv.SelectedCells)
-            {
-                DataGridViewRow selectedRow = dgv.Rows[cell.RowIndex];
-
-                int selectedId = int.Parse(selectedRow.Cells["ap_id"].Value.ToString());
-                int selectedPgDocId = int.Parse(selectedRow.Cells["id_doco"].Value.ToString());
-                int clientId = int.Parse(selectedRow.Cells["id_empresa"].Value.ToString());
-
-                Collectable.Account pgDoco = new Collectable.Account();
-                pgDoco.ApId = selectedId;
-                pgDoco.DocId = selectedPgDocId;
-                pgDoco.Company.Id = clientId;
-                pgDoco.Company.EnterpriseId = dbCustomer.IdEmpresa(clientId);
-                pgDoco.Company.EnterprisePath = dbCustomer.RutaCliente(clientId);
-                
-                bool cancelled = false;
-
-                try
-                {
-                    api.DownloadCollectable(ref pgDoco, dbEnterprise.ConceptosPago(set.empresa), out cancelled);
-                }
-                catch (Exception ex)
-                {
-                    ErrLogger.Log(ex.Message);
-                }
-
-                dbAccount.SaveAccount(pgDoco);
-
-                foreach (Collectable.Payment payment in pgDoco.Payments)
-                {
-                    payment.DocId = pgDoco.DocId;
-                    dbAccount.SavePayment(payment);
-                }
-
-                if (cancelled) 
-                    dbAccount.CancelAccount(pgDoco.DocId);
-            }
-        }
-
-        private void toolStripButtonAdminPaqDownloadBlackList_Click(object sender, EventArgs e)
-        {
-            UpdateFromAdminPaq(dataGridViewBlackList);
-            RefreshBlackList();
-            MessageBox.Show("Datos extraidos de adminPaq existosamente.", "Actualizado", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-
-        private void toolStripButtonAdminPaqDownloadMaster_Click(object sender, EventArgs e)
-        {
-            UpdateFromAdminPaq(dataGridViewMaster);
-            List<Collectable.Account> adminPaqAccounts = api.DownloadCollectables(DateTime.Today, DateTime.Today);
-            dbAccount.UploadAccounts(adminPaqAccounts, api.Cancelados, api.Saldados, api.Conceptos);
-            dbAccount.SetCollectDate(api);
-            RefreshMaster();
-            MessageBox.Show("Datos extraidos de adminPaq existosamente.", "Actualizado", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-
-        private void toolStripButtonAdminPaqDownloadAttended_Click(object sender, EventArgs e)
-        {
-            UpdateFromAdminPaq(dataGridViewAttended);
-            RefreshAttended();
-            MessageBox.Show("Datos extraidos de adminPaq existosamente.", "Actualizado", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-
-        private void toolStripButtonDownloadEscalated_Click(object sender, EventArgs e)
-        {
-            UpdateFromAdminPaq(dataGridViewEscalated);
-            RefreshEscalated();
-            MessageBox.Show("Datos extraidos de adminPaq existosamente.", "Actualizado", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-
-        private void toolStripButtonDownloadUncollectable_Click(object sender, EventArgs e)
-        {
-            UpdateFromAdminPaq(dataGridViewUncollectable);
-            RefreshUncollectable();
-            MessageBox.Show("Datos extraidos de adminPaq existosamente.", "Actualizado", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
         #endregion
 

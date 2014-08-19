@@ -47,27 +47,6 @@
             this.toolStripButtonCheckDB = new System.Windows.Forms.ToolStripButton();
             this.label7 = new System.Windows.Forms.Label();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.buttonRemoveAbono = new System.Windows.Forms.Button();
-            this.listBoxConceptosAbono = new System.Windows.Forms.ListBox();
-            this.buttonRemoveFactura = new System.Windows.Forms.Button();
-            this.buttonAddAbono = new System.Windows.Forms.Button();
-            this.textBoxConceptoAbono = new System.Windows.Forms.TextBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.buttonAddFactura = new System.Windows.Forms.Button();
-            this.textBoxConceptoFactura = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.listBoxConceptosFactura = new System.Windows.Forms.ListBox();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.radioButtonAllDocuments = new System.Windows.Forms.RadioButton();
-            this.radioButtonWithAmount = new System.Windows.Forms.RadioButton();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.radioButtonUseDocDate = new System.Windows.Forms.RadioButton();
-            this.radioButtonUseCollectDate = new System.Windows.Forms.RadioButton();
-            this.dateTimePickerTo = new System.Windows.Forms.DateTimePicker();
-            this.dateTimePickerFrom = new System.Windows.Forms.DateTimePicker();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripButtonSave = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonUndo = new System.Windows.Forms.ToolStripButton();
@@ -81,9 +60,6 @@
             this.tabPage2.SuspendLayout();
             this.toolStrip2.SuspendLayout();
             this.tabPage1.SuspendLayout();
-            this.groupBox4.SuspendLayout();
-            this.groupBox3.SuspendLayout();
-            this.groupBox2.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSourceEmpresas)).BeginInit();
@@ -98,7 +74,7 @@
             this.tabControl1.Margin = new System.Windows.Forms.Padding(4);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(683, 435);
+            this.tabControl1.Size = new System.Drawing.Size(683, 261);
             this.tabControl1.TabIndex = 0;
             this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
             // 
@@ -119,7 +95,7 @@
             this.tabPage2.Margin = new System.Windows.Forms.Padding(4);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(4);
-            this.tabPage2.Size = new System.Drawing.Size(675, 406);
+            this.tabPage2.Size = new System.Drawing.Size(675, 232);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Base de Datos";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -254,9 +230,6 @@
             // 
             // tabPage1
             // 
-            this.tabPage1.Controls.Add(this.groupBox4);
-            this.tabPage1.Controls.Add(this.groupBox3);
-            this.tabPage1.Controls.Add(this.groupBox2);
             this.tabPage1.Controls.Add(this.toolStrip1);
             this.tabPage1.Controls.Add(this.groupBox1);
             this.tabPage1.Location = new System.Drawing.Point(4, 25);
@@ -267,233 +240,6 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "AdminPaq";
             this.tabPage1.UseVisualStyleBackColor = true;
-            // 
-            // groupBox4
-            // 
-            this.groupBox4.Controls.Add(this.buttonRemoveAbono);
-            this.groupBox4.Controls.Add(this.listBoxConceptosAbono);
-            this.groupBox4.Controls.Add(this.buttonRemoveFactura);
-            this.groupBox4.Controls.Add(this.buttonAddAbono);
-            this.groupBox4.Controls.Add(this.textBoxConceptoAbono);
-            this.groupBox4.Controls.Add(this.label6);
-            this.groupBox4.Controls.Add(this.buttonAddFactura);
-            this.groupBox4.Controls.Add(this.textBoxConceptoFactura);
-            this.groupBox4.Controls.Add(this.label5);
-            this.groupBox4.Controls.Add(this.listBoxConceptosFactura);
-            this.groupBox4.Location = new System.Drawing.Point(336, 152);
-            this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(311, 229);
-            this.groupBox4.TabIndex = 4;
-            this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "Conceptos";
-            // 
-            // buttonRemoveAbono
-            // 
-            this.buttonRemoveAbono.Location = new System.Drawing.Point(115, 180);
-            this.buttonRemoveAbono.Name = "buttonRemoveAbono";
-            this.buttonRemoveAbono.Size = new System.Drawing.Size(60, 23);
-            this.buttonRemoveAbono.TabIndex = 8;
-            this.buttonRemoveAbono.Text = "<<";
-            this.buttonRemoveAbono.UseVisualStyleBackColor = true;
-            this.buttonRemoveAbono.Click += new System.EventHandler(this.buttonRemoveAbono_Click);
-            // 
-            // listBoxConceptosAbono
-            // 
-            this.listBoxConceptosAbono.FormattingEnabled = true;
-            this.listBoxConceptosAbono.ItemHeight = 16;
-            this.listBoxConceptosAbono.Location = new System.Drawing.Point(181, 131);
-            this.listBoxConceptosAbono.Name = "listBoxConceptosAbono";
-            this.listBoxConceptosAbono.Size = new System.Drawing.Size(120, 84);
-            this.listBoxConceptosAbono.TabIndex = 9;
-            // 
-            // buttonRemoveFactura
-            // 
-            this.buttonRemoveFactura.Location = new System.Drawing.Point(115, 79);
-            this.buttonRemoveFactura.Name = "buttonRemoveFactura";
-            this.buttonRemoveFactura.Size = new System.Drawing.Size(60, 23);
-            this.buttonRemoveFactura.TabIndex = 3;
-            this.buttonRemoveFactura.Text = "<<";
-            this.buttonRemoveFactura.UseVisualStyleBackColor = true;
-            this.buttonRemoveFactura.Click += new System.EventHandler(this.buttonRemoveFactura_Click);
-            // 
-            // buttonAddAbono
-            // 
-            this.buttonAddAbono.Location = new System.Drawing.Point(115, 147);
-            this.buttonAddAbono.Name = "buttonAddAbono";
-            this.buttonAddAbono.Size = new System.Drawing.Size(60, 23);
-            this.buttonAddAbono.TabIndex = 7;
-            this.buttonAddAbono.Text = ">>";
-            this.buttonAddAbono.UseVisualStyleBackColor = true;
-            this.buttonAddAbono.Click += new System.EventHandler(this.buttonAddAbono_Click);
-            // 
-            // textBoxConceptoAbono
-            // 
-            this.textBoxConceptoAbono.Location = new System.Drawing.Point(9, 148);
-            this.textBoxConceptoAbono.MaxLength = 6;
-            this.textBoxConceptoAbono.Name = "textBoxConceptoAbono";
-            this.textBoxConceptoAbono.Size = new System.Drawing.Size(100, 22);
-            this.textBoxConceptoAbono.TabIndex = 6;
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(18, 128);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(157, 16);
-            this.label6.TabIndex = 5;
-            this.label6.Text = "Conceptos de Abono:";
-            // 
-            // buttonAddFactura
-            // 
-            this.buttonAddFactura.Location = new System.Drawing.Point(115, 50);
-            this.buttonAddFactura.Name = "buttonAddFactura";
-            this.buttonAddFactura.Size = new System.Drawing.Size(60, 23);
-            this.buttonAddFactura.TabIndex = 2;
-            this.buttonAddFactura.Text = ">>";
-            this.buttonAddFactura.UseVisualStyleBackColor = true;
-            this.buttonAddFactura.Click += new System.EventHandler(this.buttonAddFactura_Click);
-            // 
-            // textBoxConceptoFactura
-            // 
-            this.textBoxConceptoFactura.Location = new System.Drawing.Point(9, 51);
-            this.textBoxConceptoFactura.MaxLength = 6;
-            this.textBoxConceptoFactura.Name = "textBoxConceptoFactura";
-            this.textBoxConceptoFactura.Size = new System.Drawing.Size(100, 22);
-            this.textBoxConceptoFactura.TabIndex = 1;
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(6, 31);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(164, 16);
-            this.label5.TabIndex = 0;
-            this.label5.Text = "Conceptos de Factura:";
-            // 
-            // listBoxConceptosFactura
-            // 
-            this.listBoxConceptosFactura.FormattingEnabled = true;
-            this.listBoxConceptosFactura.ItemHeight = 16;
-            this.listBoxConceptosFactura.Location = new System.Drawing.Point(181, 34);
-            this.listBoxConceptosFactura.Name = "listBoxConceptosFactura";
-            this.listBoxConceptosFactura.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.listBoxConceptosFactura.Size = new System.Drawing.Size(124, 84);
-            this.listBoxConceptosFactura.TabIndex = 4;
-            // 
-            // groupBox3
-            // 
-            this.groupBox3.Controls.Add(this.radioButtonAllDocuments);
-            this.groupBox3.Controls.Add(this.radioButtonWithAmount);
-            this.groupBox3.Location = new System.Drawing.Point(8, 311);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(317, 70);
-            this.groupBox3.TabIndex = 3;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Saldos";
-            // 
-            // radioButtonAllDocuments
-            // 
-            this.radioButtonAllDocuments.AutoSize = true;
-            this.radioButtonAllDocuments.Location = new System.Drawing.Point(143, 21);
-            this.radioButtonAllDocuments.Name = "radioButtonAllDocuments";
-            this.radioButtonAllDocuments.Size = new System.Drawing.Size(55, 17);
-            this.radioButtonAllDocuments.TabIndex = 1;
-            this.radioButtonAllDocuments.Text = "Todos";
-            this.radioButtonAllDocuments.UseVisualStyleBackColor = true;
-            this.radioButtonAllDocuments.CheckedChanged += new System.EventHandler(this.adminPaqconfig_ValueChanged);
-            // 
-            // radioButtonWithAmount
-            // 
-            this.radioButtonWithAmount.AutoSize = true;
-            this.radioButtonWithAmount.Checked = true;
-            this.radioButtonWithAmount.Location = new System.Drawing.Point(14, 21);
-            this.radioButtonWithAmount.MinimumSize = new System.Drawing.Size(100, 0);
-            this.radioButtonWithAmount.Name = "radioButtonWithAmount";
-            this.radioButtonWithAmount.Size = new System.Drawing.Size(100, 17);
-            this.radioButtonWithAmount.TabIndex = 0;
-            this.radioButtonWithAmount.TabStop = true;
-            this.radioButtonWithAmount.Text = "Con Saldo";
-            this.radioButtonWithAmount.UseVisualStyleBackColor = true;
-            this.radioButtonWithAmount.CheckedChanged += new System.EventHandler(this.adminPaqconfig_ValueChanged);
-            // 
-            // groupBox2
-            // 
-            this.groupBox2.Controls.Add(this.radioButtonUseDocDate);
-            this.groupBox2.Controls.Add(this.radioButtonUseCollectDate);
-            this.groupBox2.Controls.Add(this.dateTimePickerTo);
-            this.groupBox2.Controls.Add(this.dateTimePickerFrom);
-            this.groupBox2.Controls.Add(this.label4);
-            this.groupBox2.Controls.Add(this.label3);
-            this.groupBox2.Location = new System.Drawing.Point(8, 152);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(317, 153);
-            this.groupBox2.TabIndex = 2;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Fechas";
-            // 
-            // radioButtonUseDocDate
-            // 
-            this.radioButtonUseDocDate.AutoSize = true;
-            this.radioButtonUseDocDate.Checked = true;
-            this.radioButtonUseDocDate.Location = new System.Drawing.Point(153, 106);
-            this.radioButtonUseDocDate.Name = "radioButtonUseDocDate";
-            this.radioButtonUseDocDate.Size = new System.Drawing.Size(130, 17);
-            this.radioButtonUseDocDate.TabIndex = 5;
-            this.radioButtonUseDocDate.TabStop = true;
-            this.radioButtonUseDocDate.Text = "Fecha del Documento";
-            this.radioButtonUseDocDate.UseVisualStyleBackColor = true;
-            this.radioButtonUseDocDate.CheckedChanged += new System.EventHandler(this.adminPaqconfig_ValueChanged);
-            // 
-            // radioButtonUseCollectDate
-            // 
-            this.radioButtonUseCollectDate.AutoSize = true;
-            this.radioButtonUseCollectDate.Location = new System.Drawing.Point(6, 106);
-            this.radioButtonUseCollectDate.MinimumSize = new System.Drawing.Size(100, 0);
-            this.radioButtonUseCollectDate.Name = "radioButtonUseCollectDate";
-            this.radioButtonUseCollectDate.Size = new System.Drawing.Size(101, 17);
-            this.radioButtonUseCollectDate.TabIndex = 4;
-            this.radioButtonUseCollectDate.Text = "Fecha de Cobro";
-            this.radioButtonUseCollectDate.UseVisualStyleBackColor = true;
-            this.radioButtonUseCollectDate.CheckedChanged += new System.EventHandler(this.adminPaqconfig_ValueChanged);
-            // 
-            // dateTimePickerTo
-            // 
-            this.dateTimePickerTo.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dateTimePickerTo.Location = new System.Drawing.Point(98, 62);
-            this.dateTimePickerTo.Name = "dateTimePickerTo";
-            this.dateTimePickerTo.Size = new System.Drawing.Size(102, 22);
-            this.dateTimePickerTo.TabIndex = 3;
-            this.dateTimePickerTo.ValueChanged += new System.EventHandler(this.adminPaqconfig_ValueChanged);
-            // 
-            // dateTimePickerFrom
-            // 
-            this.dateTimePickerFrom.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dateTimePickerFrom.Location = new System.Drawing.Point(98, 31);
-            this.dateTimePickerFrom.Name = "dateTimePickerFrom";
-            this.dateTimePickerFrom.Size = new System.Drawing.Size(102, 22);
-            this.dateTimePickerFrom.TabIndex = 1;
-            this.dateTimePickerFrom.Value = new System.DateTime(2013, 1, 1, 0, 0, 0, 0);
-            this.dateTimePickerFrom.ValueChanged += new System.EventHandler(this.adminPaqconfig_ValueChanged);
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(11, 65);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(81, 16);
-            this.label4.TabIndex = 2;
-            this.label4.Text = "Fecha Final:";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(6, 34);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(86, 16);
-            this.label3.TabIndex = 0;
-            this.label3.Text = "Fecha Inicial:";
             // 
             // toolStrip1
             // 
@@ -579,7 +325,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(683, 435);
+            this.ClientSize = new System.Drawing.Size(683, 261);
             this.Controls.Add(this.tabControl1);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -595,12 +341,6 @@
             this.toolStrip2.PerformLayout();
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
-            this.groupBox4.ResumeLayout(false);
-            this.groupBox4.PerformLayout();
-            this.groupBox3.ResumeLayout(false);
-            this.groupBox3.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             this.groupBox1.ResumeLayout(false);
@@ -620,27 +360,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TabPage tabPage2;
-        private System.Windows.Forms.GroupBox groupBox4;
-        private System.Windows.Forms.Button buttonRemoveAbono;
-        private System.Windows.Forms.ListBox listBoxConceptosAbono;
-        private System.Windows.Forms.Button buttonRemoveFactura;
-        private System.Windows.Forms.Button buttonAddAbono;
-        private System.Windows.Forms.TextBox textBoxConceptoAbono;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Button buttonAddFactura;
-        private System.Windows.Forms.TextBox textBoxConceptoFactura;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.ListBox listBoxConceptosFactura;
-        private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.RadioButton radioButtonAllDocuments;
-        private System.Windows.Forms.RadioButton radioButtonWithAmount;
-        private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.RadioButton radioButtonUseDocDate;
-        private System.Windows.Forms.RadioButton radioButtonUseCollectDate;
-        private System.Windows.Forms.DateTimePicker dateTimePickerTo;
-        private System.Windows.Forms.DateTimePicker dateTimePickerFrom;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label labelRutaEmpresa;
         private System.Windows.Forms.ComboBox comboBoxEmpresas;
         private System.Windows.Forms.ToolStrip toolStrip2;

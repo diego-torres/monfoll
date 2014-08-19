@@ -23,5 +23,11 @@ namespace SeguimientoSuper.Collectable.PostgresImpl
             conn.Open();
         }
 
+        protected int ConfiguredCompany()
+        {
+            Settings set = Settings.Default;
+            return set.empresa;
+        }
+
     }
 }

@@ -459,6 +459,7 @@ namespace SeguimientoCobrador.Process
             string prevFilter = dtMaster.DefaultView.RowFilter;
             dtMaster = dbAccount.MasterTable();
             dtMaster.DefaultView.RowFilter = prevFilter;
+            dtMaster.DefaultView.Sort = "f_documento desc, folio_doco asc";
             dataGridViewMaster.DataSource = dtMaster;
 
             FormatAccountsGridView(dataGridViewMaster);
@@ -469,6 +470,7 @@ namespace SeguimientoCobrador.Process
             string prevFilter = dtAttended.DefaultView.RowFilter;
             dtAttended = dbAccount.Attended();
             dtAttended.DefaultView.RowFilter = prevFilter;
+            dtAttended.DefaultView.Sort = "f_documento desc, folio_doco asc";
             dataGridViewAttended.DataSource = dtAttended;
 
             FormatAccountsGridView(dataGridViewAttended);
@@ -665,70 +667,6 @@ namespace SeguimientoCobrador.Process
         private void toolStripButtonAddFollowUpAttended_Click(object sender, EventArgs e)
         {
             SetGroupFollowUp(dataGridViewAttended);
-        }
-        #endregion
-
-        #region ADMIN_PAQ_DOWNLOADERS
-        private void UpdateFromAdminPaq(DataGridView dgv)
-        {
-            Settings set = Settings.Default;
-            SeguimientoCobrador.Collectable.PostgresImpl.Enterprise dbEnterprise = new SeguimientoCobrador.Collectable.PostgresImpl.Enterprise();
-            SeguimientoCobrador.Collectable.PostgresImpl.Customer dbCustomer = new Customer();
-
-            foreach (DataGridViewCell cell in dgv.SelectedCells)
-            {
-                DataGridViewRow selectedRow = dgv.Rows[cell.RowIndex];
-
-                int selectedId = int.Parse(selectedRow.Cells["ap_id"].Value.ToString());
-                int selectedPgDocId = int.Parse(selectedRow.Cells["id_doco"].Value.ToString());
-                int clientId = int.Parse(selectedRow.Cells["id_empresa"].Value.ToString());
-
-                Collectable.Account pgDoco = new Collectable.Account();
-                pgDoco.ApId = selectedId;
-                pgDoco.DocId = selectedPgDocId;
-                pgDoco.Company.Id = clientId;
-                pgDoco.Company.EnterpriseId = dbCustomer.IdEmpresa(clientId);
-                pgDoco.Company.EnterprisePath = dbCustomer.RutaCliente(clientId);
-                
-                bool cancelled = false;
-
-                try
-                {
-                    api.DownloadCollectable(ref pgDoco, dbEnterprise.ConceptosPago(set.empresa), out cancelled);
-                }
-                catch (Exception ex)
-                {
-                    ErrLogger.Log(ex.Message);
-                }
-
-                dbAccount.SaveAccount(pgDoco);
-
-                foreach (Collectable.Payment payment in pgDoco.Payments)
-                {
-                    payment.DocId = pgDoco.DocId;
-                    dbAccount.SavePayment(payment);
-                }
-
-                if (cancelled) 
-                    dbAccount.CancelAccount(pgDoco.DocId);
-            }
-        }
-        
-        private void toolStripButtonAdminPaqDownloadMaster_Click(object sender, EventArgs e)
-        {
-            UpdateFromAdminPaq(dataGridViewMaster);
-            List<Collectable.Account> adminPaqAccounts = api.DownloadCollectables(DateTime.Today, DateTime.Today);
-            dbAccount.UploadAccounts(adminPaqAccounts, api.Cancelados, api.Saldados, api.Conceptos);
-            dbAccount.SetCollectDate(api);
-            RefreshMaster();
-            MessageBox.Show("Datos extraidos de adminPaq existosamente.", "Actualizado", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-
-        private void toolStripButtonAdminPaqDownloadAttended_Click(object sender, EventArgs e)
-        {
-            UpdateFromAdminPaq(dataGridViewAttended);
-            RefreshAttended();
-            MessageBox.Show("Datos extraidos de adminPaq existosamente.", "Actualizado", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
         #endregion
 

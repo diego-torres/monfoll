@@ -421,47 +421,5 @@ namespace SeguimientoSuper.Process
             textBoxFollowUpNote.Enabled = !Lock;
             comboBoxFollowUpType.Enabled = !Lock;
         }
-
-        private void toolStripButtonDownload_Click(object sender, EventArgs e)
-        {
-            if (followUpDirty && !ConfirmNSaveFollowUp()) return;
-            if (adminPaqDirty && !ConfirmNSaveAdminPaq()) return;
-
-            SeguimientoSuper.Collectable.PostgresImpl.Enterprise dbEnterprise = new SeguimientoSuper.Collectable.PostgresImpl.Enterprise();
-
-            Settings set = Settings.Default;
-
-            bool cancelled = false;
-            try
-            {
-                api.DownloadCollectable(ref account, dbEnterprise.ConceptosPago(account.Company.EnterpriseId), out cancelled);
-                Collectable.PostgresImpl.Account dbAccount = new Collectable.PostgresImpl.Account();
-                dbAccount.SaveAccount(account);
-
-                foreach (Collectable.Payment payment in account.Payments)
-                {
-                    payment.DocId = account.DocId;
-                    dbAccount.SavePayment(payment);
-                }
-
-                if (cancelled) dbAccount.CancelAccount(account.DocId);
-
-                LoadDates();
-                LoadCustomer();
-                LoadDocument();
-                LoadPayments();
-                RefreshFollowUpGrid();
-
-                adminPaqDirty = false;
-                followUpDirty = false;
-
-                MessageBox.Show("Datos extraidos de adminPaq existosamente.", "Actualizado", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            catch (Exception ex)
-            {
-                ErrLogger.Log(ex.StackTrace);
-                MessageBox.Show("Error al obtener los datos de AdminPaq para la cuenta, intentelo mas tarde: \n " + ex.Message, "No se puede obtener la cuenta", MessageBoxButtons.OK, MessageBoxIcon.Hand);
-            }
-        }
     }
 }
