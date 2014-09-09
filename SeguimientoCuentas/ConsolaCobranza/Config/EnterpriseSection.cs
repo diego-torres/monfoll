@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Configuration;
 
-namespace Cobranza.Config
+namespace ConsolaCobranza.Config
 {
     /// <summary>
     /// Sección que define la configuración de una empresa y sus códigos de documentos

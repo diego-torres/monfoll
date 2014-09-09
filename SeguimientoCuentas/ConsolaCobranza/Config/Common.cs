@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Cobranza.Config
+namespace ConsolaCobranza.Config
 {
     public class Common
     {

@@ -7,7 +7,6 @@ using System.Linq;
 using System.ServiceProcess;
 using System.Text;
 using System.Timers;
-using Cobranza.Process;
 
 namespace Cobranza
 {
@@ -15,8 +14,6 @@ namespace Cobranza
     {
 
         private Timer tmrDelay;
-        CommonAdminPaq.AdminPaqLib apl;
-        Main process = new Main();
 
         public CobranzaService()
         {
@@ -28,8 +25,6 @@ namespace Cobranza
 
             eventLogService.Source = "CobranzaService";
             eventLogService.Log = "CobranzaLog";
-            apl = new CommonAdminPaq.AdminPaqLib();
-            apl.SetDllFolder();
         }
 
         protected override void OnStart(string[] args)
@@ -50,21 +45,18 @@ namespace Cobranza
 
         private void timerDelay_Tick(object sender, EventArgs e)
         {
-            try
+            if (tmrDelay.Interval == 30000)
             {
-                tmrDelay.Stop();
-                tmrDelay.Interval = 300000;
-                eventLogService.WriteEntry("PERIODICAL ETL Process Execution BEGIN.", EventLogEntryType.Information, 2, 1);
-                
-                process.Execute(eventLogService);
-                
-                eventLogService.WriteEntry("PERIODICAL ETL Process Execution END.", EventLogEntryType.Information, 3, 1);
-                tmrDelay.Start();
+                tmrDelay.Interval = 400000;
             }
-            catch (Exception ex)
-            {
-                eventLogService.WriteEntry("Exception while running process. " + ex.Message + "::" + ex.StackTrace, EventLogEntryType.Error, 4, 1);
-            }
+
+            eventLogService.WriteEntry("START TODAY DOWNLOAD PROCESS.",
+                EventLogEntryType.Information, 1, 1);
+
+            System.Threading.Thread.Sleep(180000);
+
+            eventLogService.WriteEntry("START UPDATE PROCESS.",
+                EventLogEntryType.Information, 2, 1);
         }
     }
 }

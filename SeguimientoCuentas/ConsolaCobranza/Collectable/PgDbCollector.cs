@@ -6,18 +6,14 @@ using System.Configuration;
 using Npgsql;
 using System.Diagnostics;
 
-namespace Cobranza.Collectable
+namespace ConsolaCobranza.Collectable
 {
     public class PgDbCollector
     {
 
-        public bool HasExecuted { get; set; }
-        public bool PgHasData
-        {
-            get 
-            {
-
-                string connectionString = ConfigurationManager.ConnectionStrings[Config.Common.MONFOLL].ConnectionString;
+        public static bool PgHasData()
+        { 
+            string connectionString = ConfigurationManager.ConnectionStrings[Config.Common.MONFOLL].ConnectionString;
                 NpgsqlConnection conn;
                 NpgsqlDataReader dr;
                 NpgsqlCommand cmd;
@@ -40,10 +36,9 @@ namespace Cobranza.Collectable
                 conn.Close();
 
                 return records>0;
-            }
         }
 
-        public Empresa GetCompanyByName(string companyName)
+        public static Empresa GetCompanyByName(string companyName)
         {
             Empresa result = null;
 
@@ -77,9 +72,39 @@ namespace Cobranza.Collectable
             return result;
         }
 
-        public List<Account> GetAccounts() 
+        public static List<int> GetAccointIds()
         {
-            List<Account> result = new List<Account>();
+            List<int> result = new List<int>();
+
+            string connectionString = ConfigurationManager.ConnectionStrings[Config.Common.MONFOLL].ConnectionString;
+            NpgsqlConnection conn;
+            NpgsqlDataReader dr;
+            NpgsqlCommand cmd;
+
+            conn = new NpgsqlConnection(connectionString);
+            conn.Open();
+
+            string sqlString = "SELECT id_doco " +
+                "FROM ctrl_cuenta;";
+
+            cmd = new NpgsqlCommand(sqlString, conn);
+
+            dr = cmd.ExecuteReader();
+
+            while (dr.Read())
+            {
+                result.Add(int.Parse(dr["id_doco"].ToString()));
+            }
+
+            dr.Close();
+            conn.Close();
+
+            return result;
+        }
+
+        public static Account GetAccountById(int accountId) 
+        {
+            Account result = null;
 
             string connectionString = ConfigurationManager.ConnectionStrings[Config.Common.MONFOLL].ConnectionString;
             NpgsqlConnection conn;
@@ -91,21 +116,23 @@ namespace Cobranza.Collectable
 
             string sqlString = "SELECT id_doco, ap_id, id_cliente, cat_empresa.id_empresa, cat_empresa.ruta " +
                 "FROM ctrl_cuenta " +
-                "INNER JOIN cat_empresa ON cat_empresa.id_empresa = ctrl_cuenta.enterprise_id;";
+                "INNER JOIN cat_empresa ON cat_empresa.id_empresa = ctrl_cuenta.enterprise_id " +
+                "WHERE ctrl_cuenta.id_doco = @accountId;";
             cmd = new NpgsqlCommand(sqlString, conn);
+
+            cmd.Parameters.Add("@accountId", NpgsqlTypes.NpgsqlDbType.Integer);
+            cmd.Parameters["@accountId"].Value = accountId;
 
             dr = cmd.ExecuteReader();
 
-            while (dr.Read())
+            if (dr.Read())
             {
-                Account act = new Account();
-                act.DocId = int.Parse( dr["id_doco"].ToString() );
-                act.ApId = int.Parse(dr["ap_id"].ToString());
-                act.Company.Id = int.Parse(dr["id_cliente"].ToString());
-                act.Company.EnterpriseId = int.Parse(dr["id_empresa"].ToString());
-                act.Company.EnterprisePath = dr["ruta"].ToString();
-
-                result.Add(act);
+                result = new Account();
+                result.DocId = int.Parse(dr["id_doco"].ToString());
+                result.ApId = int.Parse(dr["ap_id"].ToString());
+                result.Company.Id = int.Parse(dr["id_cliente"].ToString());
+                result.Company.EnterpriseId = int.Parse(dr["id_empresa"].ToString());
+                result.Company.EnterprisePath = dr["ruta"].ToString();
             }
 
             dr.Close();
@@ -114,7 +141,7 @@ namespace Cobranza.Collectable
             return result;
         }
 
-        public Empresa GetAccountEnterprise(int enterpriseId)
+        public static Empresa GetAccountEnterprise(int enterpriseId)
         {
             Empresa result = null;
 
@@ -149,7 +176,7 @@ namespace Cobranza.Collectable
             return result;
         }
 
-        public bool AccountExists(Account account)
+        public static bool AccountExists(Account account)
         {
 
             string connectionString = ConfigurationManager.ConnectionStrings[Config.Common.MONFOLL].ConnectionString;
@@ -184,7 +211,7 @@ namespace Cobranza.Collectable
             return records > 0;
         }
 
-        public void AddAccount(Account account, EventLog log, AdminPaqImpl api)
+        public static void AddAccount(Account account, EventLog log)
         {
             string connectionString = ConfigurationManager.ConnectionStrings[Config.Common.MONFOLL].ConnectionString;
             NpgsqlConnection conn;
@@ -224,9 +251,9 @@ namespace Cobranza.Collectable
             if (coId == 0)
             {
                 log.WriteEntry("Unable to find client apId: " + account.Company.ApId + "; enterprise: " + account.Company.EnterpriseId, EventLogEntryType.Warning);
-                Company company = api.GetCompany(account.Company.ApId, account.Company.EnterprisePath, account.Company.EnterpriseId);
+                Company company = AdminPaqImpl.GetCompany(account.Company.ApId, account.Company.EnterprisePath, account.Company.EnterpriseId);
                 if (company != null)
-                    AddCompany(conn, company, log);
+                    AddCompany(conn, company);
                 else
                 {
                     log.WriteEntry("Unable to find client in adminPaq", EventLogEntryType.Warning);
@@ -256,7 +283,7 @@ namespace Cobranza.Collectable
             conn.Close();
         }
 
-        public void UpdateAccount(Account account, bool isCancelled, EventLog log, AdminPaqImpl api)
+        public static void UpdateAccountSimple(Account account, bool isCancelled)
         {
             if (isCancelled)
             {
@@ -303,13 +330,96 @@ namespace Cobranza.Collectable
             int coId = CompanyId(conn, account.Company.ApId, account.Company.EnterpriseId);
             if (coId == 0)
             {
-                log.WriteEntry("Unable to find client apId: " + account.Company.ApId + "; enterprise: " + account.Company.EnterpriseId, EventLogEntryType.Warning);
-                Company company = api.GetCompany(account.Company.ApId, account.Company.EnterprisePath, account.Company.EnterpriseId);
+                Company company = AdminPaqImpl.GetCompany(account.Company.ApId, account.Company.EnterprisePath, account.Company.EnterpriseId);
                 if (company != null)
-                    AddCompany(conn, company, log);
+                    AddCompany(conn, company);
                 else
                 {
-                    log.WriteEntry("Unable to find client in adminPaq", EventLogEntryType.Warning);
+                    conn.Close();
+                    return;
+                }
+
+                coId = CompanyId(conn, account.Company.ApId, account.Company.EnterpriseId);
+                if (coId == 0)
+                {
+                    conn.Close();
+                    return;
+                }
+            }
+
+            cmd.Parameters["@id_cliente"].Value = coId;
+            cmd.Parameters["@serie_doco"].Value = account.Serie;
+            cmd.Parameters["@folio_doco"].Value = account.Folio;
+            cmd.Parameters["@tipo_documento"].Value = account.DocType;
+            cmd.Parameters["@facturado"].Value = account.Amount;
+            cmd.Parameters["@saldo"].Value = account.Balance;
+            cmd.Parameters["@moneda"].Value = account.Currency;
+            cmd.Parameters["@id"].Value = account.ApId;
+            cmd.Parameters["@enterprise"].Value = account.Company.EnterpriseId;
+            
+            cmd.ExecuteNonQuery();
+            conn.Close();
+        }
+
+        public static void UpdateAccount(Account account, bool isCancelled)
+        {
+            if (isCancelled)
+            {
+                CloseAccount(account.DocId);
+                return;
+            }
+
+            string connectionString = ConfigurationManager.ConnectionStrings[Config.Common.MONFOLL].ConnectionString;
+            NpgsqlConnection conn;
+
+            conn = new NpgsqlConnection(connectionString);
+            conn.Open();
+
+            string sqlString = "UPDATE ctrl_cuenta " +
+                "SET F_DOCUMENTO = @f_documento, " +
+                "F_VENCIMIENTO = @f_vencimiento, " +
+                "ID_CLIENTE = @id_cliente, " +
+                "SERIE_DOCO = @serie_doco, " +
+                "FOLIO_DOCO = @folio_doco, " +
+                "TIPO_DOCUMENTO = @tipo_documento, " +
+                "FACTURADO = @facturado, " +
+                "SALDO = @saldo, " +
+                "MONEDA = @moneda, " +
+                "F_COBRO = @collect_date, " +
+                "TIPO_COBRO = @collect_type, " +
+                "OBSERVACIONES = @obs_note, " + 
+                "TS_DESCARGADO = CURRENT_TIMESTAMP " +
+                "WHERE ap_id = @id AND enterprise_id = @enterprise";
+
+            NpgsqlCommand cmd = new NpgsqlCommand(sqlString, conn);
+
+            cmd.Parameters.Add("@f_documento", NpgsqlTypes.NpgsqlDbType.Date);
+            cmd.Parameters.Add("@f_vencimiento", NpgsqlTypes.NpgsqlDbType.Date);
+            cmd.Parameters.Add("@id_cliente", NpgsqlTypes.NpgsqlDbType.Integer);
+            cmd.Parameters.Add("@serie_doco", NpgsqlTypes.NpgsqlDbType.Varchar, 4);
+            cmd.Parameters.Add("@folio_doco", NpgsqlTypes.NpgsqlDbType.Integer);
+            cmd.Parameters.Add("@tipo_documento", NpgsqlTypes.NpgsqlDbType.Varchar, 150);
+            cmd.Parameters.Add("@facturado", NpgsqlTypes.NpgsqlDbType.Money);
+            cmd.Parameters.Add("@saldo", NpgsqlTypes.NpgsqlDbType.Money);
+            cmd.Parameters.Add("@moneda", NpgsqlTypes.NpgsqlDbType.Varchar, 50);
+            cmd.Parameters.Add("@id", NpgsqlTypes.NpgsqlDbType.Integer);
+            cmd.Parameters.Add("@enterprise", NpgsqlTypes.NpgsqlDbType.Integer);
+
+            cmd.Parameters.Add("@collect_date", NpgsqlTypes.NpgsqlDbType.Date);
+            cmd.Parameters.Add("@collect_type", NpgsqlTypes.NpgsqlDbType.Varchar, 100);
+            cmd.Parameters.Add("@obs_note", NpgsqlTypes.NpgsqlDbType.Varchar, 250);
+
+            cmd.Parameters["@f_documento"].Value = account.DocDate;
+            cmd.Parameters["@f_vencimiento"].Value = account.DueDate;
+
+            int coId = CompanyId(conn, account.Company.ApId, account.Company.EnterpriseId);
+            if (coId == 0)
+            {
+                Company company = AdminPaqImpl.GetCompany(account.Company.ApId, account.Company.EnterprisePath, account.Company.EnterpriseId);
+                if (company != null)
+                    AddCompany(conn, company);
+                else
+                {
                     conn.Close();
                     return;
                 }
@@ -332,12 +442,17 @@ namespace Cobranza.Collectable
             cmd.Parameters["@id"].Value = account.ApId;
             cmd.Parameters["@enterprise"].Value = account.Company.EnterpriseId;
 
+            cmd.Parameters["@collect_date"].Value = account.CollectDate;
+            cmd.Parameters["@collect_type"].Value = account.CollectType;
+            cmd.Parameters["@obs_note"].Value = account.Note;
+
+
             cmd.ExecuteNonQuery();
             conn.Close();
         }
 
 
-        private void AddCompany(NpgsqlConnection conn, Company company, EventLog log)
+        private static void AddCompany(NpgsqlConnection conn, Company company)
         {
             string sqlString = "INSERT INTO cat_cliente (ap_id, id_empresa, cd_cliente, nombre_cliente, ruta, dia_pago, es_local) " +
                 "VALUES(@id, @empresa, @codigo, @nombre_cliente,  @agente,  @dia_pago, @local)";
@@ -360,17 +475,11 @@ namespace Cobranza.Collectable
             cmd.Parameters["@dia_pago"].Value = company.PaymentDay;
             cmd.Parameters["@local"].Value = company.EsLocal;
 
-            try {
-                cmd.ExecuteNonQuery();
-            }
-            catch(Exception ex){
-                log.WriteEntry("Unable to upload company: " + company.ApId + "; eid: " + company.EnterpriseId, EventLogEntryType.Warning);
-                log.WriteEntry(ex.Message + " || " + ex.StackTrace, EventLogEntryType.Warning);
-            }
+            cmd.ExecuteNonQuery();
             
         }
 
-        public void SavePayment(Payment payment, EventLog log)
+        public static void SavePayment(Payment payment)
         {
             string connectionString = ConfigurationManager.ConnectionStrings[Config.Common.MONFOLL].ConnectionString;
             NpgsqlConnection conn;
@@ -391,14 +500,14 @@ namespace Cobranza.Collectable
             dr.Close();
 
             if (exists)
-                UpdatePayment(conn, payment, log);
+                UpdatePayment(conn, payment);
             else
-                AddPayment(conn, payment, log);
+                AddPayment(conn, payment);
 
             conn.Close();
         }
 
-        private void AddPayment(NpgsqlConnection conn, Payment payment, EventLog log)
+        private static void AddPayment(NpgsqlConnection conn, Payment payment)
         {
             string sqlString = "INSERT INTO ctrl_abono (id_abono, id_doco, tipo_pago, importe_pago, folio, concepto, fecha_deposito, cuenta) " +
                 "VALUES(@id, @id_doc, @tipo_pago, @importe, @folio, @concepto, @fecha_deposito, @cuenta);";
@@ -423,16 +532,10 @@ namespace Cobranza.Collectable
             cmd.Parameters["@cuenta"].Value = payment.Account;
             cmd.Parameters["@id"].Value = payment.PaymentId;
 
-            try {
-                cmd.ExecuteNonQuery();
-            } catch(Exception ex)
-            {
-                log.WriteEntry(ex.Message + " || " + ex.StackTrace, EventLogEntryType.Warning);
-            }
-            
+            cmd.ExecuteNonQuery();
         }
 
-        private void UpdatePayment(NpgsqlConnection conn, Payment payment, EventLog log)
+        private static void UpdatePayment(NpgsqlConnection conn, Payment payment)
         {
             string sqlString = "UPDATE ctrl_abono " +
                 "SET ID_DOCO = @id_doc, " +
@@ -464,17 +567,10 @@ namespace Cobranza.Collectable
             cmd.Parameters["@cuenta"].Value = payment.Account;
             cmd.Parameters["@id"].Value = payment.PaymentId;
 
-            try
-            {
-                cmd.ExecuteNonQuery();
-            }
-            catch (Exception ex)
-            {
-                log.WriteEntry(ex.Message + " || " + ex.StackTrace, EventLogEntryType.Warning);
-            }
+            cmd.ExecuteNonQuery();
         }
 
-        private int CompanyId(NpgsqlConnection conn, int apId, int empresaId)
+        private static int CompanyId(NpgsqlConnection conn, int apId, int empresaId)
         {
             NpgsqlDataReader dr;
             NpgsqlCommand cmd;
@@ -501,7 +597,7 @@ namespace Cobranza.Collectable
             return result;
         }
 
-        private void CloseAccount(int accountId)
+        private static void CloseAccount(int accountId)
         {
          
             string connectionString = ConfigurationManager.ConnectionStrings[Config.Common.MONFOLL].ConnectionString;
