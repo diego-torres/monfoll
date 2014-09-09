@@ -106,31 +106,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_31AC0163D9868D779B89279BF23920C1"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_7EDEEE59830548F3B689D67713649E8F"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_55E41F66EE3A3B7F1FD9025DF956EDB5"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_4BF17127F6C4D1E3C0DB17D8D9B65672"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_C8352F1C0BFA4908A5C88A2751310F5B"
+        "OwnerKey" = "8:_5ACB34241180CA07641FB7B06B7FD74D"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -142,7 +118,31 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_5ACB34241180CA07641FB7B06B7FD74D"
+        "OwnerKey" = "8:_C8352F1C0BFA4908A5C88A2751310F5B"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_4BF17127F6C4D1E3C0DB17D8D9B65672"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_55E41F66EE3A3B7F1FD9025DF956EDB5"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_7EDEEE59830548F3B689D67713649E8F"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_31AC0163D9868D779B89279BF23920C1"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -549,15 +549,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Seguimiento Supervisor"
-        "ProductCode" = "8:{BB9F2CAD-E867-41FC-BFF7-5930032EE01B}"
-        "PackageCode" = "8:{6D41091A-A3F0-4A88-88F5-820A63D8A34C}"
+        "ProductCode" = "8:{6EC78D2F-7C7B-4BEE-A7EA-1DAEF2DBFCE2}"
+        "PackageCode" = "8:{E29B6D39-5544-494F-B211-C32F614F1ADE}"
         "UpgradeCode" = "8:{D145EDF6-3734-44BD-B706-A0FAF3619BE7}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:3.4.2"
+        "ProductVersion" = "8:4.0.0"
         "Manufacturer" = "8:Inspiracode"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -1099,7 +1099,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_7EDEEE59830548F3B689D67713649E8F"
             {
-            "SourcePath" = "8:..\\SeguimientoSuper\\obj\\x86\\Release\\SeguimientoSuper.exe"
+            "SourcePath" = "8:..\\SeguimientoSuper\\obj\\x86\\Debug\\SeguimientoSuper.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_B90B89FE3C034AEB80619A36F3D4F8CB"
