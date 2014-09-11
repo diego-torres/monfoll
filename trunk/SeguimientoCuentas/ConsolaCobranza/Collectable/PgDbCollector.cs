@@ -72,9 +72,9 @@ namespace ConsolaCobranza.Collectable
             return result;
         }
 
-        public static List<int> GetAccointIds()
+        public static List<Empresa> GetEnterprises()
         {
-            List<int> result = new List<int>();
+            List<Empresa> result = new List<Empresa>();
 
             string connectionString = ConfigurationManager.ConnectionStrings[Config.Common.MONFOLL].ConnectionString;
             NpgsqlConnection conn;
@@ -84,8 +84,8 @@ namespace ConsolaCobranza.Collectable
             conn = new NpgsqlConnection(connectionString);
             conn.Open();
 
-            string sqlString = "SELECT id_doco " +
-                "FROM ctrl_cuenta;";
+            string sqlString = "SELECT id_empresa, nombre_empresa, ruta " +
+                "FROM cat_empresa;";
 
             cmd = new NpgsqlCommand(sqlString, conn);
 
@@ -93,7 +93,11 @@ namespace ConsolaCobranza.Collectable
 
             while (dr.Read())
             {
-                result.Add(int.Parse(dr["id_doco"].ToString()));
+                Empresa theEmpresa = new Empresa();
+                theEmpresa.Id = int.Parse(dr["id_empresa"].ToString());
+                theEmpresa.Nombre = dr["nombre_empresa"].ToString();
+                theEmpresa.Ruta = dr["ruta"].ToString();
+                result.Add(theEmpresa);
             }
 
             dr.Close();
@@ -618,5 +622,38 @@ namespace ConsolaCobranza.Collectable
             conn.Close();
         }
 
+
+        public static List<int> GetAccointIds(int eID)
+        {
+            List<int> result = new List<int>();
+
+            string connectionString = ConfigurationManager.ConnectionStrings[Config.Common.MONFOLL].ConnectionString;
+            NpgsqlConnection conn;
+            NpgsqlDataReader dr;
+            NpgsqlCommand cmd;
+
+            conn = new NpgsqlConnection(connectionString);
+            conn.Open();
+
+            string sqlString = "SELECT id_doco " +
+                "FROM ctrl_cuenta WHERE enterprise_id = @enterprise;";
+
+            cmd = new NpgsqlCommand(sqlString, conn);
+
+            cmd.Parameters.Add("@enterprise", NpgsqlTypes.NpgsqlDbType.Integer);
+            cmd.Parameters["@enterprise"].Value = eID;
+
+            dr = cmd.ExecuteReader();
+
+            while (dr.Read())
+            {
+                result.Add(int.Parse(dr["id_doco"].ToString()));
+            }
+
+            dr.Close();
+            conn.Close();
+
+            return result;
+        }
     }
 }
