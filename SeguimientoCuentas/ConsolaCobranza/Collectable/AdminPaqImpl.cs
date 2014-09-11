@@ -419,10 +419,10 @@ namespace ConsolaCobranza.Collectable
             log.WriteEntry("Added " + counter.ToString() + " accounts to database", EventLogEntryType.Information, 10, 2);
         }
 
-        public static void DownloadCollectable(Account source, string[] conceptosAbono)
+        public static void DownloadCollectable(Account source, string[] conceptosAbono, int connection)
         {
             bool isCancelled = false;
-            int connection, dbResponse, fieldResponse;
+            int  dbResponse, fieldResponse;
             string key;
 
             int cancelled = 0, folioDoc = 0, currencyId = 0, companyId = 0;
@@ -442,21 +442,14 @@ namespace ConsolaCobranza.Collectable
                 throw new Exception("Error en la configuración de empresa.");
             }
 
-            connection = AdminPaqLib.dbLogIn("", sourceCompany.EnterprisePath);
-            if (connection == 0)
-            {
-                throw new Exception("No fue posible establecer la conexión con la base de datos de la empresa en la ruta: " + sourceCompany.EnterprisePath);
-            }
-
             key = source.ApId.ToString().PadLeft(11);
             dbResponse = AdminPaqLib.dbGet(connection, TableNames.DOCUMENTOS, IndexNames.PRIMARY_KEY, key);
 
             if (dbResponse != 0)
             {
-                AdminPaqLib.dbLogOut(connection);
+                PgDbCollector.UpdateAccountSimple(source, true);
                 return;
             }
-
 
             if (dbResponse == 0)
             {
@@ -562,8 +555,6 @@ namespace ConsolaCobranza.Collectable
                 }
 
             }
-
-            AdminPaqLib.dbLogOut(connection);
         }
 
         public static void DownloadCollectables(string[] conceptosFactura, string[] conceptosAbono, Empresa configuredCompany, EventLog log)

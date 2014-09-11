@@ -7,6 +7,7 @@ using ConsolaCobranza.Collectable;
 using System.Configuration;
 using System.Collections.Specialized;
 using ConsolaCobranza.Config;
+using CommonAdminPaq;
 
 namespace ConsolaCobranza
 {
@@ -14,25 +15,40 @@ namespace ConsolaCobranza
     {
         public void UpdateAccounts(EventLog log)
         {
-            List<int> accounts = PgDbCollector.GetAccointIds();
-            log.WriteEntry("Updating " + accounts.Count + " Accounts", EventLogEntryType.Information, 19, 1);
+            List<Empresa> enterprises = PgDbCollector.GetEnterprises();
 
-            foreach (int accountId in accounts)
+            foreach (Empresa enterprise in enterprises)
             {
-                Account account = PgDbCollector.GetAccountById(accountId);
+                int connection = AdminPaqLib.dbLogIn("", enterprise.Ruta);
+                if (connection == 0)
+                {
+                    throw new Exception("No fue posible establecer la conexión con la base de datos de la empresa en la ruta: " + enterprise.Ruta);
+                }
 
-                int eId = account.Company.EnterpriseId;
-                Empresa empresa = PgDbCollector.GetAccountEnterprise(eId);
-                string sa = GetCodigos(empresa, false, log);
+                List<int> accounts = PgDbCollector.GetAccointIds(enterprise.Id);
+                log.WriteEntry("Updating " + accounts.Count + " Accounts", EventLogEntryType.Information, 19, 1);
 
-                if (sa == null)
-                    continue;
+                foreach (int accountId in accounts)
+                {
+                    Account account = PgDbCollector.GetAccountById(accountId);
 
-                string[] arrAbonos = sa.Split(',');
-                AdminPaqImpl.DownloadCollectable(account, arrAbonos);
+                    int eId = account.Company.EnterpriseId;
+                    Empresa empresa = PgDbCollector.GetAccountEnterprise(eId);
+                    string sa = GetCodigos(empresa, false, log);
+
+                    if (sa == null)
+                        continue;
+
+                    string[] arrAbonos = sa.Split(',');
+                    AdminPaqImpl.DownloadCollectable(account, arrAbonos,connection);
+                }
+                AdminPaqLib.dbLogOut(connection);
+                accounts.Clear();
+                accounts = null;
+
             }
-            accounts.Clear();
-            accounts = null;
+
+            
         }
 
         public void DownloadTodayAccounts(EventLog log)
