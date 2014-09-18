@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminPaqLib.cs" />
+    <Compile Include="AdminPaqSDK.cs" />
     <Compile Include="ErrLogger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Configuration;
 
-namespace ConsolaCobranza.Config
+namespace ConsolaSDK.Config
 {
     /// <summary>
     /// Sección que define la configuración de una empresa y sus códigos de documentos
@@ -16,6 +16,13 @@ namespace ConsolaCobranza.Config
         {
             get { return (string)this["NombreEmpresa"]; }
             set { this["NombreEmpresa"] = value; }
+        }
+
+        [ConfigurationProperty("RutaEmpresa", DefaultValue = @"\\rh-srvadmin-01\Compacw\Empresas\RHI")]
+        public string RutaEmpresa
+        {
+            get { return (string)this["RutaEmpresa"]; }
+            set { this["RutaEmpresa"] = value; }
         }
 
         [ConfigurationProperty("CodigosFactura", DefaultValue = "2101,2103,2202,2302,2201,2301,2203,2303,2204,2304")]

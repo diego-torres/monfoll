@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Diagnostics;
 using System.Globalization;
+using System.Configuration;
+using System.Collections.Specialized;
 
 namespace ConsolaCobranza
 {
@@ -31,7 +33,10 @@ namespace ConsolaCobranza
             }
 
             CommonAdminPaq.AdminPaqLib apl = new CommonAdminPaq.AdminPaqLib();
-            apl.SetDllFolder();
+            string baseDir = ConfigurationManager.AppSettings["libDir"].ToString();
+
+            eventLogService.WriteEntry("Setting baseDir as [" + baseDir + "]");
+            apl.SetDllFolder(baseDir);
 
             if ("EXISTENTES".Equals(args[0]))
             {
@@ -53,6 +58,13 @@ namespace ConsolaCobranza
                 AdminPaqMiner miner = new AdminPaqMiner();
                 miner.DownloadAllAccounts(eventLogService);
                 eventLogService.WriteEntry("All accounts downloaded.", EventLogEntryType.Information, 10, 0);
+            }
+            else if ("MONITORES".Equals(args[0]))
+            {
+                eventLogService.WriteEntry("Download monitors.", EventLogEntryType.Information, 9, 0);
+                AdminPaqMiner miner = new AdminPaqMiner();
+                miner.MineMonitors(eventLogService);
+                eventLogService.WriteEntry("monitors downloaded.", EventLogEntryType.Information, 10, 0);
             }
             else
             { 

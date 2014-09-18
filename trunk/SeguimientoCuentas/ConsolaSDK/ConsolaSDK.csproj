@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{B243D120-B056-468C-ABF7-BD8EC90E33D3}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <ProjectGuid>{05A56520-2B82-498C-96E7-C2E341E30A77}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Cobranza</RootNamespace>
-    <AssemblyName>Cobranza</AssemblyName>
+    <RootNamespace>ConsolaSDK</RootNamespace>
+    <AssemblyName>ConsolaSDK</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
@@ -35,42 +35,31 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Configuration.Install" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Management" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
-    <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CobranzaService.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="CobranzaService.Designer.cs">
-      <DependentUpon>CobranzaService.cs</DependentUpon>
-    </Compile>
+    <Compile Include="Config\Common.cs" />
+    <Compile Include="Config\EnterpriseSection.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="ProjectInstaller.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="ProjectInstaller.Designer.cs">
-      <DependentUpon>ProjectInstaller.cs</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="CobranzaService.resx">
-      <DependentUpon>CobranzaService.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ProjectInstaller.resx">
-      <DependentUpon>ProjectInstaller.cs</DependentUpon>
-    </EmbeddedResource>
+    <ProjectReference Include="..\CommonAdminPaq\CommonAdminPaq.csproj">
+      <Project>{FBFE32B7-F433-430E-9DBC-60CAC18725D2}</Project>
+      <Name>CommonAdminPaq</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Harwen-Pleasant-Control-Panel.ico" />
+    <None Include="Config\App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Alecive-Flatwoken-Apps-Sdk.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
