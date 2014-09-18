@@ -53,6 +53,24 @@
     <Compile Include="Collectable\PgDbCollector.cs" />
     <Compile Include="Config\Common.cs" />
     <Compile Include="Config\EnterpriseSection.cs" />
+    <Compile Include="Facts\FactCobranza.cs" />
+    <Compile Include="Facts\Factoreable.cs" />
+    <Compile Include="Facts\FactPorVencer.cs" />
+    <Compile Include="Facts\FactSales.cs" />
+    <Compile Include="Facts\FactUncollectable.cs" />
+    <Compile Include="Facts\FactVencido.cs" />
+    <Compile Include="Facts\FactVencimiento.cs" />
+    <Compile Include="Loader\DimClientes.cs" />
+    <Compile Include="Loader\DimGrupoVencimiento.cs" />
+    <Compile Include="Loader\DimMeses.cs" />
+    <Compile Include="Loader\DimSellers.cs" />
+    <Compile Include="Loader\ETLClientes.cs" />
+    <Compile Include="Loader\ETLMeses.cs" />
+    <Compile Include="Loader\ETLSellers.cs" />
+    <Compile Include="Loader\MainLoader.cs" />
+    <Compile Include="Miner\CatCliente.cs" />
+    <Compile Include="Miner\CatSeller.cs" />
+    <Compile Include="Miner\DocsMiner.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -70,6 +88,7 @@
   <ItemGroup>
     <Content Include="Guillendesign-Variations-2-Script-Console.ico" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

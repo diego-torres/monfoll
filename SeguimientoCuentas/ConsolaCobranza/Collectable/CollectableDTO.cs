@@ -163,4 +163,16 @@ namespace ConsolaCobranza.Collectable
                 return 0;
         }
     }
+
+    public class FactDocument
+    {
+        public Boolean IsSale { get; set; }
+        public Boolean IsCredit { get; set; }
+        public Boolean IsPayment { get; set; }
+        public double Amount { get; set; }
+        public int SellerId { get; set; }
+        public DateTime DocumentDate { get; set; }
+        public DateTime DueDate { get; set; }
+        public Company Company { get; set; }
+    }
 }

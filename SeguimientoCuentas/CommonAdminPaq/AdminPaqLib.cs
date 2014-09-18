@@ -84,6 +84,15 @@ namespace CommonAdminPaq
             reportDir = rk.GetValue("DirectorioReportes").ToString();
             dataDir = rk.GetValue("DirectorioDatos").ToString();
         }
+
+        public void SetDllFolder(string path)
+        {
+            bool allowedDirectory = SetDllDirectory(path);
+
+            RegistryKey rk = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Computación en Acción, SA CV\AdminPAQ");
+            reportDir = rk.GetValue("DirectorioReportes").ToString();
+            dataDir = rk.GetValue("DirectorioDatos").ToString();
+        }
     }
 
     [StructLayout(LayoutKind.Sequential)]
