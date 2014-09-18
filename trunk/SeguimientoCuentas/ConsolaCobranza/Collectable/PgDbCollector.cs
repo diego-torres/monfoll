@@ -72,9 +72,9 @@ namespace ConsolaCobranza.Collectable
             return result;
         }
 
-        public static List<Empresa> GetEnterprises()
+        public static List<int> GetAccointIds(int enterpriseId)
         {
-            List<Empresa> result = new List<Empresa>();
+            List<int> result = new List<int>();
 
             string connectionString = ConfigurationManager.ConnectionStrings[Config.Common.MONFOLL].ConnectionString;
             NpgsqlConnection conn;
@@ -84,20 +84,20 @@ namespace ConsolaCobranza.Collectable
             conn = new NpgsqlConnection(connectionString);
             conn.Open();
 
-            string sqlString = "SELECT id_empresa, nombre_empresa, ruta " +
-                "FROM cat_empresa;";
+            string sqlString = "SELECT id_doco " +
+                "FROM ctrl_cuenta " +
+                "WHERE enterprise_id = @enterpriseId;";
 
             cmd = new NpgsqlCommand(sqlString, conn);
+
+            cmd.Parameters.Add("@enterpriseId", NpgsqlTypes.NpgsqlDbType.Integer);
+            cmd.Parameters["@enterpriseId"].Value = enterpriseId;
 
             dr = cmd.ExecuteReader();
 
             while (dr.Read())
             {
-                Empresa theEmpresa = new Empresa();
-                theEmpresa.Id = int.Parse(dr["id_empresa"].ToString());
-                theEmpresa.Nombre = dr["nombre_empresa"].ToString();
-                theEmpresa.Ruta = dr["ruta"].ToString();
-                result.Add(theEmpresa);
+                result.Add(int.Parse(dr["id_doco"].ToString()));
             }
 
             dr.Close();
@@ -213,6 +213,57 @@ namespace ConsolaCobranza.Collectable
             conn.Close();
 
             return records > 0;
+        }
+
+        public static void CleanFactDocument()
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings[Config.Common.JASPER].ConnectionString;
+            NpgsqlConnection conn;
+
+            conn = new NpgsqlConnection(connectionString);
+            conn.Open();
+
+            string sqlString = "DELETE FROM fact_documents;";
+
+            NpgsqlCommand cmd = new NpgsqlCommand(sqlString, conn);
+
+            cmd.ExecuteNonQuery();
+            conn.Close();
+        }
+
+        public static void AddFactDocument(FactDocument doco, EventLog log)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings[Config.Common.JASPER].ConnectionString;
+            NpgsqlConnection conn;
+
+            conn = new NpgsqlConnection(connectionString);
+            conn.Open();
+
+            string sqlString = "INSERT INTO fact_documents (sale, credit, payment, amount, seller, doco_date, due_date, company_cd, enterprise_id) " +
+                "VALUES( @esVenta, @esCredit, @esPago, @monto, @f_doco, @f_vto, @cliente, @empresa);";
+
+            NpgsqlCommand cmd = new NpgsqlCommand(sqlString, conn);
+
+            cmd.Parameters.Add("@esVenta", NpgsqlTypes.NpgsqlDbType.Boolean);
+            cmd.Parameters.Add("@esCredit", NpgsqlTypes.NpgsqlDbType.Boolean);
+            cmd.Parameters.Add("@esPago", NpgsqlTypes.NpgsqlDbType.Boolean);
+            cmd.Parameters.Add("@monto", NpgsqlTypes.NpgsqlDbType.Numeric);
+            cmd.Parameters.Add("@f_doco", NpgsqlTypes.NpgsqlDbType.Date);
+            cmd.Parameters.Add("@f_vto", NpgsqlTypes.NpgsqlDbType.Date);
+            cmd.Parameters.Add("@cliente", NpgsqlTypes.NpgsqlDbType.Integer);
+            cmd.Parameters.Add("@empresa", NpgsqlTypes.NpgsqlDbType.Integer);
+
+            cmd.Parameters["@esVenta"].Value = doco.IsSale;
+            cmd.Parameters["@esCredit"].Value = doco.IsCredit;
+            cmd.Parameters["@esPago"].Value = doco.IsPayment;
+            cmd.Parameters["@monto"].Value = doco.Amount;
+            cmd.Parameters["@f_doco"].Value = doco.DocumentDate;
+            cmd.Parameters["@f_vto"].Value = doco.DueDate;
+            cmd.Parameters["@cliente"].Value = doco.Company.ApId;
+            cmd.Parameters["@empresa"].Value = doco.Company.EnterpriseId;
+            
+            cmd.ExecuteNonQuery();
+            conn.Close();
         }
 
         public static void AddAccount(Account account, EventLog log)
@@ -622,38 +673,5 @@ namespace ConsolaCobranza.Collectable
             conn.Close();
         }
 
-
-        public static List<int> GetAccointIds(int eID)
-        {
-            List<int> result = new List<int>();
-
-            string connectionString = ConfigurationManager.ConnectionStrings[Config.Common.MONFOLL].ConnectionString;
-            NpgsqlConnection conn;
-            NpgsqlDataReader dr;
-            NpgsqlCommand cmd;
-
-            conn = new NpgsqlConnection(connectionString);
-            conn.Open();
-
-            string sqlString = "SELECT id_doco " +
-                "FROM ctrl_cuenta WHERE enterprise_id = @enterprise;";
-
-            cmd = new NpgsqlCommand(sqlString, conn);
-
-            cmd.Parameters.Add("@enterprise", NpgsqlTypes.NpgsqlDbType.Integer);
-            cmd.Parameters["@enterprise"].Value = eID;
-
-            dr = cmd.ExecuteReader();
-
-            while (dr.Read())
-            {
-                result.Add(int.Parse(dr["id_doco"].ToString()));
-            }
-
-            dr.Close();
-            conn.Close();
-
-            return result;
-        }
     }
 }
