@@ -21,4 +21,24 @@ namespace ConsolaODBCFox.dto
         public double TipoCambio { get; set; }
         public DateTime Fecha { get; set; }
     }
+
+    public class DetalleVenta
+    {
+        public string Vendedor { get; set; }
+        public int IdDoco { get; set; }
+        public int Folio { get; set; }
+        public string Serie { get; set; }
+        public double Importe { get; set; }
+        public string Moneda { get; set; }
+        public int IdConcepto { get; set; }
+        public double TipoCambio { get; set; }
+        public DateTime Fecha { get; set; }
+        public List<DetalleMovimiento> Movimientos { get; set; }
+    }
+    public class DetalleMovimiento
+    {
+        public int IdMov { get; set; }
+        public string Producto { get; set; }
+        public double Importe { get; set; }
+    }
 }
