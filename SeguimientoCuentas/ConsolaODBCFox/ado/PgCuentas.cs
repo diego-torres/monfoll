@@ -145,7 +145,7 @@ namespace ConsolaODBCFox.ado
                 NpgsqlDataReader dr;
                 NpgsqlCommand cmd;
 
-                string sqlString = "SELECT id_doco, ap_id, saldo " +
+                string sqlString = "SELECT id_doco, ap_id, saldo, f_cobro, observaciones, tipo_cobro " +
                     "FROM ctrl_cuenta " +
                     "WHERE enterprise_id = @idEmpresa;";
 
@@ -161,6 +161,9 @@ namespace ConsolaODBCFox.ado
                     cuenta.Id = int.Parse(dr["id_doco"].ToString());
                     cuenta.ApId = int.Parse(dr["ap_id"].ToString());
                     cuenta.Saldo = double.Parse(dr["saldo"].ToString());
+                    cuenta.FechaCobro = DateTime.Parse(dr["f_cobro"].ToString());
+                    cuenta.Observaciones = dr["observaciones"].ToString();
+                    cuenta.TipoCobro = dr["tipo_cobro"].ToString();
                     result.Add(cuenta);
                 }
 
@@ -229,8 +232,8 @@ namespace ConsolaODBCFox.ado
                 cmd.Parameters["@id"].Value = cuenta.Id;
 
                 cmd.Parameters["@collect_date"].Value = cuenta.FechaCobro;
-                cmd.Parameters["@collect_type"].Value = cuenta.TipoCobro;
-                cmd.Parameters["@obs_note"].Value = cuenta.Observaciones;
+                cmd.Parameters["@collect_type"].Value = cuenta.TipoCobro.Trim();
+                cmd.Parameters["@obs_note"].Value = cuenta.Observaciones.Trim();
 
                 cmd.ExecuteNonQuery();
 
@@ -241,7 +244,9 @@ namespace ConsolaODBCFox.ado
         }
 
         private static void GrabarAbonos(NpgsqlConnection conn, Cuenta cuenta)
-        { 
+        {
+            if (cuenta.Abonos == null) return;
+
             foreach(Abono abono in cuenta.Abonos)
             {
                 GrabarAbono(conn, abono);

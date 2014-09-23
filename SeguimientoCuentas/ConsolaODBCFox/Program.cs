@@ -26,14 +26,14 @@ namespace ConsolaODBCFox
             eventLogService.Source = "ConsolaDBF";
             eventLogService.Log = "DBFCmdLog";
 
-            eventLogService.WriteEntry("CONSOLE EXECUTION BEGIN.");
-
 
             if (args.Length == 0)
             {
                 eventLogService.WriteEntry("Console usage: NO ARGUMENTS FOUND.", EventLogEntryType.Error, 1, 1);
                 return;
             }
+
+            eventLogService.WriteEntry("CONSOLE EXECUTION BEGIN FOR [" + args[0] + "].");
 
             // Read configuration file
             string rutaDatos = ConfigurationManager.AppSettings["rutaDatos"].ToString();
@@ -116,6 +116,9 @@ namespace ConsolaODBCFox
                         case "VENTAS":
                             docosAPI.CalcularVentas();
                             break;
+                        case "DETALLE":
+                            docosAPI.CalcularDetalle();
+                            break;
                         default:
                             eventLogService.WriteEntry("Console usage: argument not allowed: " + args[0] + ".", EventLogEntryType.Error, 11, 1);
                             break;
@@ -123,41 +126,7 @@ namespace ConsolaODBCFox
                 }
             }
 
-            /*
-            string sqlString = "SELECT COUNT(CIDDOCUM01) AS cuentas FROM MGW10008;";
-            int cuentas = 0;
-
-            try
-            {
-                string connString = "Driver={Microsoft Visual FoxPro Driver};SourceType=DBF;Exclusive=No;" +
-                @"SourceDB=\\rh-srvadmin-01\Compacw\Empresas\RHI;";
-                using (OdbcConnection conn = new OdbcConnection(connString))
-                {
-                    conn.Open();
-
-                    OdbcDataReader dr;
-                    OdbcCommand cmd;
-
-                    cmd = new OdbcCommand(sqlString, conn);
-                    dr = cmd.ExecuteReader();
-
-                    if (dr.Read())
-                    {
-                        cuentas = int.Parse(dr["cuentas"].ToString());
-                    }
-                    
-                    dr.Close();
-                    conn.Close();
-                }
-            }
-            catch (Exception ex)
-            {
-                eventLogService.WriteEntry("EXCEPTION WHILE USING DATABASE: " + ex.Message + " || " + ex.StackTrace, EventLogEntryType.Error);
-            }
-            eventLogService.WriteEntry("FOUND ACCOUNTS: " + cuentas.ToString());
-            */
-
-            eventLogService.WriteEntry("CONSOLE EXECUTION END.");
+            eventLogService.WriteEntry("CONSOLE EXECUTION END FOR " + args[0]);
         }
     }
 }
