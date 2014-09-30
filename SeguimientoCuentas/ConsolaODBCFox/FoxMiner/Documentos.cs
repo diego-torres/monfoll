@@ -156,7 +156,6 @@ namespace ConsolaODBCFox.FoxMiner
                         }
 
                         cuenta.Moneda = Monedas[iMoneda];
-                        //cuenta.Total = double.Parse(dr["CTIPOCAM01"].ToString());
                         cuenta.Total = double.Parse(dr["CTOTAL"].ToString());
                         cuenta.Saldo = double.Parse(dr["CPENDIENTE"].ToString());
 
@@ -213,7 +212,7 @@ namespace ConsolaODBCFox.FoxMiner
                 NpgsqlDataReader dr;
                 NpgsqlCommand cmd;
 
-                string sqlString = "SELECT id_cliente " +
+                string sqlString = "SELECT id_cliente, dia_pago " +
                     "FROM cat_cliente " +
                     "WHERE ap_id = @idCliente AND id_empresa = @idEmpresa;";
 
@@ -230,6 +229,7 @@ namespace ConsolaODBCFox.FoxMiner
                 {
                     // Cliente listo en base de datos; asignar identificador para relacion
                     cliente.Id = int.Parse(dr["id_cliente"].ToString());
+                    cliente.DiaPago = dr["dia_pago"].ToString();
                 }
                 else
                 {
@@ -314,7 +314,9 @@ namespace ConsolaODBCFox.FoxMiner
                                     // Actualizar Full
                                     pgCuenta.Observaciones = apCuenta.Observaciones;
                                     pgCuenta.TipoCobro = apCuenta.TipoCobro;
-                                    pgCuenta.FechaCobro = apCuenta.FechaCobro;
+
+                                    if(!apCuenta.FechaCobro.Equals(new DateTime(1899, 12, 30)))
+                                        pgCuenta.FechaCobro = apCuenta.FechaCobro;
 
                                     PgCuentas.ActualizarCompleto(pgCuenta);
                                 }
@@ -654,7 +656,6 @@ namespace ConsolaODBCFox.FoxMiner
 
         #endregion
 
-
         #region DETALLE
 
         public void CalcularDetalle()
@@ -873,9 +874,103 @@ namespace ConsolaODBCFox.FoxMiner
 
         #endregion
 
+        #region VENCIDOS
+
         public void CalcularVencidos()
         {
-            throw new NotImplementedException("Not implemented yet");
+            List<GrupoVencimiento> grupos = PgGruposVencimiento.GruposVencimiento();
+            foreach (GrupoVencimiento grupo in grupos)
+            {
+
+                throw new NotImplementedException("Not implemented yet");
+
+            }
+
+            
+        }
+
+        public List<FactVencimiento> VencimientosAdminPaq(GrupoVencimiento grupo, string arrCredito)
+        {
+            int monthDeltaDays = (DateTime.Today.Day - 1) * -1;
+            DateTime BOM = DateTime.Today.AddDays(monthDeltaDays);
+
+            string sqlString = "SELECT " +
+                "SUM(CTOTAL) AS SUM_TOTAL, " +
+                "CIDAGENTE, " +
+                "CIDMONEDA, " +
+                "CTIPOCAM01, " +
+                "CFECHA " +
+                "FROM MGW10008 " +
+                "WHERE CCANCELADO = 0 " +
+                "AND CDEVUELTO = 0 " +
+                "AND CIDCONCE01 IN (" + arrCredito + ") " +
+                "AND CAFECTADO = 1 " +
+                "AND CIMPRESO = 1 " +
+                "AND CFECHA >= Date(" + BOM.Year + "," + BOM.Month + "," + BOM.Day + ") " +
+                "GROUP BY CIDAGENTE, CIDMONEDA, CTIPOCAM01, CFECHA";
+
+            string connString = "Driver={Microsoft Visual FoxPro Driver};SourceType=DBF;Exclusive=No;" +
+                @"SourceDB=" + Empresa.Ruta + ";";
+            using (OdbcConnection conn = new OdbcConnection(connString))
+            {
+                conn.Open();
+
+                OdbcDataReader dr;
+                OdbcCommand cmd;
+
+                cmd = new OdbcCommand(sqlString, conn);
+                dr = cmd.ExecuteReader();
+
+                while (dr.Read())
+                {
+                    FactVenta venta = new FactVenta();
+                    venta.Importe = double.Parse(dr["SUM_TOTAL"].ToString());
+                    venta.IdVendedor = int.Parse(dr["CIDAGENTE"].ToString());
+                    venta.IdMoneda = int.Parse(dr["CIDMONEDA"].ToString());
+                    venta.TipoCambio = double.Parse(dr["CTIPOCAM01"].ToString());
+                    venta.Fecha = DateTime.Parse(dr["CFECHA"].ToString());
+
+                    //result.Add(venta);
+                }
+                dr.Close();
+                conn.Close();
+            }
+            return null;
+        }
+
+        #endregion
+
+        public void Fix()
+        {
+            List<Cuenta> cuentas = PgCuentas.FixCuentas(Empresa.Id);
+            PgCuentas.ArreglarCuentas(cuentas);
+        }
+
+        public void Clientes()
+        {
+            List<Cliente> clientes = PgClientes.Clientes(Empresa.Id);
+
+            try
+            {
+                string connString = "Driver={Microsoft Visual FoxPro Driver};SourceType=DBF;Exclusive=No;" +
+                @"SourceDB=" + Empresa.Ruta + ";";
+                using (OdbcConnection conn = new OdbcConnection(connString))
+                {
+                    conn.Open();
+                    foreach (Cliente cliente in clientes)
+                    {
+                        Cliente apCliente = ClienteFromAdminPaq(cliente.ApId, conn);
+                        apCliente.Id = cliente.Id;
+
+                        PgClientes.ActualizarCliente(apCliente);
+                    }
+                    conn.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.WriteEntry("EXCEPTION WHILE USING DATABASE: " + ex.Message + " || " + ex.StackTrace, EventLogEntryType.Warning, 2, 3);
+            }
         }
 
         public void CalcularPorVencer()

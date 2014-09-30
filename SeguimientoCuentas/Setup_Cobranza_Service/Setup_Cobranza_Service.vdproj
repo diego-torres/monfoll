@@ -58,7 +58,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_0B1D3946FA19639FDB738FE9A11A068F"
+        "OwnerKey" = "8:_E61DA399D7FE45F754203FCB1E9FA004"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -70,7 +70,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_E61DA399D7FE45F754203FCB1E9FA004"
+        "OwnerKey" = "8:_0B1D3946FA19639FDB738FE9A11A068F"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -388,15 +388,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Servicio Cobranza"
-        "ProductCode" = "8:{D32F4355-0591-4734-8B96-E18A1C36E28C}"
-        "PackageCode" = "8:{4477EE88-DD7A-4ACB-ACEB-FB3D7576F9E7}"
+        "ProductCode" = "8:{873D40D1-05AD-4154-949C-3F06F15428FB}"
+        "PackageCode" = "8:{EB414EAE-5D7B-49E7-B13A-B44422AFA39B}"
         "UpgradeCode" = "8:{02429FA4-2BBD-48CC-AE0C-05FB596933C6}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:6.1.1"
+        "ProductVersion" = "8:6.1.2"
         "Manufacturer" = "8:Inspiracode"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
