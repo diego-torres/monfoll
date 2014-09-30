@@ -53,6 +53,11 @@ namespace Cobranza
             eventLogService.WriteEntry("START TODAY DOWNLOAD PROCESS.",
                 EventLogEntryType.Information, 1, 1);
 
+            System.Threading.Thread.Sleep(100000);
+
+            eventLogService.WriteEntry("START CLIENT DOWNLOAD PROCESS.",
+                EventLogEntryType.Information, 3, 1);
+
             System.Threading.Thread.Sleep(180000);
 
             eventLogService.WriteEntry("START UPDATE PROCESS.",

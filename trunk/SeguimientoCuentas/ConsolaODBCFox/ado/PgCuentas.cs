@@ -55,9 +55,9 @@ namespace ConsolaODBCFox.ado
                 conn.Open();
 
                 string sqlString = "INSERT INTO ctrl_cuenta (ap_id, enterprise_id, F_DOCUMENTO, F_VENCIMIENTO, F_COBRO, ID_CLIENTE, SERIE_DOCO, FOLIO_DOCO, TIPO_DOCUMENTO, TIPO_COBRO, FACTURADO, " +
-                    "SALDO, MONEDA, OBSERVACIONES) " +
+                    "SALDO, MONEDA, OBSERVACIONES, f_cobro_esperada) " +
                     "VALUES( @id, @enterprise, @f_documento, @f_vencimiento, @f_cobro, @id_cliente, @serie_doco, @folio_doco, @tipo_documento, @tipo_cobro, @facturado, @saldo, " +
-                    "@moneda, @observaciones);";
+                    "@moneda, @observaciones, @esperada);";
 
                 NpgsqlCommand cmd = new NpgsqlCommand(sqlString, conn);
 
@@ -75,6 +75,7 @@ namespace ConsolaODBCFox.ado
                 cmd.Parameters.Add("@saldo", NpgsqlTypes.NpgsqlDbType.Money);
                 cmd.Parameters.Add("@moneda", NpgsqlTypes.NpgsqlDbType.Varchar, 50);
                 cmd.Parameters.Add("@observaciones", NpgsqlTypes.NpgsqlDbType.Varchar, 250);
+                cmd.Parameters.Add("@esperada", NpgsqlTypes.NpgsqlDbType.Date);
 
                 cmd.Parameters["@id"].Value = cuenta.ApId;
                 cmd.Parameters["@enterprise"].Value = idEmpresa;
@@ -85,8 +86,8 @@ namespace ConsolaODBCFox.ado
                 int coId = cuenta.Cliente.Id;
                 if (coId == 0)
                 {
-                    AgregarCliente(conn, cuenta.Cliente);
-                    coId = IdCliente(conn, cuenta.Cliente.ApId, cuenta.Cliente.IdEmpresa);
+                    PgClientes.AgregarCliente(conn, cuenta.Cliente);
+                    coId = PgClientes.IdCliente(conn, cuenta.Cliente.ApId, cuenta.Cliente.IdEmpresa);
                     if (coId == 0)
                     {
                         conn.Close();
@@ -103,6 +104,9 @@ namespace ConsolaODBCFox.ado
                 cmd.Parameters["@saldo"].Value = cuenta.Saldo;
                 cmd.Parameters["@moneda"].Value = cuenta.Moneda;
                 cmd.Parameters["@observaciones"].Value = cuenta.Observaciones;
+
+                if(!cuenta.FechaEsperadaCobro.Equals(new DateTime(1899, 12, 30)))
+                    cmd.Parameters["@esperada"].Value = cuenta.FechaEsperadaCobro;
 
                 cmd.ExecuteNonQuery();
 
@@ -134,6 +138,94 @@ namespace ConsolaODBCFox.ado
             }
         }
 
+        public static void ArreglarCuentas(List<Cuenta> cuentas)
+        {
+
+            string connectionString = ConfigurationManager.ConnectionStrings[Config.Common.MONFOLL].ConnectionString;
+
+            using (NpgsqlConnection conn = new NpgsqlConnection(connectionString))
+            {
+                conn.Open();
+
+
+                foreach (Cuenta cuenta in cuentas)
+                {
+                    DateTime esperada = cuenta.FechaEsperadaCobro;
+                    if (esperada.Equals(new DateTime(1899, 12, 30)))
+                        continue;
+
+                    string sqlString = "UPDATE ctrl_cuenta " +
+                    "SET f_cobro_esperada = @fecha " +
+                    "WHERE id_doco = @id";
+
+                    NpgsqlCommand cmd = new NpgsqlCommand(sqlString, conn);
+
+                    cmd.Parameters.Add("@fecha", NpgsqlTypes.NpgsqlDbType.Date);
+                    cmd.Parameters.Add("@id", NpgsqlTypes.NpgsqlDbType.Integer);
+
+                    cmd.Parameters["@fecha"].Value = esperada;
+                    cmd.Parameters["@id"].Value = cuenta.Id;
+
+                    cmd.ExecuteNonQuery();
+                }
+
+                conn.Close();
+            }
+            
+        }
+
+        public static List<Cuenta> FixCuentas(int idEmpresa)
+        {
+            List<Cuenta> result = new List<Cuenta>();
+            string connectionString = ConfigurationManager.ConnectionStrings[Config.Common.MONFOLL].ConnectionString;
+            // Para cada ID Doco en la BD de postgres
+            using (NpgsqlConnection pgConnection = new NpgsqlConnection(connectionString))
+            {
+                pgConnection.Open();
+                NpgsqlDataReader dr;
+                NpgsqlCommand cmd;
+
+                string sqlString = "SELECT id_doco, f_documento, f_vencimiento, dia_pago  " +
+                    "FROM ctrl_cuenta " +
+                    "INNER JOIN cat_cliente ON cat_cliente.id_cliente = ctrl_cuenta.id_cliente " +
+                    "WHERE enterprise_id = @idEmpresa;";
+
+                cmd = new NpgsqlCommand(sqlString, pgConnection);
+                cmd.Parameters.Add("@idEmpresa", NpgsqlTypes.NpgsqlDbType.Integer);
+                cmd.Parameters["@idEmpresa"].Value = idEmpresa;
+
+                dr = cmd.ExecuteReader();
+
+                while (dr.Read())
+                {
+                    Cuenta cuenta = new Cuenta();
+                    cuenta.Id = int.Parse(dr["id_doco"].ToString());
+                    
+                    bool parsed = false;
+                    DateTime tempDate = DateTime.Today;
+                    parsed = DateTime.TryParse(dr["f_documento"].ToString(), out tempDate);
+                    if (parsed)
+                        cuenta.FechaDoc = tempDate;
+
+                    parsed = DateTime.TryParse(dr["f_vencimiento"].ToString(), out tempDate);
+                    if (parsed)
+                        cuenta.FechaVencimiento = tempDate;
+
+
+                    Cliente cliente = new Cliente();
+                    cliente.DiaPago = dr["dia_pago"].ToString();
+                    cuenta.Cliente = cliente;
+
+                    result.Add(cuenta);
+                }
+
+                dr.Close();
+                cmd.Dispose();
+                pgConnection.Close();
+            }
+            return result;
+        }
+
         public static List<Cuenta> Cuentas(int idEmpresa)
         {
             List<Cuenta> result = new List<Cuenta>();
@@ -161,7 +253,14 @@ namespace ConsolaODBCFox.ado
                     cuenta.Id = int.Parse(dr["id_doco"].ToString());
                     cuenta.ApId = int.Parse(dr["ap_id"].ToString());
                     cuenta.Saldo = double.Parse(dr["saldo"].ToString());
-                    cuenta.FechaCobro = DateTime.Parse(dr["f_cobro"].ToString());
+
+                    bool parsed = false;
+                    DateTime fCobro = DateTime.Today;
+                    parsed = DateTime.TryParse(dr["f_cobro"].ToString(), out fCobro);
+                    if(parsed)
+                        cuenta.FechaCobro = DateTime.Parse(dr["f_cobro"].ToString());
+                        
+                    
                     cuenta.Observaciones = dr["observaciones"].ToString();
                     cuenta.TipoCobro = dr["tipo_cobro"].ToString();
                     result.Add(cuenta);
@@ -336,62 +435,6 @@ namespace ConsolaODBCFox.ado
             cmd.ExecuteNonQuery();
         }
 
-        private static void AgregarCliente(NpgsqlConnection conn, Cliente cliente)
-        {
-            string sqlString = "INSERT INTO cat_cliente (ap_id, id_empresa, cd_cliente, nombre_cliente, ruta, dia_pago, es_local) " +
-                "VALUES(@id, @empresa, @codigo, @nombre_cliente,  @agente,  @dia_pago, @local)";
-
-            NpgsqlCommand cmd = new NpgsqlCommand(sqlString, conn);
-
-            cmd.Parameters.Add("@id", NpgsqlTypes.NpgsqlDbType.Integer);
-            cmd.Parameters.Add("@empresa", NpgsqlTypes.NpgsqlDbType.Integer);
-            cmd.Parameters.Add("@codigo", NpgsqlTypes.NpgsqlDbType.Varchar, 6);
-            cmd.Parameters.Add("@nombre_cliente", NpgsqlTypes.NpgsqlDbType.Varchar, 150);
-            cmd.Parameters.Add("@agente", NpgsqlTypes.NpgsqlDbType.Varchar, 20);
-            cmd.Parameters.Add("@dia_pago", NpgsqlTypes.NpgsqlDbType.Varchar, 50);
-            cmd.Parameters.Add("@local", NpgsqlTypes.NpgsqlDbType.Boolean);
-
-            cmd.Parameters["@id"].Value = cliente.ApId;
-            cmd.Parameters["@empresa"].Value = cliente.IdEmpresa;
-            cmd.Parameters["@codigo"].Value = cliente.Codigo;
-            cmd.Parameters["@nombre_cliente"].Value = cliente.RazonSocial;
-            cmd.Parameters["@agente"].Value = cliente.Ruta;
-            cmd.Parameters["@dia_pago"].Value = cliente.DiaPago;
-            cmd.Parameters["@local"].Value = cliente.EsLocal;
-
-            cmd.ExecuteNonQuery();
-        }
-
-        private static int IdCliente(NpgsqlConnection conn, int apId, int idEmpresa)
-        {
-            int result = 0;
-            NpgsqlDataReader dr;
-            NpgsqlCommand cmd;
-
-            string sqlString = "SELECT id_cliente " +
-                "FROM cat_cliente " +
-                "WHERE ap_id = @idCliente AND id_empresa = @idEmpresa;";
-
-            cmd = new NpgsqlCommand(sqlString, conn);
-            cmd.Parameters.Add("@idCliente", NpgsqlTypes.NpgsqlDbType.Integer);
-            cmd.Parameters.Add("@idEmpresa", NpgsqlTypes.NpgsqlDbType.Integer);
-
-            cmd.Parameters["@idCliente"].Value = apId;
-            cmd.Parameters["@idEmpresa"].Value = idEmpresa;
-
-            dr = cmd.ExecuteReader();
-
-            if (dr.Read())
-            {
-                // Cliente listo en base de datos; asignar identificador para relacion
-                result = int.Parse(dr["id_cliente"].ToString());
-            }
-            
-            dr.Close();
-            cmd.Dispose();
-            
-            return result;
-        }
 
     }
 }

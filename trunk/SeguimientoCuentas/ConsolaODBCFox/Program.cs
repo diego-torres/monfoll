@@ -55,6 +55,7 @@ namespace ConsolaODBCFox
                 string configuredClient = configuredClients.GetValues(key).FirstOrDefault();
 
                 if ("rutaDatos".Equals(key.ToString())) continue;
+                if ("primerContacto".Equals(key.ToString())) continue;
                 EnterpriseSection clientConfig = (EnterpriseSection)System.Configuration.ConfigurationManager.GetSection("Empresas/" + configuredClient);
 
                 if (clientConfig == null)
@@ -118,6 +119,12 @@ namespace ConsolaODBCFox
                             break;
                         case "DETALLE":
                             docosAPI.CalcularDetalle();
+                            break;
+                        case "FIX":
+                            docosAPI.Fix();
+                            break;
+                        case "CLIENTES":
+                            docosAPI.Clientes();
                             break;
                         default:
                             eventLogService.WriteEntry("Console usage: argument not allowed: " + args[0] + ".", EventLogEntryType.Error, 11, 1);
