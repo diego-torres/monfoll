@@ -434,7 +434,7 @@ namespace ConsolaODBCFox.FoxMiner
             DateTime BOM = DateTime.Today.AddDays(monthDeltaDays);
 
             string sqlString = "SELECT " +
-                "SUM(CTOTAL) AS SUM_TOTAL, " +
+                "SUM(CNETO) AS SUM_TOTAL, " +
                 "CIDAGENTE, " +
                 "CIDMONEDA, " +
                 "CTIPOCAM01, " +
