@@ -66,6 +66,8 @@
             this.toolStripButtonOpenFilterAttended = new System.Windows.Forms.ToolStripButton();
             this.statusStripAttended = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusFilterAttended = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabelTotalMaster = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabelTotalAttended = new System.Windows.Forms.ToolStripStatusLabel();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewMaster)).BeginInit();
             this.contextMenuStripAccountsGrid.SuspendLayout();
             this.statusStripMaster.SuspendLayout();
@@ -91,6 +93,7 @@
             this.dataGridViewMaster.ReadOnly = true;
             this.dataGridViewMaster.Size = new System.Drawing.Size(799, 384);
             this.dataGridViewMaster.TabIndex = 0;
+            this.dataGridViewMaster.SelectionChanged += new System.EventHandler(this.dataGridViewMaster_SelectionChanged);
             this.dataGridViewMaster.DoubleClick += new System.EventHandler(this.dataGridViewMaster_DoubleClick);
             this.dataGridViewMaster.MouseDown += new System.Windows.Forms.MouseEventHandler(this.dataGridView_MouseDown);
             // 
@@ -119,7 +122,8 @@
             // statusStripMaster
             // 
             this.statusStripMaster.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripStatusFilterMaster});
+            this.toolStripStatusFilterMaster,
+            this.toolStripStatusLabelTotalMaster});
             this.statusStripMaster.Location = new System.Drawing.Point(3, 412);
             this.statusStripMaster.Name = "statusStripMaster";
             this.statusStripMaster.Size = new System.Drawing.Size(799, 22);
@@ -295,6 +299,7 @@
             this.dataGridViewAttended.ReadOnly = true;
             this.dataGridViewAttended.Size = new System.Drawing.Size(805, 390);
             this.dataGridViewAttended.TabIndex = 0;
+            this.dataGridViewAttended.SelectionChanged += new System.EventHandler(this.dataGridViewAttended_SelectionChanged);
             this.dataGridViewAttended.DoubleClick += new System.EventHandler(this.dataGridViewAttended_DoubleClick);
             this.dataGridViewAttended.MouseDown += new System.Windows.Forms.MouseEventHandler(this.dataGridView_MouseDown);
             // 
@@ -415,7 +420,8 @@
             // statusStripAttended
             // 
             this.statusStripAttended.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripStatusFilterAttended});
+            this.toolStripStatusFilterAttended,
+            this.toolStripStatusLabelTotalAttended});
             this.statusStripAttended.Location = new System.Drawing.Point(0, 415);
             this.statusStripAttended.Name = "statusStripAttended";
             this.statusStripAttended.Size = new System.Drawing.Size(805, 22);
@@ -427,6 +433,22 @@
             this.toolStripStatusFilterAttended.Name = "toolStripStatusFilterAttended";
             this.toolStripStatusFilterAttended.Size = new System.Drawing.Size(47, 17);
             this.toolStripStatusFilterAttended.Text = "FILTRO:";
+            // 
+            // toolStripStatusLabelTotalMaster
+            // 
+            this.toolStripStatusLabelTotalMaster.Name = "toolStripStatusLabelTotalMaster";
+            this.toolStripStatusLabelTotalMaster.Size = new System.Drawing.Size(737, 17);
+            this.toolStripStatusLabelTotalMaster.Spring = true;
+            this.toolStripStatusLabelTotalMaster.Text = "Total:";
+            this.toolStripStatusLabelTotalMaster.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // toolStripStatusLabelTotalAttended
+            // 
+            this.toolStripStatusLabelTotalAttended.Name = "toolStripStatusLabelTotalAttended";
+            this.toolStripStatusLabelTotalAttended.Size = new System.Drawing.Size(743, 17);
+            this.toolStripStatusLabelTotalAttended.Spring = true;
+            this.toolStripStatusLabelTotalAttended.Text = "Total:";
+            this.toolStripStatusLabelTotalAttended.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // FormProcess
             // 
@@ -496,5 +518,7 @@
         private System.Windows.Forms.DataGridView dataGridViewAttended;
         private System.Windows.Forms.ToolStripButton toolStripButtonAddFollowUpMaster;
         private System.Windows.Forms.ToolStripButton toolStripButtonAddFollowUpAttended;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelTotalMaster;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelTotalAttended;
     }
 }

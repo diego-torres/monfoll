@@ -133,7 +133,7 @@
             // 
             this.mainStatus.Name = "mainStatus";
             this.mainStatus.Size = new System.Drawing.Size(311, 17);
-            this.mainStatus.Text = "Seguimiento a cuentas por cobrar - módulo de cobrador V 4.0.0";
+            this.mainStatus.Text = "Seguimiento a cuentas por cobrar - módulo de cobrador V 4.1.1";
             // 
             // mainProgressBar
             // 

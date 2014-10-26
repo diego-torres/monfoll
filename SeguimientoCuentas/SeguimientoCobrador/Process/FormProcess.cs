@@ -459,7 +459,7 @@ namespace SeguimientoCobrador.Process
             string prevFilter = dtMaster.DefaultView.RowFilter;
             dtMaster = dbAccount.MasterTable();
             dtMaster.DefaultView.RowFilter = prevFilter;
-            dtMaster.DefaultView.Sort = "f_documento desc, folio_doco asc";
+            dtMaster.DefaultView.Sort = "f_vencimiento desc, folio_doco asc";
             dataGridViewMaster.DataSource = dtMaster;
 
             FormatAccountsGridView(dataGridViewMaster);
@@ -470,7 +470,7 @@ namespace SeguimientoCobrador.Process
             string prevFilter = dtAttended.DefaultView.RowFilter;
             dtAttended = dbAccount.Attended();
             dtAttended.DefaultView.RowFilter = prevFilter;
-            dtAttended.DefaultView.Sort = "f_documento desc, folio_doco asc";
+            dtAttended.DefaultView.Sort = "f_vencimiento desc, folio_doco asc";
             dataGridViewAttended.DataSource = dtAttended;
 
             FormatAccountsGridView(dataGridViewAttended);
@@ -478,6 +478,30 @@ namespace SeguimientoCobrador.Process
         #endregion
 
         #region DATE_SETTERS
+        private void SetCollectDate(DateTimePicker dtp, Collectable.Account account)
+        {
+            try
+            {
+                if (!dtp.Checked)
+                {
+                    //18991230
+                    DateTime dt = new DateTime(1899, 12, 30);
+                    api.SetCollectDate(account.ApId, dt, account.Company.EnterprisePath);
+                    dbAccount.SetCollectDate(account.DocId, dt);
+                }
+                else
+                {
+                    api.SetCollectDate(account.ApId, dtp.Value, account.Company.EnterprisePath);
+                    dbAccount.SetCollectDate(account.DocId, dtp.Value);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("No se pudo actualizar la fecha de cobro en AdminPaq para el folio: [" + account.Folio + "]. \n" +
+                ex.Message, "Fecha de cobro no guardada", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
         private void toolStripButtonSetDateMaster_Click(object sender, EventArgs e)
         {
             DialogCollectDate dlgCollectDate = new DialogCollectDate();
@@ -488,18 +512,7 @@ namespace SeguimientoCobrador.Process
 
             foreach (Collectable.Account account in selectedIds)
             {
-                if (!dlgCollectDate.dateTimePickerCollectDate.Checked)
-                {
-                    //18991230
-                    DateTime dt = new DateTime(1899, 12, 30);
-                    api.SetCollectDate(account.ApId, dt, account.Company.EnterprisePath);
-                    dbAccount.SetCollectDate(account.DocId, dt);
-                }
-                else 
-                {
-                    api.SetCollectDate(account.ApId, dlgCollectDate.dateTimePickerCollectDate.Value, account.Company.EnterprisePath);
-                    dbAccount.SetCollectDate(account.DocId, dlgCollectDate.dateTimePickerCollectDate.Value);
-                }
+                SetCollectDate(dlgCollectDate.dateTimePickerCollectDate, account);
             }
 
             MessageBox.Show("Fecha de cobro actualizada en AdminPaq.", "Fecha de cobro asignada", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -517,18 +530,7 @@ namespace SeguimientoCobrador.Process
 
             foreach (Collectable.Account account in selectedIds)
             {
-                if (!dlgCollectDate.dateTimePickerCollectDate.Checked)
-                {
-                    //18991230
-                    DateTime dt = new DateTime(1899, 12, 30);
-                    api.SetCollectDate(account.ApId, dt, account.Company.EnterprisePath);
-                    dbAccount.SetCollectDate(account.DocId, dt);
-                }
-                else
-                {
-                    api.SetCollectDate(account.ApId, dlgCollectDate.dateTimePickerCollectDate.Value, account.Company.EnterprisePath);
-                    dbAccount.SetCollectDate(account.DocId, dlgCollectDate.dateTimePickerCollectDate.Value);
-                }
+                SetCollectDate(dlgCollectDate.dateTimePickerCollectDate, account);
             }
 
             MessageBox.Show("Fecha de cobro actualizada en AdminPaq.", "Fecha de cobro asignada", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -548,8 +550,16 @@ namespace SeguimientoCobrador.Process
 
             foreach (Collectable.Account account in selectedIds)
             {
-                api.SetObservations(account.ApId, dlgObs.textBoxCollectType.Text, dlgObs.textBoxObservations.Text, account.Company.EnterprisePath);
-                dbAccount.SetObservations(account.DocId, dlgObs.textBoxCollectType.Text, dlgObs.textBoxObservations.Text);
+                try
+                {
+                    api.SetObservations(account.ApId, dlgObs.textBoxCollectType.Text, dlgObs.textBoxObservations.Text, account.Company.EnterprisePath);
+                    dbAccount.SetObservations(account.DocId, dlgObs.textBoxCollectType.Text, dlgObs.textBoxObservations.Text);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("El documento con folio [" + account.Folio + "] no pudo ser actualizado. \n"
+                        + ex.Message, "Documento no actualizado", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
             }
             MessageBox.Show("Observaciones actualizadas exitosamente en AdminPaq.", "Observaciones actualizadas", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
@@ -566,8 +576,16 @@ namespace SeguimientoCobrador.Process
 
             foreach (Collectable.Account account in selectedIds)
             {
-                api.SetObservations(account.ApId, dlgObs.textBoxCollectType.Text, dlgObs.textBoxObservations.Text, account.Company.EnterprisePath);
-                dbAccount.SetObservations(account.DocId, dlgObs.textBoxCollectType.Text, dlgObs.textBoxObservations.Text);
+                try
+                {
+                    api.SetObservations(account.ApId, dlgObs.textBoxCollectType.Text, dlgObs.textBoxObservations.Text, account.Company.EnterprisePath);
+                    dbAccount.SetObservations(account.DocId, dlgObs.textBoxCollectType.Text, dlgObs.textBoxObservations.Text);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("El documento con folio [" + account.Folio + "] no pudo ser actualizado. \n"
+                        + ex.Message, "Documento no actualizado", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
             }
             MessageBox.Show("Observaciones actualizadas exitosamente en AdminPaq.", "Observaciones actualizadas", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
@@ -650,11 +668,11 @@ namespace SeguimientoCobrador.Process
             dlgFollow.ShowDialog();
             if (dlgFollow.DialogResult == DialogResult.Cancel) return;
 
-            List<Collectable.Account> selectedIds = SelectedAdminId(dgv);
+            List<int> selectedIds = SelectedIds(dgv);
 
-            foreach (Collectable.Account account in selectedIds)
+            foreach (int id in selectedIds)
             {
-                dbAccount.AddFollowUp(dlgFollow.comboBoxType.Text, dlgFollow.textBoxNote.Text, account.DocId);
+                dbAccount.AddFollowUp(dlgFollow.comboBoxType.Text, dlgFollow.textBoxNote.Text, id);
             }
             MessageBox.Show("Seguimiento enviado exitosamente a la base de datos.", "Seguimiento actualizado", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
@@ -751,6 +769,36 @@ namespace SeguimientoCobrador.Process
                 FormatAccountsGridView(dataGridViewAttended);
                 toolStripStatusFilterAttended.Text = "FILTRO: " + filter;
             }
+        }
+
+        private double TotalSelected(DataGridView dgvSender)
+        {
+            double totalSelected = 0;
+
+            if (dgvSender.SelectedCells.Count >= 1)
+            {
+                List<int> selectedIds = new List<int>();
+                foreach (DataGridViewCell cell in dgvSender.SelectedCells)
+                {
+                    DataGridViewRow selectedRow = dgvSender.Rows[cell.RowIndex];
+                    double selectedAmount = double.Parse(selectedRow.Cells["saldo"].Value.ToString());
+                    int selectedId = int.Parse(selectedRow.Cells["id_doco"].Value.ToString());
+
+                    if (!selectedIds.Contains(selectedId))
+                        totalSelected += selectedAmount;
+                }
+            }
+            return totalSelected;
+        }
+
+        private void dataGridViewMaster_SelectionChanged(object sender, EventArgs e)
+        {
+            toolStripStatusLabelTotalMaster.Text = String.Format("Total: {0:c}", TotalSelected((DataGridView)sender));
+        }
+
+        private void dataGridViewAttended_SelectionChanged(object sender, EventArgs e)
+        {
+            toolStripStatusLabelTotalAttended.Text = String.Format("Total: {0:c}", TotalSelected((DataGridView)sender));
         }
     }
 }

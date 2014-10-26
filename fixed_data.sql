@@ -11,3 +11,4 @@ INSERT INTO CAT_MOVIMIENTO(descripcion, system_based) VALUES('Llamada', false); 
 INSERT INTO CAT_MOVIMIENTO(descripcion, system_based) VALUES('Visita', false); -- 10
 INSERT INTO CAT_MOVIMIENTO(descripcion, system_based) VALUES('Email', false); -- 11
 INSERT INTO CAT_MOVIMIENTO(descripcion, system_based) VALUES('Otro Seguimiento', false); -- 12
+INSERT INTO CAT_MOVIMIENTO(descripcion, system_based) VALUES('Registro', true); -- 13

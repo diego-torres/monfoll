@@ -9,18 +9,19 @@ namespace SeguimientoSuper.Collectable.PostgresImpl
 {
     public abstract class CommonBase
     {
-        protected NpgsqlConnection conn;
+        protected const string UNEXISTING_DOCO_ERR = "El documento ya no existe, pues ha sido saldado.";
 
-        protected void connect()
+        protected string ConnString
         {
-            Settings set = Settings.Default;
+            get
+            {
+                Settings set = Settings.Default;
 
-            string connString = String.Format("Server={0};Port={1};" +
-                    "User Id={2};Password={3};Database={4};Timeout=5;",
-                    set.server, set.port, set.user,
-                    set.password, set.database);
-            conn = new NpgsqlConnection(connString);
-            conn.Open();
+                return String.Format("Server={0};Port={1};" +
+                        "User Id={2};Password={3};Database={4};Timeout=5;",
+                        set.server, set.port, set.user,
+                        set.password, set.database);
+            }
         }
 
         protected int ConfiguredCompany()
