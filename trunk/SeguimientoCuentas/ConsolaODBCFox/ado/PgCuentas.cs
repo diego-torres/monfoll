@@ -261,8 +261,8 @@ namespace ConsolaODBCFox.ado
                         cuenta.FechaCobro = DateTime.Parse(dr["f_cobro"].ToString());
                         
                     
-                    cuenta.Observaciones = dr["observaciones"].ToString();
-                    cuenta.TipoCobro = dr["tipo_cobro"].ToString();
+                    cuenta.Observaciones = dr["observaciones"].ToString().Trim();
+                    cuenta.TipoCobro = dr["tipo_cobro"].ToString().Trim();
                     result.Add(cuenta);
                 }
 
@@ -311,8 +311,7 @@ namespace ConsolaODBCFox.ado
                 conn.Open();
 
                 string sqlString = "UPDATE ctrl_cuenta " +
-                "SET SALDO = @saldo, " +
-                "F_COBRO = @collect_date, " +
+                "SET F_COBRO = @collect_date, " +
                 "TIPO_COBRO = @collect_type, " +
                 "OBSERVACIONES = @obs_note, " +
                 "TS_DESCARGADO = CURRENT_TIMESTAMP " +
@@ -336,10 +335,27 @@ namespace ConsolaODBCFox.ado
 
                 cmd.ExecuteNonQuery();
 
-                GrabarAbonos(conn, cuenta);
+                NotaDeCambio(conn, cuenta);
+                //GrabarAbonos(conn, cuenta);
 
                 conn.Close();
             }
+        }
+
+        private static void NotaDeCambio(NpgsqlConnection conn, Cuenta cuenta)
+        {
+            string sqlString = "INSERT INTO ctrl_seguimiento (id_movimiento, id_doco, descripcion) " +
+                "VALUES(13, @id, @nota);";
+
+            NpgsqlCommand cmd = new NpgsqlCommand(sqlString, conn);
+
+            cmd.Parameters.Add("@id", NpgsqlTypes.NpgsqlDbType.Integer);
+            cmd.Parameters.Add("@nota", NpgsqlTypes.NpgsqlDbType.Varchar, 250);
+
+            cmd.Parameters["@id"].Value = cuenta.Id;
+            cmd.Parameters["@nota"].Value = string.Format("Cambio detectado en AdminPaq. O:{0}, TC:{1}, FC:{2}", cuenta.Observaciones, cuenta.TipoCobro, cuenta.FechaCobro.ToShortDateString());
+
+            cmd.ExecuteNonQuery();
         }
 
         private static void GrabarAbonos(NpgsqlConnection conn, Cuenta cuenta)

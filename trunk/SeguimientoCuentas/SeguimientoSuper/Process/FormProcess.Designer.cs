@@ -125,6 +125,11 @@
             this.toolStripButtonOpenFilterUncollectable = new System.Windows.Forms.ToolStripButton();
             this.statusStripUncollectable = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusFilterUncollectable = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabelTotalBlackList = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabelTotalMaster = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabelTotalAttended = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabelTotalEscalated = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabelTotalUncollectable = new System.Windows.Forms.ToolStripStatusLabel();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewMaster)).BeginInit();
             this.contextMenuStripAccountsGrid.SuspendLayout();
             this.statusStripMaster.SuspendLayout();
@@ -162,6 +167,7 @@
             this.dataGridViewMaster.ReadOnly = true;
             this.dataGridViewMaster.Size = new System.Drawing.Size(799, 384);
             this.dataGridViewMaster.TabIndex = 0;
+            this.dataGridViewMaster.SelectionChanged += new System.EventHandler(this.dataGridViewMaster_SelectionChanged);
             this.dataGridViewMaster.DoubleClick += new System.EventHandler(this.dataGridViewMaster_DoubleClick);
             this.dataGridViewMaster.MouseDown += new System.Windows.Forms.MouseEventHandler(this.dataGridView_MouseDown);
             // 
@@ -190,7 +196,8 @@
             // statusStripMaster
             // 
             this.statusStripMaster.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripStatusFilterMaster});
+            this.toolStripStatusFilterMaster,
+            this.toolStripStatusLabelTotalMaster});
             this.statusStripMaster.Location = new System.Drawing.Point(3, 412);
             this.statusStripMaster.Name = "statusStripMaster";
             this.statusStripMaster.Size = new System.Drawing.Size(799, 22);
@@ -242,6 +249,7 @@
             this.dataGridViewBlackList.ReadOnly = true;
             this.dataGridViewBlackList.Size = new System.Drawing.Size(799, 384);
             this.dataGridViewBlackList.TabIndex = 2;
+            this.dataGridViewBlackList.SelectionChanged += new System.EventHandler(this.dataGridViewBlackList_SelectionChanged);
             this.dataGridViewBlackList.DoubleClick += new System.EventHandler(this.dataGridViewBlackList_DoubleClick);
             this.dataGridViewBlackList.MouseDown += new System.Windows.Forms.MouseEventHandler(this.dataGridView_MouseDown);
             // 
@@ -391,7 +399,8 @@
             // statusStripBlackList
             // 
             this.statusStripBlackList.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripStatusFilterBlackList});
+            this.toolStripStatusFilterBlackList,
+            this.toolStripStatusLabelTotalBlackList});
             this.statusStripBlackList.Location = new System.Drawing.Point(3, 412);
             this.statusStripBlackList.Name = "statusStripBlackList";
             this.statusStripBlackList.Size = new System.Drawing.Size(799, 22);
@@ -584,6 +593,7 @@
             this.dataGridViewAttended.ReadOnly = true;
             this.dataGridViewAttended.Size = new System.Drawing.Size(805, 390);
             this.dataGridViewAttended.TabIndex = 0;
+            this.dataGridViewAttended.SelectionChanged += new System.EventHandler(this.dataGridViewAttended_SelectionChanged);
             this.dataGridViewAttended.DoubleClick += new System.EventHandler(this.dataGridViewAttended_DoubleClick);
             this.dataGridViewAttended.MouseDown += new System.Windows.Forms.MouseEventHandler(this.dataGridView_MouseDown);
             // 
@@ -743,7 +753,8 @@
             // statusStripAttended
             // 
             this.statusStripAttended.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripStatusFilterAttended});
+            this.toolStripStatusFilterAttended,
+            this.toolStripStatusLabelTotalAttended});
             this.statusStripAttended.Location = new System.Drawing.Point(0, 415);
             this.statusStripAttended.Name = "statusStripAttended";
             this.statusStripAttended.Size = new System.Drawing.Size(805, 22);
@@ -781,6 +792,7 @@
             this.dataGridViewEscalated.ReadOnly = true;
             this.dataGridViewEscalated.Size = new System.Drawing.Size(805, 390);
             this.dataGridViewEscalated.TabIndex = 2;
+            this.dataGridViewEscalated.SelectionChanged += new System.EventHandler(this.dataGridViewEscalated_SelectionChanged);
             this.dataGridViewEscalated.DoubleClick += new System.EventHandler(this.dataGridViewEscalated_DoubleClick);
             this.dataGridViewEscalated.MouseDown += new System.Windows.Forms.MouseEventHandler(this.dataGridView_MouseDown);
             // 
@@ -918,7 +930,8 @@
             // statusStripEscalated
             // 
             this.statusStripEscalated.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripStatusFilterEscalated});
+            this.toolStripStatusFilterEscalated,
+            this.toolStripStatusLabelTotalEscalated});
             this.statusStripEscalated.Location = new System.Drawing.Point(0, 415);
             this.statusStripEscalated.Name = "statusStripEscalated";
             this.statusStripEscalated.Size = new System.Drawing.Size(805, 22);
@@ -956,6 +969,7 @@
             this.dataGridViewUncollectable.ReadOnly = true;
             this.dataGridViewUncollectable.Size = new System.Drawing.Size(805, 390);
             this.dataGridViewUncollectable.TabIndex = 2;
+            this.dataGridViewUncollectable.SelectionChanged += new System.EventHandler(this.dataGridViewUncollectable_SelectionChanged);
             this.dataGridViewUncollectable.DoubleClick += new System.EventHandler(this.dataGridViewUncollectable_DoubleClick);
             this.dataGridViewUncollectable.MouseDown += new System.Windows.Forms.MouseEventHandler(this.dataGridView_MouseDown);
             // 
@@ -1066,7 +1080,8 @@
             // statusStripUncollectable
             // 
             this.statusStripUncollectable.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripStatusFilterUncollectable});
+            this.toolStripStatusFilterUncollectable,
+            this.toolStripStatusLabelTotalUncollectable});
             this.statusStripUncollectable.Location = new System.Drawing.Point(0, 415);
             this.statusStripUncollectable.Name = "statusStripUncollectable";
             this.statusStripUncollectable.Size = new System.Drawing.Size(805, 22);
@@ -1078,6 +1093,48 @@
             this.toolStripStatusFilterUncollectable.Name = "toolStripStatusFilterUncollectable";
             this.toolStripStatusFilterUncollectable.Size = new System.Drawing.Size(47, 17);
             this.toolStripStatusFilterUncollectable.Text = "FILTRO:";
+            // 
+            // toolStripStatusLabelTotalBlackList
+            // 
+            this.toolStripStatusLabelTotalBlackList.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripStatusLabelTotalBlackList.Name = "toolStripStatusLabelTotalBlackList";
+            this.toolStripStatusLabelTotalBlackList.Padding = new System.Windows.Forms.Padding(15, 0, 0, 0);
+            this.toolStripStatusLabelTotalBlackList.Size = new System.Drawing.Size(737, 17);
+            this.toolStripStatusLabelTotalBlackList.Spring = true;
+            this.toolStripStatusLabelTotalBlackList.Text = "Total:";
+            this.toolStripStatusLabelTotalBlackList.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // toolStripStatusLabelTotalMaster
+            // 
+            this.toolStripStatusLabelTotalMaster.Name = "toolStripStatusLabelTotalMaster";
+            this.toolStripStatusLabelTotalMaster.Size = new System.Drawing.Size(737, 17);
+            this.toolStripStatusLabelTotalMaster.Spring = true;
+            this.toolStripStatusLabelTotalMaster.Text = "Total:";
+            this.toolStripStatusLabelTotalMaster.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // toolStripStatusLabelTotalAttended
+            // 
+            this.toolStripStatusLabelTotalAttended.Name = "toolStripStatusLabelTotalAttended";
+            this.toolStripStatusLabelTotalAttended.Size = new System.Drawing.Size(743, 17);
+            this.toolStripStatusLabelTotalAttended.Spring = true;
+            this.toolStripStatusLabelTotalAttended.Text = "Total:";
+            this.toolStripStatusLabelTotalAttended.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // toolStripStatusLabelTotalEscalated
+            // 
+            this.toolStripStatusLabelTotalEscalated.Name = "toolStripStatusLabelTotalEscalated";
+            this.toolStripStatusLabelTotalEscalated.Size = new System.Drawing.Size(743, 17);
+            this.toolStripStatusLabelTotalEscalated.Spring = true;
+            this.toolStripStatusLabelTotalEscalated.Text = "Total:";
+            this.toolStripStatusLabelTotalEscalated.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // toolStripStatusLabelTotalUncollectable
+            // 
+            this.toolStripStatusLabelTotalUncollectable.Name = "toolStripStatusLabelTotalUncollectable";
+            this.toolStripStatusLabelTotalUncollectable.Size = new System.Drawing.Size(712, 17);
+            this.toolStripStatusLabelTotalUncollectable.Spring = true;
+            this.toolStripStatusLabelTotalUncollectable.Text = "Total:";
+            this.toolStripStatusLabelTotalUncollectable.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // FormProcess
             // 
@@ -1227,5 +1284,10 @@
         private System.Windows.Forms.ToolStripButton toolStripButtonAddFollowUpEscalated;
         private System.Windows.Forms.ToolStripButton toolStripButtonAddFollowUpUncollectable;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator14;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelTotalBlackList;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelTotalMaster;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelTotalAttended;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelTotalEscalated;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelTotalUncollectable;
     }
 }

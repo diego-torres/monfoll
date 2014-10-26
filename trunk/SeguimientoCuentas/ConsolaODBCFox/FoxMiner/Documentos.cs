@@ -294,33 +294,11 @@ namespace ConsolaODBCFox.FoxMiner
                         if (apCuenta.ApId == pgCuenta.ApId)
                         {
                             found = true;
-                            if (apCuenta.Saldo != pgCuenta.Saldo
-                                || !apCuenta.FechaCobro.Equals(pgCuenta.FechaCobro)
-                                || !apCuenta.Observaciones.Equals(pgCuenta.Observaciones)
-                                || !apCuenta.TipoCobro.Equals(pgCuenta.TipoCobro))
+                            if (apCuenta.Saldo != pgCuenta.Saldo)
                             {
-                                if (apCuenta.Saldo != pgCuenta.Saldo)
-                                {
-                                    pgCuenta.Abonos = AbonosDocumento(pgCuenta.ApId);
-                                    pgCuenta.Saldo = apCuenta.Saldo;
-                                }
-
-                                if ("".Equals(apCuenta.Observaciones) && "".Equals(apCuenta.TipoCobro))
-                                {
-                                    PgCuentas.ActualizarSimple(pgCuenta);
-                                }
-                                else
-                                {
-                                    // Actualizar Full
-                                    pgCuenta.Observaciones = apCuenta.Observaciones;
-                                    pgCuenta.TipoCobro = apCuenta.TipoCobro;
-
-                                    if(!apCuenta.FechaCobro.Equals(new DateTime(1899, 12, 30)))
-                                        pgCuenta.FechaCobro = apCuenta.FechaCobro;
-
-                                    PgCuentas.ActualizarCompleto(pgCuenta);
-                                }
-
+                                pgCuenta.Abonos = AbonosDocumento(pgCuenta.ApId);
+                                pgCuenta.Saldo = apCuenta.Saldo;
+                                PgCuentas.ActualizarSimple(pgCuenta);
                             }
                             break;
                         }
@@ -465,8 +443,6 @@ namespace ConsolaODBCFox.FoxMiner
                 "WHERE CCANCELADO = 0 " +
                 "AND CDEVUELTO = 0 " + 
                 "AND CIDCONCE01 IN (" + arrVenta + ") " +
-                "AND CAFECTADO = 1 " +
-                "AND CIMPRESO = 1 " +
                 "AND CFECHA >= Date(" + BOM.Year + "," + BOM.Month + "," + BOM.Day + ") " +
                 "GROUP BY CIDAGENTE, CIDMONEDA, CTIPOCAM01, CFECHA";
 
@@ -701,8 +677,6 @@ namespace ConsolaODBCFox.FoxMiner
                 "WHERE CCANCELADO = 0 " +
                 "AND CDEVUELTO = 0 " +
                 "AND CIDCONCE01 IN (" + Conceptos + ") " +
-                "AND CAFECTADO = 1 " +
-                "AND CIMPRESO = 1 " +
                 "AND CFECHA >= Date(" + BOM.Year + "," + BOM.Month + "," + BOM.Day + ")";
 
             string connString = "Driver={Microsoft Visual FoxPro Driver};SourceType=DBF;Exclusive=No;" +
@@ -879,35 +853,48 @@ namespace ConsolaODBCFox.FoxMiner
         public void CalcularVencidos()
         {
             List<GrupoVencimiento> grupos = PgGruposVencimiento.GruposVencimiento();
+            string conceptosCredito = ConceptosCreditoIds();
             foreach (GrupoVencimiento grupo in grupos)
             {
+                if (grupo.Desde == 0 && grupo.Hasta == 0) continue;
 
-                throw new NotImplementedException("Not implemented yet");
+                DateTime fromDate = new DateTime(), toDate = new DateTime();
+                fromDate = DateTime.Today.AddDays(grupo.Hasta * -1);
+                toDate = DateTime.Today.AddDays(grupo.Desde * -1);
 
+                List<FactVencimiento> listaVencimientos = new List<FactVencimiento>();
+                if (grupo.Desde == 0)
+                {
+                    listaVencimientos = LimiteVencidos(fromDate, conceptosCredito, ">=");
+                }
+                else if (grupo.Hasta == 0)
+                {
+                    listaVencimientos = LimiteVencidos(toDate, conceptosCredito, "<=");
+                }
+                else
+                {
+                    listaVencimientos = CreditosVencidos(fromDate, toDate, conceptosCredito);
+                }
+
+                PgGruposVencimiento.GrabarVencimientos(listaVencimientos, grupo);
             }
-
-            
         }
 
-        public List<FactVencimiento> VencimientosAdminPaq(GrupoVencimiento grupo, string arrCredito)
+        private List<FactVencimiento> LimiteVencidos(DateTime fecha, string arrCredito, string operador)
         {
-            int monthDeltaDays = (DateTime.Today.Day - 1) * -1;
-            DateTime BOM = DateTime.Today.AddDays(monthDeltaDays);
+            List<FactVencimiento> result = new List<FactVencimiento>();
 
             string sqlString = "SELECT " +
-                "SUM(CTOTAL) AS SUM_TOTAL, " +
-                "CIDAGENTE, " +
+                "SUM(CTOTAL) AS VENCIDO, " +
+                "CIDCLIEN01, " +
                 "CIDMONEDA, " +
-                "CTIPOCAM01, " +
-                "CFECHA " +
+                "CTIPOCAM01 " +
                 "FROM MGW10008 " +
                 "WHERE CCANCELADO = 0 " +
                 "AND CDEVUELTO = 0 " +
                 "AND CIDCONCE01 IN (" + arrCredito + ") " +
-                "AND CAFECTADO = 1 " +
-                "AND CIMPRESO = 1 " +
-                "AND CFECHA >= Date(" + BOM.Year + "," + BOM.Month + "," + BOM.Day + ") " +
-                "GROUP BY CIDAGENTE, CIDMONEDA, CTIPOCAM01, CFECHA";
+                "AND CFECHA " + operador + " Date(" + fecha.Year + "," + fecha.Month + "," + fecha.Day + ") " +
+                "GROUP BY CIDCLIEN01, CIDMONEDA, CTIPOCAM01, CFECHA";
 
             string connString = "Driver={Microsoft Visual FoxPro Driver};SourceType=DBF;Exclusive=No;" +
                 @"SourceDB=" + Empresa.Ruta + ";";
@@ -923,19 +910,79 @@ namespace ConsolaODBCFox.FoxMiner
 
                 while (dr.Read())
                 {
-                    FactVenta venta = new FactVenta();
-                    venta.Importe = double.Parse(dr["SUM_TOTAL"].ToString());
-                    venta.IdVendedor = int.Parse(dr["CIDAGENTE"].ToString());
-                    venta.IdMoneda = int.Parse(dr["CIDMONEDA"].ToString());
-                    venta.TipoCambio = double.Parse(dr["CTIPOCAM01"].ToString());
-                    venta.Fecha = DateTime.Parse(dr["CFECHA"].ToString());
+                    FactVencimiento vencimiento = new FactVencimiento();
+                    
+                    vencimiento.IdEmpresa = Empresa.Id;
+                    vencimiento.IdCliente = int.Parse(dr["CIDCLIEN01"].ToString());
+                    double importeVencido = double.Parse(dr["VENCIDO"].ToString());
+                    int idMoneda = int.Parse(dr["CIDMONEDA"].ToString());
+                    if (idMoneda != 1)
+                    {
+                        double tCambio = double.Parse(dr["CTIPOCAM01"].ToString());
+                        importeVencido *= tCambio;
+                    }
 
-                    //result.Add(venta);
+                    vencimiento.Importe = double.Parse(dr["VENCIDO"].ToString());
+
+                    result.Add(vencimiento);
                 }
                 dr.Close();
                 conn.Close();
             }
-            return null;
+            return result;
+        }
+
+        private List<FactVencimiento> CreditosVencidos(DateTime desdeFecha, DateTime hastaFecha, string arrCredito)
+        {
+            List<FactVencimiento> result = new List<FactVencimiento>();
+
+            string sqlString = "SELECT " +
+                "SUM(CTOTAL) AS VENCIDO, " +
+                "CIDCLIEN01, " +
+                "CIDMONEDA, " +
+                "CTIPOCAM01 " +
+                "FROM MGW10008 " +
+                "WHERE CCANCELADO = 0 " +
+                "AND CDEVUELTO = 0 " +
+                "AND CIDCONCE01 IN (" + arrCredito + ") " +
+                "AND CFECHA >= Date(" + desdeFecha.Year + "," + desdeFecha.Month + "," + desdeFecha.Day + ") " +
+                "AND CFECHA <= Date(" + hastaFecha.Year + "," + hastaFecha.Month + "," + hastaFecha.Day + ") " +
+                "GROUP BY CIDCLIEN01, CIDMONEDA, CTIPOCAM01, CFECHA";
+
+            string connString = "Driver={Microsoft Visual FoxPro Driver};SourceType=DBF;Exclusive=No;" +
+                @"SourceDB=" + Empresa.Ruta + ";";
+            using (OdbcConnection conn = new OdbcConnection(connString))
+            {
+                conn.Open();
+
+                OdbcDataReader dr;
+                OdbcCommand cmd;
+
+                cmd = new OdbcCommand(sqlString, conn);
+                dr = cmd.ExecuteReader();
+
+                while (dr.Read())
+                {
+                    FactVencimiento vencimiento = new FactVencimiento();
+
+                    vencimiento.IdEmpresa = Empresa.Id;
+                    vencimiento.IdCliente = int.Parse(dr["CIDCLIEN01"].ToString());
+                    double importeVencido = double.Parse(dr["VENCIDO"].ToString());
+                    int idMoneda = int.Parse(dr["CIDMONEDA"].ToString());
+                    if (idMoneda != 1)
+                    {
+                        double tCambio = double.Parse(dr["CTIPOCAM01"].ToString());
+                        importeVencido *= tCambio;
+                    }
+
+                    vencimiento.Importe = double.Parse(dr["VENCIDO"].ToString());
+
+                    result.Add(vencimiento);
+                }
+                dr.Close();
+                conn.Close();
+            }
+            return result;
         }
 
         #endregion

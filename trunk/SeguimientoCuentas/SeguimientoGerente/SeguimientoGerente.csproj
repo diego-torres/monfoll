@@ -69,7 +69,6 @@
     <Compile Include="Collectable\AdminPaqImp.cs" />
     <Compile Include="Collectable\CollectableDTO.cs" />
     <Compile Include="Collectable\PostgresImpl\Account.cs" />
-    <Compile Include="Collectable\PostgresImpl\Collector.cs" />
     <Compile Include="Collectable\PostgresImpl\CommonBase.cs" />
     <Compile Include="Collectable\PostgresImpl\Customer.cs" />
     <Compile Include="Collectable\PostgresImpl\Enterprise.cs" />
@@ -188,15 +187,19 @@
     <EmbeddedResource Include="Reports\ReportViewer.resx">
       <DependentUpon>ReportViewer.cs</DependentUpon>
     </EmbeddedResource>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
   </ItemGroup>
   <ItemGroup>

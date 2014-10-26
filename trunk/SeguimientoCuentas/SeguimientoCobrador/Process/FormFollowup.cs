@@ -318,7 +318,8 @@ namespace SeguimientoCobrador.Process
 
             DateTime now = DateTime.Now;
             TimeSpan elapsed = now.Subtract(account.DueDate);
-            this.labelDueDays.Text = elapsed.TotalDays.ToString("0");
+            int elapsedDays = int.Parse(elapsed.TotalDays.ToString("0")) - 1;
+            this.labelDueDays.Text = elapsedDays.ToString();
         }
 
         private void LoadCustomer()
