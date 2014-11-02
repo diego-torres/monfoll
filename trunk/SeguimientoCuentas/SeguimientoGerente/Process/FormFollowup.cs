@@ -316,7 +316,7 @@ namespace SeguimientoGerente.Process
 
             DateTime now = DateTime.Now;
             TimeSpan elapsed = now.Subtract(account.DueDate);
-            int elapsedDays = int.Parse(elapsed.TotalDays.ToString("0")) - 1;
+            int elapsedDays = int.Parse(elapsed.TotalDays.ToString("0"));
             this.labelDueDays.Text = elapsedDays.ToString();
         }
 

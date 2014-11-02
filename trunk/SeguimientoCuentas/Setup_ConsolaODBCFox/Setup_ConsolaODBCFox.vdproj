@@ -304,15 +304,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:ConsolaODBCFox"
-        "ProductCode" = "8:{C93EB5E7-029D-417E-98E4-13831DC73674}"
-        "PackageCode" = "8:{D8AA426A-5781-41CE-ACA4-68B6FFE7782D}"
+        "ProductCode" = "8:{720796D1-6599-4223-830F-D245D4747B60}"
+        "PackageCode" = "8:{4951FD0D-2979-40E7-A1FB-6F3CFF38B40A}"
         "UpgradeCode" = "8:{D8324497-3EA8-4961-8124-DCFF432CF62C}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.5.1"
+        "ProductVersion" = "8:1.6.2"
         "Manufacturer" = "8:Inspiracode"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -826,7 +826,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_3A1063E549AB4B30A939C88E24FA61FE"
             {
-            "SourcePath" = "8:..\\ConsolaODBCFox\\obj\\x86\\Debug\\ConsolaODBCFox.exe"
+            "SourcePath" = "8:..\\ConsolaODBCFox\\obj\\x86\\Release\\ConsolaODBCFox.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_F0CF1363D6934A07B6D614D703E83D79"

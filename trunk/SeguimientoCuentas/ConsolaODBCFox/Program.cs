@@ -65,7 +65,7 @@ namespace ConsolaODBCFox
                 }
 
                 Empresa empresa = Empresas.GetEmpresa(clientConfig.NombreEmpresa, rutaDatos, eventLogService);
-                empresa.Ruta = clientConfig.RutaEmpresa;
+                empresa.Ruta = @clientConfig.RutaEmpresa;
                 if (empresa == null)
                 {
                     eventLogService.WriteEntry("Configuration not found in AdminPaq for configured company: " +
@@ -74,7 +74,7 @@ namespace ConsolaODBCFox
                 }
                 else
                 {
-                    eventLogService.WriteEntry("Company configuration found in database: " + clientConfig.NombreEmpresa + "; " + empresa.Ruta, EventLogEntryType.Information, 6,1);
+                    eventLogService.WriteEntry("Company configuration found in database: " + clientConfig.NombreEmpresa + "; " + @empresa.Ruta, EventLogEntryType.Information, 6,1);
 
                     string[] ConceptosAbono = clientConfig.CodigosPago.Split(',');
                     string[] ConceptosCredito = clientConfig.CodigosFactura.Split(',');
