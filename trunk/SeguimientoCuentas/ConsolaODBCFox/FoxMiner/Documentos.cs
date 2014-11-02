@@ -865,11 +865,12 @@ namespace ConsolaODBCFox.FoxMiner
                 List<FactVencimiento> listaVencimientos = new List<FactVencimiento>();
                 if (grupo.Desde == 0)
                 {
-                    listaVencimientos = LimiteVencidos(fromDate, conceptosCredito, ">=");
+                    //listaVencimientos = LimiteVencidos(fromDate, conceptosCredito, ">=");
+                    listaVencimientos = CreditosVencidos(fromDate, DateTime.Today, conceptosCredito);
                 }
                 else if (grupo.Hasta == 0)
                 {
-                    listaVencimientos = LimiteVencidos(toDate, conceptosCredito, "<=");
+                    listaVencimientos = LimiteVencidos(toDate, conceptosCredito);
                 }
                 else
                 {
@@ -880,7 +881,7 @@ namespace ConsolaODBCFox.FoxMiner
             }
         }
 
-        private List<FactVencimiento> LimiteVencidos(DateTime fecha, string arrCredito, string operador)
+        private List<FactVencimiento> LimiteVencidos(DateTime fecha, string arrCredito)
         {
             List<FactVencimiento> result = new List<FactVencimiento>();
 
@@ -893,7 +894,7 @@ namespace ConsolaODBCFox.FoxMiner
                 "WHERE CCANCELADO = 0 " +
                 "AND CDEVUELTO = 0 " +
                 "AND CIDCONCE01 IN (" + arrCredito + ") " +
-                "AND CFECHA " + operador + " Date(" + fecha.Year + "," + fecha.Month + "," + fecha.Day + ") " +
+                "AND CFECHA <= Date(" + fecha.Year + "," + fecha.Month + "," + fecha.Day + ") " +
                 "GROUP BY CIDCLIEN01, CIDMONEDA, CTIPOCAM01, CFECHA";
 
             string connString = "Driver={Microsoft Visual FoxPro Driver};SourceType=DBF;Exclusive=No;" +

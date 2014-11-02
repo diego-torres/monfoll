@@ -76,7 +76,7 @@
   <PropertyGroup />
   <ItemGroup>
     <Reference Include="Npgsql">
-      <HintPath>..\..\..\..\jasper-bi\DataMining\pgsql_driver\Npgsql.dll</HintPath>
+      <HintPath>..\..\pgsql_driver\Npgsql.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />

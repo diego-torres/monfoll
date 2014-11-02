@@ -12,17 +12,99 @@ namespace ConsolaODBCFox.ado
     {
         public static void GrabarVencimientos(List<FactVencimiento> vencimientos, GrupoVencimiento grupo)
         {
-            throw new NotImplementedException("Not implemented yet.");
+            List<FactVencimiento> listAllFactVencimientosInDB = new List<FactVencimiento>();
+            
             string connectionString = ConfigurationManager.ConnectionStrings[Config.Common.JASPER].ConnectionString;
-            // Para cada ID Doco en la BD de postgres
+
             using (NpgsqlConnection pgConnection = new NpgsqlConnection(connectionString))
             {
                 pgConnection.Open();
-                foreach (FactVencimiento vencimiento in vencimientos)
+                NpgsqlDataReader dr;
+                NpgsqlCommand cmd;
+
+                string sqlString = "SELECT id_cliente, id_grupo_vencimiento, saldo_vencido " +
+                                    "FROM fact_vencido;";
+
+                cmd = new NpgsqlCommand(sqlString, pgConnection);
+                dr = cmd.ExecuteReader();
+
+                while (dr.Read())
                 {
-                    // Check if record exists.
-                    // if record exists, update the record.
-                    // if record does not exists, insert the record
+                    FactVencimiento oFactVencimiento = new FactVencimiento();
+                    oFactVencimiento.IdCliente = int.Parse(dr["id_cliente"].ToString());
+                    //oFactVencimiento.IdEmpresa = int.Parse(dr[""].ToString()); //TODO
+                    oFactVencimiento.IdVencimiento = int.Parse(dr["id_grupo_vencimiento"].ToString());
+                    oFactVencimiento.Importe = int.Parse(dr["saldo_vencido"].ToString());
+                    listAllFactVencimientosInDB.Add(oFactVencimiento);
+                }
+
+                dr.Close();
+                cmd.Dispose();
+                pgConnection.Close();
+            }
+            
+
+            // Para cada ID Doco en la BD de postgres
+            using (NpgsqlConnection pgConnection = new NpgsqlConnection(connectionString))
+            {
+                try
+                {
+                    pgConnection.Open();
+
+                    using (NpgsqlTransaction transaction = pgConnection.BeginTransaction())
+                    {
+
+                        try
+                        {
+                            foreach (FactVencimiento vencimiento in vencimientos)
+                            {
+                                NpgsqlCommand theCommand;
+                                FactVencimiento oFactVencimientToPersist = vencimiento;
+
+                                // Check if record exists.
+                                FactVencimiento oFactVencimientoExistente = listAllFactVencimientosInDB.First(record => record.IdCliente == vencimiento.IdCliente && record.IdEmpresa == vencimiento.IdEmpresa && record.IdVencimiento == vencimiento.IdVencimiento);
+
+                                // if record exists, update the record.
+                                if (oFactVencimientoExistente != null)
+                                {
+                                    oFactVencimientToPersist.Importe += oFactVencimientoExistente.Importe;
+                                    string sqlUpdateVencimiento = "UPDATE fact_vencido " +
+                                                                    "SET saldo_vencido=@saldo_vencido " +
+                                                                    "WHERE id_cliente=@id_cliente and id_grupo_vencimiento=@id_grupo_vencimiento;";
+                                    theCommand = new NpgsqlCommand(sqlUpdateVencimiento, pgConnection);
+                                }
+                                // if record does not exists, insert the record
+                                else
+                                {
+                                    string sqlUpdateVencimiento = "INSERT INTO fact_vencido(" +
+                                                                    "id_cliente, id_grupo_vencimiento, saldo_vencido) " +
+                                                                    "VALUES (@id_cliente, @id_grupo_vencimiento, @saldo_vencido);";
+                                    theCommand = new NpgsqlCommand(sqlUpdateVencimiento, pgConnection);
+                                }
+
+                                theCommand.Parameters.Add("@saldo_vencido", NpgsqlTypes.NpgsqlDbType.Double);
+                                theCommand.Parameters.Add("@id_cliente", NpgsqlTypes.NpgsqlDbType.Integer);
+                                theCommand.Parameters.Add("@id_grupo_vencimiento", NpgsqlTypes.NpgsqlDbType.Integer);
+
+                                theCommand.Parameters["@saldo_vencido"].Value = oFactVencimientToPersist.Importe;
+                                theCommand.Parameters["@id_cliente"].Value = oFactVencimientToPersist.IdCliente;
+                                theCommand.Parameters["@id_grupo_vencimiento"].Value = grupo.Id;
+
+                                theCommand.ExecuteNonQuery();
+
+                            }
+                            transaction.Commit();
+                        }
+                        catch (Exception ex)
+                        {
+                            if(transaction != null) transaction.Rollback();
+                            throw ex;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
                 }
                 pgConnection.Close();
             }
