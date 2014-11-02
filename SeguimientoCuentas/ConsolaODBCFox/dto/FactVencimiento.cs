@@ -12,4 +12,6 @@ namespace ConsolaODBCFox.dto
         public int IdEmpresa { get; set; }
         public double Importe { get; set; }
     }
+
+    public class FactPorVencer : FactVencimiento { }
 }

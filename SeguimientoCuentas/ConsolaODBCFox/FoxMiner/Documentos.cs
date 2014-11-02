@@ -933,6 +933,57 @@ namespace ConsolaODBCFox.FoxMiner
             return result;
         }
 
+        private List<FactPorVencer> LimitePorVencer(DateTime fecha, string arrCredito)
+        {
+            List<FactPorVencer> result = new List<FactPorVencer>();
+
+            string sqlString = "SELECT " +
+                "SUM(CTOTAL) AS VENCIDO, " +
+                "CIDCLIEN01, " +
+                "CIDMONEDA, " +
+                "CTIPOCAM01 " +
+                "FROM MGW10008 " +
+                "WHERE CCANCELADO = 0 " +
+                "AND CDEVUELTO = 0 " +
+                "AND CIDCONCE01 IN (" + arrCredito + ") " +
+                "AND CFECHA >= Date(" + fecha.Year + "," + fecha.Month + "," + fecha.Day + ") " +
+                "GROUP BY CIDCLIEN01, CIDMONEDA, CTIPOCAM01, CFECHA";
+
+            string connString = "Driver={Microsoft Visual FoxPro Driver};SourceType=DBF;Exclusive=No;" +
+                @"SourceDB=" + Empresa.Ruta + ";";
+            using (OdbcConnection conn = new OdbcConnection(connString))
+            {
+                conn.Open();
+
+                OdbcDataReader dr;
+                OdbcCommand cmd;
+
+                cmd = new OdbcCommand(sqlString, conn);
+                dr = cmd.ExecuteReader();
+
+                while (dr.Read())
+                {
+                    FactPorVencer porvencer = new FactPorVencer();
+
+                    porvencer.IdEmpresa = Empresa.Id;
+                    porvencer.IdCliente = int.Parse(dr["CIDCLIEN01"].ToString());
+                    double importePorVencer = double.Parse(dr["VENCIDO"].ToString());
+                    int idMoneda = int.Parse(dr["CIDMONEDA"].ToString());
+                    if (idMoneda != 1)
+                    {
+                        double tCambio = double.Parse(dr["CTIPOCAM01"].ToString());
+                        importePorVencer *= tCambio;
+                    }
+
+                    porvencer.Importe = double.Parse(dr["VENCIDO"].ToString());
+
+                    result.Add(porvencer);
+                }
+                dr.Close();
+                conn.Close();
+            }
+            return result;
+        }
         private List<FactVencimiento> CreditosVencidos(DateTime desdeFecha, DateTime hastaFecha, string arrCredito)
         {
             List<FactVencimiento> result = new List<FactVencimiento>();
@@ -985,7 +1036,58 @@ namespace ConsolaODBCFox.FoxMiner
             }
             return result;
         }
+        private List<FactPorVencer> CreditosPorVencer(DateTime desdeFecha, DateTime hastaFecha, string arrCredito)
+        {
+            List<FactPorVencer> result = new List<FactPorVencer>();
 
+            string sqlString = "SELECT " +
+                "SUM(CTOTAL) AS VENCIDO, " +
+                "CIDCLIEN01, " +
+                "CIDMONEDA, " +
+                "CTIPOCAM01 " +
+                "FROM MGW10008 " +
+                "WHERE CCANCELADO = 0 " +
+                "AND CDEVUELTO = 0 " +
+                "AND CIDCONCE01 IN (" + arrCredito + ") " +
+                "AND CFECHA >= Date(" + desdeFecha.Year + "," + desdeFecha.Month + "," + desdeFecha.Day + ") " +
+                "AND CFECHA <= Date(" + hastaFecha.Year + "," + hastaFecha.Month + "," + hastaFecha.Day + ") " +
+                "GROUP BY CIDCLIEN01, CIDMONEDA, CTIPOCAM01, CFECHA";
+
+            string connString = "Driver={Microsoft Visual FoxPro Driver};SourceType=DBF;Exclusive=No;" +
+                @"SourceDB=" + Empresa.Ruta + ";";
+            using (OdbcConnection conn = new OdbcConnection(connString))
+            {
+                conn.Open();
+
+                OdbcDataReader dr;
+                OdbcCommand cmd;
+
+                cmd = new OdbcCommand(sqlString, conn);
+                dr = cmd.ExecuteReader();
+
+                while (dr.Read())
+                {
+                    FactPorVencer porvencer = new FactPorVencer();
+
+                    porvencer.IdEmpresa = Empresa.Id;
+                    porvencer.IdCliente = int.Parse(dr["CIDCLIEN01"].ToString());
+                    double importeVencido = double.Parse(dr["VENCIDO"].ToString());
+                    int idMoneda = int.Parse(dr["CIDMONEDA"].ToString());
+                    if (idMoneda != 1)
+                    {
+                        double tCambio = double.Parse(dr["CTIPOCAM01"].ToString());
+                        importeVencido *= tCambio;
+                    }
+
+                    porvencer.Importe = double.Parse(dr["VENCIDO"].ToString());
+
+                    result.Add(porvencer);
+                }
+                dr.Close();
+                conn.Close();
+            }
+            return result;
+        }
         #endregion
 
         public void Fix()
@@ -1023,7 +1125,32 @@ namespace ConsolaODBCFox.FoxMiner
 
         public void CalcularPorVencer()
         {
-            throw new NotImplementedException("Not implemented yet");
+            List<GrupoVencimiento> grupos = PgGruposVencimiento.GruposVencimiento();
+            string conceptosCredito = ConceptosCreditoIds();
+            foreach (GrupoVencimiento grupo in grupos)
+            {
+                if (grupo.Desde == 0 && grupo.Hasta == 0) continue;
+
+                DateTime fromDate = new DateTime(), toDate = new DateTime();
+                fromDate = DateTime.Today.AddDays(grupo.Desde);
+                toDate = DateTime.Today.AddDays(grupo.Hasta);
+
+                List<FactPorVencer> listPorVencer = new List<FactPorVencer>();
+                if (grupo.Desde == 0)
+                {
+                    listPorVencer = CreditosPorVencer(DateTime.Today, toDate, conceptosCredito);
+                }
+                else if (grupo.Hasta == 0)
+                {
+                    listPorVencer = LimitePorVencer(fromDate, conceptosCredito);
+                }
+                else
+                {
+                    listPorVencer = CreditosPorVencer(fromDate, toDate, conceptosCredito);
+                }
+
+                PgGruposVencimiento.GrabarPorVencer(listPorVencer, grupo);
+            }
         }
 
         public void CalcularCobrado()
