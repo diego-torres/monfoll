@@ -45,8 +45,8 @@ namespace SeguimientoCobrador.Collectable.PostgresImpl
                     DateTime now = DateTime.Now;
                     DateTime dueDate = DateTime.Parse(row["f_vencimiento"].ToString());
                     TimeSpan elapsed = now.Subtract(dueDate);
-
-                    row["dias_vencido"] = int.Parse(elapsed.TotalDays.ToString("0")) - 1;
+                    // Homologar dias vencidos
+                    row["dias_vencido"] = int.Parse(elapsed.TotalDays.ToString("0"));
                 }
 
                 return ds.Tables[0];
@@ -89,7 +89,7 @@ namespace SeguimientoCobrador.Collectable.PostgresImpl
                     DateTime dueDate = DateTime.Parse(row["f_vencimiento"].ToString());
                     TimeSpan elapsed = now.Subtract(dueDate);
 
-                    row["dias_vencido"] = int.Parse(elapsed.TotalDays.ToString("0")) - 1;
+                    row["dias_vencido"] = int.Parse(elapsed.TotalDays.ToString("0"));
                 }
 
                 return ds.Tables[0];
@@ -133,7 +133,7 @@ namespace SeguimientoCobrador.Collectable.PostgresImpl
                     DateTime dueDate = DateTime.Parse(row["f_vencimiento"].ToString());
                     TimeSpan elapsed = now.Subtract(dueDate);
 
-                    row["dias_vencido"] = int.Parse(elapsed.TotalDays.ToString("0")) - 1;
+                    row["dias_vencido"] = int.Parse(elapsed.TotalDays.ToString("0"));
                 }
 
                 return ds.Tables[0];
@@ -176,7 +176,7 @@ namespace SeguimientoCobrador.Collectable.PostgresImpl
                     DateTime dueDate = DateTime.Parse(row["f_vencimiento"].ToString());
                     TimeSpan elapsed = now.Subtract(dueDate);
 
-                    row["dias_vencido"] = int.Parse(elapsed.TotalDays.ToString("0")) - 1;
+                    row["dias_vencido"] = int.Parse(elapsed.TotalDays.ToString("0"));
                 }
 
                 return ds.Tables[0];
@@ -218,7 +218,7 @@ namespace SeguimientoCobrador.Collectable.PostgresImpl
                     DateTime dueDate = DateTime.Parse(row["f_vencimiento"].ToString());
                     TimeSpan elapsed = now.Subtract(dueDate);
 
-                    row["dias_vencido"] = int.Parse(elapsed.TotalDays.ToString("0")) - 1;
+                    row["dias_vencido"] = int.Parse(elapsed.TotalDays.ToString("0"));
                 }
 
                 return ds.Tables[0];

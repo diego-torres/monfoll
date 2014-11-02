@@ -64,7 +64,7 @@ namespace ConsolaODBCFox.FoxMiner
             try
             {
                 string connString = "Driver={Microsoft Visual FoxPro Driver};SourceType=DBF;Exclusive=No;" +
-                @"SourceDB=" + Empresa.Ruta + ";";
+                "SourceDB=" + @Empresa.Ruta + ";";
                 using (OdbcConnection conn = new OdbcConnection(connString))
                 {
                     conn.Open();
@@ -335,7 +335,7 @@ namespace ConsolaODBCFox.FoxMiner
                 "AND CIDCONCE01 IN (" + ConceptosCreditoIds() + ")";
 
             string connString = "Driver={Microsoft Visual FoxPro Driver};SourceType=DBF;Exclusive=No;" +
-                @"SourceDB=" + Empresa.Ruta + ";";
+                "SourceDB=" + @Empresa.Ruta + ";";
             using (OdbcConnection conn = new OdbcConnection(connString))
             {
                 conn.Open();
@@ -430,8 +430,19 @@ namespace ConsolaODBCFox.FoxMiner
         private List<FactVenta> VentasMensuales(string arrVenta)
         {
             List<FactVenta> result = new List<FactVenta>();
+
+            int weekStartDelta = 1 - (int)DateTime.Today.DayOfWeek;
+            DateTime weekStart = DateTime.Today.AddDays(weekStartDelta);
+
             int monthDeltaDays = (DateTime.Today.Day - 1) * -1;
             DateTime BOM = DateTime.Today.AddDays(monthDeltaDays);
+
+            DateTime reportDate = DateTime.Today;
+            if (weekStart.CompareTo(BOM) <= 0)
+                reportDate = weekStart;
+            else
+                reportDate = BOM;
+
 
             string sqlString = "SELECT " +
                 "SUM(CNETO) AS SUM_TOTAL, " +
@@ -443,11 +454,11 @@ namespace ConsolaODBCFox.FoxMiner
                 "WHERE CCANCELADO = 0 " +
                 "AND CDEVUELTO = 0 " + 
                 "AND CIDCONCE01 IN (" + arrVenta + ") " +
-                "AND CFECHA >= Date(" + BOM.Year + "," + BOM.Month + "," + BOM.Day + ") " +
+                "AND CFECHA >= Date(" + reportDate.Year + "," + reportDate.Month + "," + reportDate.Day + ") " +
                 "GROUP BY CIDAGENTE, CIDMONEDA, CTIPOCAM01, CFECHA";
 
             string connString = "Driver={Microsoft Visual FoxPro Driver};SourceType=DBF;Exclusive=No;" +
-                @"SourceDB=" + Empresa.Ruta + ";";
+                "SourceDB=" + @Empresa.Ruta + ";";
             using (OdbcConnection conn = new OdbcConnection(connString))
             {
                 conn.Open();
@@ -478,9 +489,12 @@ namespace ConsolaODBCFox.FoxMiner
         private void CalcularVentas(List<FactVenta> factVentas, List<FactVenta> factDevoluciones)
         {
             Dictionary<int, Venta> ventas = new Dictionary<int, Venta>();
+            int monthDeltaDays = (DateTime.Today.Day - 1) * -1;
+            DateTime BOM = DateTime.Today.AddDays(monthDeltaDays);
+
             int weekStartDelta = 1 - (int)DateTime.Today.DayOfWeek;
             DateTime weekStart = DateTime.Today.AddDays(weekStartDelta);
-
+            
             foreach (FactVenta factVenta in factVentas)
             {
                 Venta venta = null;
@@ -499,7 +513,8 @@ namespace ConsolaODBCFox.FoxMiner
                     factVenta.Importe *= factVenta.TipoCambio;
                 }
 
-                venta.Mensual += factVenta.Importe;
+                if(factVenta.Fecha.CompareTo(BOM) >= 0)
+                    venta.Mensual += factVenta.Importe;
 
                 if (factVenta.Fecha.CompareTo(weekStart) >= 0)
                     venta.Semanal += factVenta.Importe;
@@ -526,7 +541,8 @@ namespace ConsolaODBCFox.FoxMiner
                     factDevolucion.Importe *= factDevolucion.TipoCambio;
                 }
 
-                venta.Mensual -= factDevolucion.Importe;
+                if (factDevolucion.Fecha.CompareTo(BOM) >= 0)
+                    venta.Mensual -= factDevolucion.Importe;
 
                 if (factDevolucion.Fecha.CompareTo(weekStart) >= 0)
                     venta.Semanal -= factDevolucion.Importe;
@@ -547,6 +563,11 @@ namespace ConsolaODBCFox.FoxMiner
                 {
                     // Resolver de AdminPaq
                     Vendedor vendedor = VendedorAdminPaq(apId);
+                    if (vendedor == null)
+                    {
+                        Log.WriteEntry("Seller not found in AdminPaq: " + apId, EventLogEntryType.Warning, 101,1);
+                        continue;
+                    }
                     vendedor.Empresa = Empresa.Nombre;
                     vendedor.EmpresaId = Empresa.Id;
                     // Agregar a Postgres
@@ -560,14 +581,24 @@ namespace ConsolaODBCFox.FoxMiner
                     }
 
                     Venta current = ventas[apId];
+                    if (current == null)
+                    {
+                        Log.WriteEntry("Seller not found in Collection: " + apId, EventLogEntryType.Warning, 101, 1);
+                        continue;
+                    }
+
                     current.Vendedor.Id = pgId;
 
                     PgFactVentas.AgregarVentas(current);
-
                 }
                 else
                 {
                     Venta current = ventas[apId];
+                    if (current == null)
+                    {
+                        Log.WriteEntry("Seller not found in Collection: " + apId, EventLogEntryType.Warning, 101, 1);
+                        continue;
+                    }
                     current.Vendedor.Id = pgId;
 
                     PgFactVentas.ActualizarVentas(current);
@@ -613,7 +644,7 @@ namespace ConsolaODBCFox.FoxMiner
             try
             {
                 string connString = "Driver={Microsoft Visual FoxPro Driver};SourceType=DBF;Exclusive=No;" +
-                @"SourceDB=" + Empresa.Ruta + ";";
+                @"SourceDB=" + @Empresa.Ruta + ";";
                 using (OdbcConnection conn = new OdbcConnection(connString))
                 {
                     conn.Open();
@@ -661,14 +692,26 @@ namespace ConsolaODBCFox.FoxMiner
             Dictionary<int, string> dicMoneda, Dictionary<int, string> dicProductos)
         {
             List<DetalleVenta> result = new List<DetalleVenta>();
-            DateTime BOM = DateTime.Today;
+            int weekStartDelta = 1 - (int)DateTime.Today.DayOfWeek;
+            DateTime weekStart = DateTime.Today.AddDays(weekStartDelta);
+
+            int monthDeltaDays = (DateTime.Today.Day - 1) * -1;
+            DateTime BOM = DateTime.Today.AddDays(monthDeltaDays);
+
+            DateTime reportDate = DateTime.Today;
+            if (weekStart.CompareTo(BOM) <= 0)
+                reportDate = weekStart;
+            else
+                reportDate = BOM;
+
+            Log.WriteEntry("Detalle desde " + reportDate.ToShortDateString(), EventLogEntryType.Information, 100, 1);
 
             string sqlString = "SELECT " +
                 "CIDDOCUM01, " +
                 "CSERIEDO01, " +
                 "CIDCONCE01, " +
                 "CFOLIO, " +
-                "CTOTAL, " +
+                "CNETO, " +
                 "CIDAGENTE, " +
                 "CIDMONEDA, " +
                 "CTIPOCAM01, " +
@@ -677,10 +720,10 @@ namespace ConsolaODBCFox.FoxMiner
                 "WHERE CCANCELADO = 0 " +
                 "AND CDEVUELTO = 0 " +
                 "AND CIDCONCE01 IN (" + Conceptos + ") " +
-                "AND CFECHA >= Date(" + BOM.Year + "," + BOM.Month + "," + BOM.Day + ")";
+                "AND CFECHA >= Date(" + reportDate.Year + "," + reportDate.Month + "," + reportDate.Day + ") ";
 
             string connString = "Driver={Microsoft Visual FoxPro Driver};SourceType=DBF;Exclusive=No;" +
-                @"SourceDB=" + Empresa.Ruta + ";";
+                "SourceDB=" + @Empresa.Ruta + ";";
             using (OdbcConnection conn = new OdbcConnection(connString))
             {
                 conn.Open();
@@ -709,7 +752,7 @@ namespace ConsolaODBCFox.FoxMiner
                     venta.Vendedor = dicVendedor[idVendedor];
                     venta.Folio = int.Parse(dr["CFOLIO"].ToString());
                     venta.Serie = dr["CSERIEDO01"].ToString();
-                    venta.Importe = double.Parse(dr["CTOTAL"].ToString());
+                    venta.Importe = double.Parse(dr["CNETO"].ToString());
 
                     int idMoneda = int.Parse(dr["CIDMONEDA"].ToString());
                     if (!dicMoneda.ContainsKey(idMoneda))
@@ -739,7 +782,7 @@ namespace ConsolaODBCFox.FoxMiner
             string sqlString = "SELECT " +
                 "CIDMOVIM01, " +
                 "CIDPRODU01, " +
-                "CTOTAL " +
+                "CNETO " +
                 "FROM MGW10010 " +
                 "WHERE CIDDOCUM01 = " + idVenta;
 
@@ -753,7 +796,7 @@ namespace ConsolaODBCFox.FoxMiner
             {
                 DetalleMovimiento movimiento = new DetalleMovimiento();
                 movimiento.IdMov = int.Parse(dr["CIDMOVIM01"].ToString());
-                movimiento.Importe = double.Parse(dr["CTOTAL"].ToString());
+                movimiento.Importe = double.Parse(dr["CNETO"].ToString());
 
                 int idProducto = int.Parse(dr["CIDPRODU01"].ToString());
                 if (!dicProductos.ContainsKey(idProducto))
@@ -898,7 +941,7 @@ namespace ConsolaODBCFox.FoxMiner
                 "GROUP BY CIDCLIEN01, CIDMONEDA, CTIPOCAM01, CFECHA";
 
             string connString = "Driver={Microsoft Visual FoxPro Driver};SourceType=DBF;Exclusive=No;" +
-                @"SourceDB=" + Empresa.Ruta + ";";
+                "SourceDB=" + @Empresa.Ruta + ";";
             using (OdbcConnection conn = new OdbcConnection(connString))
             {
                 conn.Open();
@@ -1002,7 +1045,7 @@ namespace ConsolaODBCFox.FoxMiner
                 "GROUP BY CIDCLIEN01, CIDMONEDA, CTIPOCAM01, CFECHA";
 
             string connString = "Driver={Microsoft Visual FoxPro Driver};SourceType=DBF;Exclusive=No;" +
-                @"SourceDB=" + Empresa.Ruta + ";";
+                "SourceDB=" + @Empresa.Ruta + ";";
             using (OdbcConnection conn = new OdbcConnection(connString))
             {
                 conn.Open();
@@ -1103,7 +1146,7 @@ namespace ConsolaODBCFox.FoxMiner
             try
             {
                 string connString = "Driver={Microsoft Visual FoxPro Driver};SourceType=DBF;Exclusive=No;" +
-                @"SourceDB=" + Empresa.Ruta + ";";
+                "SourceDB=" + @Empresa.Ruta + ";";
                 using (OdbcConnection conn = new OdbcConnection(connString))
                 {
                     conn.Open();
@@ -1200,7 +1243,7 @@ namespace ConsolaODBCFox.FoxMiner
             try
             {
                 string connString = "Driver={Microsoft Visual FoxPro Driver};SourceType=DBF;Exclusive=No;" +
-                @"SourceDB=" + Empresa.Ruta + ";";
+                "SourceDB=" + @Empresa.Ruta + ";";
                 using (OdbcConnection conn = new OdbcConnection(connString))
                 {
                     conn.Open();
@@ -1234,7 +1277,7 @@ namespace ConsolaODBCFox.FoxMiner
             try
             {
                 string connString = "Driver={Microsoft Visual FoxPro Driver};SourceType=DBF;Exclusive=No;" +
-                @"SourceDB=" + Empresa.Ruta + ";";
+                "SourceDB=" + @Empresa.Ruta + ";";
                 using (OdbcConnection conn = new OdbcConnection(connString))
                 {
                     conn.Open();
