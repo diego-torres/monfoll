@@ -124,7 +124,6 @@ namespace ConsolaODBCFox.FoxMiner
                                     + ex.Message + " || " + ex.StackTrace, EventLogEntryType.Warning, 3, 3);
                                 continue;
                             }
-
                         }
 
                         cuenta.Cliente = Clientes[idCliente];
@@ -420,6 +419,17 @@ namespace ConsolaODBCFox.FoxMiner
         {
             string arrVenta = "-1,";
             foreach (string concepto in Empresa.ConceptosVenta)
+            {
+                arrVenta += IdConcepto(concepto).ToString() + ",";
+            }
+            arrVenta += "-2";
+            return arrVenta;
+        }
+
+        private string ConceptosAbonoIds()
+        {
+            string arrVenta = "-1,";
+            foreach (string concepto in Empresa.ConceptosAbono)
             {
                 arrVenta += IdConcepto(concepto).ToString() + ",";
             }
@@ -897,6 +907,7 @@ namespace ConsolaODBCFox.FoxMiner
         {
             List<GrupoVencimiento> grupos = PgGruposVencimiento.GruposVencimiento();
             string conceptosCredito = ConceptosCreditoIds();
+            Dictionary<int, DimCliente> clientes = new Dictionary<int, DimCliente>();
             foreach (GrupoVencimiento grupo in grupos)
             {
                 if (grupo.Desde == 0 && grupo.Hasta == 0) continue;
@@ -908,37 +919,24 @@ namespace ConsolaODBCFox.FoxMiner
                 List<FactVencimiento> listaVencimientos = new List<FactVencimiento>();
                 if (grupo.Desde == 0)
                 {
-                    //listaVencimientos = LimiteVencidos(fromDate, conceptosCredito, ">=");
-                    listaVencimientos = CreditosVencidos(fromDate, DateTime.Today, conceptosCredito);
+                    listaVencimientos = CreditosVencidos(fromDate, DateTime.Today, conceptosCredito, clientes);
                 }
                 else if (grupo.Hasta == 0)
                 {
-                    listaVencimientos = LimiteVencidos(toDate, conceptosCredito);
+                    listaVencimientos = LimiteVencidos(toDate, conceptosCredito, clientes);
                 }
                 else
                 {
-                    listaVencimientos = CreditosVencidos(fromDate, toDate, conceptosCredito);
+                    listaVencimientos = CreditosVencidos(fromDate, toDate, conceptosCredito, clientes);
                 }
 
                 PgGruposVencimiento.GrabarVencimientos(listaVencimientos, grupo);
             }
         }
 
-        private List<FactVencimiento> LimiteVencidos(DateTime fecha, string arrCredito)
+        private List<FactVencimiento> VencimientosFromAdminPaq(string sqlString, Dictionary<int, DimCliente> clientes)
         {
             List<FactVencimiento> result = new List<FactVencimiento>();
-
-            string sqlString = "SELECT " +
-                "SUM(CTOTAL) AS VENCIDO, " +
-                "CIDCLIEN01, " +
-                "CIDMONEDA, " +
-                "CTIPOCAM01 " +
-                "FROM MGW10008 " +
-                "WHERE CCANCELADO = 0 " +
-                "AND CDEVUELTO = 0 " +
-                "AND CIDCONCE01 IN (" + arrCredito + ") " +
-                "AND CFECHA <= Date(" + fecha.Year + "," + fecha.Month + "," + fecha.Day + ") " +
-                "GROUP BY CIDCLIEN01, CIDMONEDA, CTIPOCAM01, CFECHA";
 
             string connString = "Driver={Microsoft Visual FoxPro Driver};SourceType=DBF;Exclusive=No;" +
                 "SourceDB=" + @Empresa.Ruta + ";";
@@ -955,9 +953,31 @@ namespace ConsolaODBCFox.FoxMiner
                 while (dr.Read())
                 {
                     FactVencimiento vencimiento = new FactVencimiento();
-                    
+                    int idCliente = int.Parse(dr["CIDCLIEN01"].ToString());
                     vencimiento.IdEmpresa = Empresa.Id;
-                    vencimiento.IdCliente = int.Parse(dr["CIDCLIEN01"].ToString());
+                    if (!clientes.ContainsKey(idCliente))
+                    {
+                        Cliente apCliente = ClienteFromAdminPaq(idCliente, conn);
+                        DimCliente dCliente = PgDimCliente.DimClienteByCode(apCliente.Codigo, Empresa.Id);
+                        
+                        if (dCliente == null)
+                        {
+                            dCliente = new DimCliente();
+                            dCliente.IdCliente = 0;
+                        }
+
+                        dCliente.NombreEmpresa = Empresa.Nombre;
+                        dCliente.NombreCliente = apCliente.RazonSocial;
+                        dCliente.EsLocal = apCliente.EsLocal;
+                        dCliente.CodigoCliente = apCliente.Codigo.Trim();
+                        dCliente.IdEmpresa = Empresa.Id;
+
+                        PgDimCliente.GrabarCliente(dCliente);
+                        dCliente = PgDimCliente.DimClienteByCode(apCliente.Codigo, Empresa.Id);
+                        clientes.Add(idCliente, dCliente);
+                    }
+
+                    vencimiento.Cliente = clientes[idCliente];
                     double importeVencido = double.Parse(dr["VENCIDO"].ToString());
                     int idMoneda = int.Parse(dr["CIDMONEDA"].ToString());
                     if (idMoneda != 1)
@@ -973,13 +993,12 @@ namespace ConsolaODBCFox.FoxMiner
                 dr.Close();
                 conn.Close();
             }
+
             return result;
         }
 
-        private List<FactPorVencer> LimitePorVencer(DateTime fecha, string arrCredito)
+        private List<FactVencimiento> LimiteVencidos(DateTime fecha, string arrCredito, Dictionary<int, DimCliente> clientes)
         {
-            List<FactPorVencer> result = new List<FactPorVencer>();
-
             string sqlString = "SELECT " +
                 "SUM(CTOTAL) AS VENCIDO, " +
                 "CIDCLIEN01, " +
@@ -989,48 +1008,16 @@ namespace ConsolaODBCFox.FoxMiner
                 "WHERE CCANCELADO = 0 " +
                 "AND CDEVUELTO = 0 " +
                 "AND CIDCONCE01 IN (" + arrCredito + ") " +
-                "AND CFECHA >= Date(" + fecha.Year + "," + fecha.Month + "," + fecha.Day + ") " +
+                "AND CFECHAVE01 <= Date(" + fecha.Year + "," + fecha.Month + "," + fecha.Day + ") " +
                 "GROUP BY CIDCLIEN01, CIDMONEDA, CTIPOCAM01, CFECHA";
 
-            string connString = "Driver={Microsoft Visual FoxPro Driver};SourceType=DBF;Exclusive=No;" +
-                @"SourceDB=" + Empresa.Ruta + ";";
-            using (OdbcConnection conn = new OdbcConnection(connString))
-            {
-                conn.Open();
-
-                OdbcDataReader dr;
-                OdbcCommand cmd;
-
-                cmd = new OdbcCommand(sqlString, conn);
-                dr = cmd.ExecuteReader();
-
-                while (dr.Read())
-                {
-                    FactPorVencer porvencer = new FactPorVencer();
-
-                    porvencer.IdEmpresa = Empresa.Id;
-                    porvencer.IdCliente = int.Parse(dr["CIDCLIEN01"].ToString());
-                    double importePorVencer = double.Parse(dr["VENCIDO"].ToString());
-                    int idMoneda = int.Parse(dr["CIDMONEDA"].ToString());
-                    if (idMoneda != 1)
-                    {
-                        double tCambio = double.Parse(dr["CTIPOCAM01"].ToString());
-                        importePorVencer *= tCambio;
-                    }
-
-                    porvencer.Importe = double.Parse(dr["VENCIDO"].ToString());
-
-                    result.Add(porvencer);
-                }
-                dr.Close();
-                conn.Close();
-            }
-            return result;
+            
+            return VencimientosFromAdminPaq(sqlString, clientes);
         }
-        private List<FactVencimiento> CreditosVencidos(DateTime desdeFecha, DateTime hastaFecha, string arrCredito)
-        {
-            List<FactVencimiento> result = new List<FactVencimiento>();
 
+        private List<FactVencimiento> CreditosVencidos(DateTime desdeFecha, DateTime hastaFecha, string arrCredito, Dictionary<int, DimCliente> clientes)
+        {
+            
             string sqlString = "SELECT " +
                 "SUM(CTOTAL) AS VENCIDO, " +
                 "CIDCLIEN01, " +
@@ -1040,97 +1027,13 @@ namespace ConsolaODBCFox.FoxMiner
                 "WHERE CCANCELADO = 0 " +
                 "AND CDEVUELTO = 0 " +
                 "AND CIDCONCE01 IN (" + arrCredito + ") " +
-                "AND CFECHA >= Date(" + desdeFecha.Year + "," + desdeFecha.Month + "," + desdeFecha.Day + ") " +
-                "AND CFECHA <= Date(" + hastaFecha.Year + "," + hastaFecha.Month + "," + hastaFecha.Day + ") " +
+                "AND CFECHAVE01 >= Date(" + desdeFecha.Year + "," + desdeFecha.Month + "," + desdeFecha.Day + ") " +
+                "AND CFECHAVE01 <= Date(" + hastaFecha.Year + "," + hastaFecha.Month + "," + hastaFecha.Day + ") " +
                 "GROUP BY CIDCLIEN01, CIDMONEDA, CTIPOCAM01, CFECHA";
 
-            string connString = "Driver={Microsoft Visual FoxPro Driver};SourceType=DBF;Exclusive=No;" +
-                "SourceDB=" + @Empresa.Ruta + ";";
-            using (OdbcConnection conn = new OdbcConnection(connString))
-            {
-                conn.Open();
-
-                OdbcDataReader dr;
-                OdbcCommand cmd;
-
-                cmd = new OdbcCommand(sqlString, conn);
-                dr = cmd.ExecuteReader();
-
-                while (dr.Read())
-                {
-                    FactVencimiento vencimiento = new FactVencimiento();
-
-                    vencimiento.IdEmpresa = Empresa.Id;
-                    vencimiento.IdCliente = int.Parse(dr["CIDCLIEN01"].ToString());
-                    double importeVencido = double.Parse(dr["VENCIDO"].ToString());
-                    int idMoneda = int.Parse(dr["CIDMONEDA"].ToString());
-                    if (idMoneda != 1)
-                    {
-                        double tCambio = double.Parse(dr["CTIPOCAM01"].ToString());
-                        importeVencido *= tCambio;
-                    }
-
-                    vencimiento.Importe = double.Parse(dr["VENCIDO"].ToString());
-
-                    result.Add(vencimiento);
-                }
-                dr.Close();
-                conn.Close();
-            }
-            return result;
+            return VencimientosFromAdminPaq(sqlString, clientes);
         }
-        private List<FactPorVencer> CreditosPorVencer(DateTime desdeFecha, DateTime hastaFecha, string arrCredito)
-        {
-            List<FactPorVencer> result = new List<FactPorVencer>();
-
-            string sqlString = "SELECT " +
-                "SUM(CTOTAL) AS VENCIDO, " +
-                "CIDCLIEN01, " +
-                "CIDMONEDA, " +
-                "CTIPOCAM01 " +
-                "FROM MGW10008 " +
-                "WHERE CCANCELADO = 0 " +
-                "AND CDEVUELTO = 0 " +
-                "AND CIDCONCE01 IN (" + arrCredito + ") " +
-                "AND CFECHA >= Date(" + desdeFecha.Year + "," + desdeFecha.Month + "," + desdeFecha.Day + ") " +
-                "AND CFECHA <= Date(" + hastaFecha.Year + "," + hastaFecha.Month + "," + hastaFecha.Day + ") " +
-                "GROUP BY CIDCLIEN01, CIDMONEDA, CTIPOCAM01, CFECHA";
-
-            string connString = "Driver={Microsoft Visual FoxPro Driver};SourceType=DBF;Exclusive=No;" +
-                @"SourceDB=" + Empresa.Ruta + ";";
-            using (OdbcConnection conn = new OdbcConnection(connString))
-            {
-                conn.Open();
-
-                OdbcDataReader dr;
-                OdbcCommand cmd;
-
-                cmd = new OdbcCommand(sqlString, conn);
-                dr = cmd.ExecuteReader();
-
-                while (dr.Read())
-                {
-                    FactPorVencer porvencer = new FactPorVencer();
-
-                    porvencer.IdEmpresa = Empresa.Id;
-                    porvencer.IdCliente = int.Parse(dr["CIDCLIEN01"].ToString());
-                    double importeVencido = double.Parse(dr["VENCIDO"].ToString());
-                    int idMoneda = int.Parse(dr["CIDMONEDA"].ToString());
-                    if (idMoneda != 1)
-                    {
-                        double tCambio = double.Parse(dr["CTIPOCAM01"].ToString());
-                        importeVencido *= tCambio;
-                    }
-
-                    porvencer.Importe = double.Parse(dr["VENCIDO"].ToString());
-
-                    result.Add(porvencer);
-                }
-                dr.Close();
-                conn.Close();
-            }
-            return result;
-        }
+        
         #endregion
 
         public void Fix()
@@ -1169,6 +1072,7 @@ namespace ConsolaODBCFox.FoxMiner
         public void CalcularPorVencer()
         {
             List<GrupoVencimiento> grupos = PgGruposVencimiento.GruposVencimiento();
+            Dictionary<int, DimCliente> clientes = new Dictionary<int, DimCliente>();
             string conceptosCredito = ConceptosCreditoIds();
             foreach (GrupoVencimiento grupo in grupos)
             {
@@ -1178,25 +1082,287 @@ namespace ConsolaODBCFox.FoxMiner
                 fromDate = DateTime.Today.AddDays(grupo.Desde);
                 toDate = DateTime.Today.AddDays(grupo.Hasta);
 
-                List<FactPorVencer> listPorVencer = new List<FactPorVencer>();
+                List<FactVencimiento> listPorVencer = new List<FactVencimiento>();
                 if (grupo.Desde == 0)
                 {
-                    listPorVencer = CreditosPorVencer(DateTime.Today, toDate, conceptosCredito);
+                    listPorVencer = CreditosPorVencer(DateTime.Today, toDate, conceptosCredito, clientes);
                 }
                 else if (grupo.Hasta == 0)
                 {
-                    listPorVencer = LimitePorVencer(fromDate, conceptosCredito);
+                    listPorVencer = LimitePorVencer(fromDate, conceptosCredito, clientes);
                 }
                 else
                 {
-                    listPorVencer = CreditosPorVencer(fromDate, toDate, conceptosCredito);
+                    listPorVencer = CreditosPorVencer(fromDate, toDate, conceptosCredito, clientes);
                 }
 
                 PgGruposVencimiento.GrabarPorVencer(listPorVencer, grupo);
             }
         }
 
+        private List<FactVencimiento> LimitePorVencer(DateTime fecha, string arrCredito, Dictionary<int, DimCliente> clientes)
+        {
+
+            string sqlString = "SELECT " +
+                "SUM(CTOTAL) AS VENCIDO, " +
+                "CIDCLIEN01, " +
+                "CIDMONEDA, " +
+                "CTIPOCAM01 " +
+                "FROM MGW10008 " +
+                "WHERE CCANCELADO = 0 " +
+                "AND CDEVUELTO = 0 " +
+                "AND CIDCONCE01 IN (" + arrCredito + ") " +
+                "AND CFECHAVE01 >= Date(" + fecha.Year + "," + fecha.Month + "," + fecha.Day + ") " +
+                "GROUP BY CIDCLIEN01, CIDMONEDA, CTIPOCAM01, CFECHA";
+
+            return VencimientosFromAdminPaq(sqlString, clientes);
+        }
+
+        private List<FactVencimiento> CreditosPorVencer(DateTime desdeFecha, DateTime hastaFecha, string arrCredito, Dictionary<int, DimCliente> clientes)
+        {
+            string sqlString = "SELECT " +
+                "SUM(CTOTAL) AS VENCIDO, " +
+                "CIDCLIEN01, " +
+                "CIDMONEDA, " +
+                "CTIPOCAM01 " +
+                "FROM MGW10008 " +
+                "WHERE CCANCELADO = 0 " +
+                "AND CDEVUELTO = 0 " +
+                "AND CIDCONCE01 IN (" + arrCredito + ") " +
+                "AND CFECHAVE01 >= Date(" + desdeFecha.Year + "," + desdeFecha.Month + "," + desdeFecha.Day + ") " +
+                "AND CFECHAVE01 <= Date(" + hastaFecha.Year + "," + hastaFecha.Month + "," + hastaFecha.Day + ") " +
+                "GROUP BY CIDCLIEN01, CIDMONEDA, CTIPOCAM01, CFECHA";
+
+            return VencimientosFromAdminPaq(sqlString, clientes);
+        }
+
         public void CalcularCobrado()
+        {
+            // Prepare months for 1 year
+            List<DimMeses> meses = PrepararMeses();
+            Log.WriteEntry("Prepared month count: " + meses.Count, EventLogEntryType.Information, 20, 1);
+            // Sold && collected
+            List<FactCollection> cobranza = CalcularCobranza(meses);
+            
+            // Uncollectable
+            // CalcularIncobrables(ref cobranza);
+            Log.WriteEntry("Saving collection results", EventLogEntryType.Information, 21, 1);
+            PgCobranza.GrabarCobranza(cobranza);
+            Log.WriteEntry("Memory clean up", EventLogEntryType.Information, 22, 1);
+            cobranza.Clear();
+            cobranza = null;
+            meses.Clear();
+            meses = null;
+            
+        }
+
+        private List<DimMeses> PrepararMeses()
+        {
+            DateTime aDate = DateTime.Today.AddYears(-1).AddMonths(-1);
+            List<DimMeses> mesesRequeridos = new List<DimMeses>();
+            while (aDate.CompareTo(DateTime.Today) < 0)
+            {
+                DimMeses oMes = new DimMeses();
+                oMes.YYYY = aDate.Year;
+                oMes.IndiceMes = (Meses)aDate.Month;
+                mesesRequeridos.Add(oMes);
+                aDate = aDate.AddMonths(1);
+            }
+
+            DimMeses thisMonth = new DimMeses();
+            thisMonth.YYYY = aDate.Year;
+            thisMonth.IndiceMes = (Meses)aDate.Month;
+            mesesRequeridos.Add(thisMonth);
+
+            List<DimMeses> mesesAlmacenados = PgMeses.GetMeses();
+
+            foreach(DimMeses MesRequerido in mesesRequeridos)
+            {
+                bool found = false;
+                foreach(DimMeses MesAlmacenado in mesesAlmacenados)
+                {
+                    if (MesRequerido.YYYY == MesAlmacenado.YYYY && MesRequerido.IndiceMes == MesAlmacenado.IndiceMes)
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found) 
+                {
+                    PgMeses.AgregarMes(MesRequerido);
+                }
+            }
+
+            mesesAlmacenados = PgMeses.GetMeses();
+            foreach(DimMeses MesAlmacenado in mesesAlmacenados)
+            {
+                bool found = false;
+                foreach(DimMeses MesRequerido in mesesRequeridos)
+                {
+                    if (MesRequerido.YYYY == MesAlmacenado.YYYY && MesRequerido.IndiceMes == MesAlmacenado.IndiceMes)
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found)
+                {
+                    PgMeses.BorrarMes(MesAlmacenado);
+                }
+            }
+
+            return PgMeses.GetMeses();
+        }
+
+        private List<FactCollection> CalcularCobranza(List<DimMeses> meses) 
+        {
+
+            List<FactCollection> result = new List<FactCollection>();
+
+            string conceptosVenta = ConceptosVentaIds();
+            string conceptosDevolucion = ConceptosDevolucionIds();
+            string conceptosAbono = ConceptosAbonoIds();
+
+            foreach(DimMeses mes in meses)
+            {
+                Log.WriteEntry("Gathering AdminPaq summary for month: " + mes.CodigoMes + "-" + mes.YYYY, EventLogEntryType.Information, 30, 1);
+                FactCollection collection = new FactCollection();
+                collection.IdEmpresa = Empresa.Id;
+                collection.IdMes = mes.IdMes;
+                collection.Year = mes.YYYY;
+                collection.iMes = (int) mes.IndiceMes;
+                collection.Vendido = VentaEnMes(mes.YYYY, (int)mes.IndiceMes, conceptosVenta, conceptosDevolucion);
+                Log.WriteEntry("Sold: " + collection.Vendido, EventLogEntryType.Information, 31, 1);
+                collection.Cobrado = AbonosEnMes(mes.YYYY, (int)mes.IndiceMes, conceptosAbono);
+                Log.WriteEntry("Collected: " + collection.Cobrado, EventLogEntryType.Information, 32, 1);
+                result.Add(collection);
+            }
+
+            return result;
+        }
+
+        private double VentaEnMes(int Year, int iMes, string conceptosVenta, string conceptosDevolucion)
+        {
+            double result = 0;
+            int nextMonth = iMes == 12 ? 1 : iMes+1;
+            int nextYear = iMes == 12 ? Year + 1 : Year;
+            string sqlString = "SELECT " +
+                "SUM(CNETO) AS SUM_TOTAL, " +
+                "CIDMONEDA, " +
+                "CTIPOCAM01 " +
+                "FROM MGW10008 " +
+                "WHERE CCANCELADO = 0 " +
+                "AND CDEVUELTO = 0 " +
+                "AND CIDCONCE01 IN (" + conceptosVenta + ") " +
+                "AND CFECHA >= Date(" + Year + "," + iMes + ", 1) " +
+                "AND CFECHA < Date(" + nextYear + "," + nextMonth + ", 1) " +
+                "GROUP BY CIDMONEDA, CTIPOCAM01";
+
+            string connString = "Driver={Microsoft Visual FoxPro Driver};SourceType=DBF;Exclusive=No;" +
+                "SourceDB=" + @Empresa.Ruta + ";";
+
+            using (OdbcConnection conn = new OdbcConnection(connString))
+            {
+                conn.Open();
+
+                OdbcDataReader dr;
+                OdbcCommand cmd;
+
+                cmd = new OdbcCommand(sqlString, conn);
+                dr = cmd.ExecuteReader();
+
+                while (dr.Read())
+                {
+                    double importe = double.Parse(dr["SUM_TOTAL"].ToString());
+                    int idMoneda = int.Parse(dr["CIDMONEDA"].ToString());
+                    double tCambio = double.Parse(dr["CTIPOCAM01"].ToString());
+
+                    if (idMoneda == 1)
+                        result += importe;
+                    else
+                        result += importe * tCambio;
+                }
+                dr.Close();
+
+                sqlString = "SELECT " +
+                "SUM(CNETO) AS SUM_TOTAL, " +
+                "CIDMONEDA, " +
+                "CTIPOCAM01 " +
+                "FROM MGW10008 " +
+                "WHERE CIDCONCE01 IN (" + conceptosDevolucion + ") " +
+                "AND CFECHA >= Date(" + Year + "," + iMes + ", 1) " +
+                "AND CFECHA < Date(" + nextYear + "," + nextMonth + ", 1) " +
+                "GROUP BY CIDMONEDA, CTIPOCAM01";
+
+                cmd = new OdbcCommand(sqlString, conn);
+                dr = cmd.ExecuteReader();
+
+                while (dr.Read())
+                {
+                    double importe = double.Parse(dr["SUM_TOTAL"].ToString());
+                    int idMoneda = int.Parse(dr["CIDMONEDA"].ToString());
+                    double tCambio = double.Parse(dr["CTIPOCAM01"].ToString());
+
+                    if (idMoneda == 1)
+                        result -= importe;
+                    else
+                        result -= importe * tCambio;
+                }
+                dr.Close();
+
+                conn.Close();
+            }
+
+            return result;
+        }
+
+        private double AbonosEnMes(int Year, int iMes, string conceptosAbono)
+        {
+            double result = 0;
+            int nextMonth = iMes == 12 ? 1 : iMes + 1;
+            int nextYear = iMes == 12 ? Year + 1 : Year;
+            string sqlString = "SELECT " +
+                "SUM(CNETO) AS SUM_TOTAL, " +
+                "CIDMONEDA, " +
+                "CTIPOCAM01 " +
+                "FROM MGW10008 " +
+                "WHERE CIDCONCE01 IN (" + conceptosAbono + ") " +
+                "AND CFECHA >= Date(" + Year + "," + iMes + ", 1) " +
+                "AND CFECHA < Date(" + nextYear + "," + nextMonth + ", 1) " +
+                "GROUP BY CIDMONEDA, CTIPOCAM01";
+
+            string connString = "Driver={Microsoft Visual FoxPro Driver};SourceType=DBF;Exclusive=No;" +
+                "SourceDB=" + @Empresa.Ruta + ";";
+            using (OdbcConnection conn = new OdbcConnection(connString))
+            {
+                conn.Open();
+
+                OdbcDataReader dr;
+                OdbcCommand cmd;
+
+                cmd = new OdbcCommand(sqlString, conn);
+                dr = cmd.ExecuteReader();
+
+                while (dr.Read())
+                {
+                    double importe = double.Parse(dr["SUM_TOTAL"].ToString());
+                    int idMoneda = int.Parse(dr["CIDMONEDA"].ToString());
+                    double tCambio = double.Parse(dr["CTIPOCAM01"].ToString());
+
+                    if (idMoneda == 1)
+                        result += importe;
+                    else
+                        result += importe * tCambio;
+                }
+                dr.Close();
+            }
+
+            return result;
+        }
+
+        private void CalcularIncobrables(ref List<FactCollection> cobranza)
         {
             throw new NotImplementedException("Not implemented yet");
         }

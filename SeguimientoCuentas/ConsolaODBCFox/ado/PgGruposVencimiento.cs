@@ -5,6 +5,7 @@ using System.Text;
 using ConsolaODBCFox.dto;
 using System.Configuration;
 using Npgsql;
+using System.Diagnostics;
 
 namespace ConsolaODBCFox.ado
 {
@@ -31,10 +32,13 @@ namespace ConsolaODBCFox.ado
                 while (dr.Read())
                 {
                     FactVencimiento oFactVencimiento = new FactVencimiento();
-                    oFactVencimiento.IdCliente = int.Parse(dr["id_cliente"].ToString());
-                    //oFactVencimiento.IdEmpresa = int.Parse(dr[""].ToString()); //TODO
+
+                    DimCliente dCliente = new DimCliente();
+                    dCliente.IdCliente = int.Parse(dr["id_cliente"].ToString());
+
+                    oFactVencimiento.Cliente = dCliente;
                     oFactVencimiento.IdVencimiento = int.Parse(dr["id_grupo_vencimiento"].ToString());
-                    oFactVencimiento.Importe = int.Parse(dr["saldo_vencido"].ToString());
+                    oFactVencimiento.Importe = double.Parse(dr["saldo_vencido"].ToString());
                     listAllFactVencimientosInDB.Add(oFactVencimiento);
                 }
 
@@ -42,8 +46,13 @@ namespace ConsolaODBCFox.ado
                 cmd.Dispose();
                 pgConnection.Close();
             }
-            
 
+            lGrabarVencimientos(vencimientos, grupo, listAllFactVencimientosInDB);
+        }
+
+        private static void lGrabarVencimientos(List<FactVencimiento> vencimientos, GrupoVencimiento grupo, List<FactVencimiento> listAllFactVencimientosInDB)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings[Config.Common.JASPER].ConnectionString;
             // Para cada ID Doco en la BD de postgres
             using (NpgsqlConnection pgConnection = new NpgsqlConnection(connectionString))
             {
@@ -53,7 +62,6 @@ namespace ConsolaODBCFox.ado
 
                     using (NpgsqlTransaction transaction = pgConnection.BeginTransaction())
                     {
-
                         try
                         {
                             foreach (FactVencimiento vencimiento in vencimientos)
@@ -62,42 +70,50 @@ namespace ConsolaODBCFox.ado
                                 FactVencimiento oFactVencimientToPersist = vencimiento;
 
                                 // Check if record exists.
-                                FactVencimiento oFactVencimientoExistente = listAllFactVencimientosInDB.First(record => record.IdCliente == vencimiento.IdCliente && record.IdEmpresa == vencimiento.IdEmpresa && record.IdVencimiento == vencimiento.IdVencimiento);
+                                FactVencimiento oFactVencimientoExistente = null;
+                                foreach (FactVencimiento record in listAllFactVencimientosInDB)
+                                {
+                                    if (record.Cliente.IdCliente == vencimiento.Cliente.IdCliente)
+                                    {
+                                        oFactVencimientoExistente = record;
+                                        break;
+                                    }   
+                                }
 
                                 // if record exists, update the record.
+                                string updateString = "";
                                 if (oFactVencimientoExistente != null)
                                 {
                                     oFactVencimientToPersist.Importe += oFactVencimientoExistente.Importe;
-                                    string sqlUpdateVencimiento = "UPDATE fact_vencido " +
-                                                                    "SET saldo_vencido=@saldo_vencido " +
-                                                                    "WHERE id_cliente=@id_cliente and id_grupo_vencimiento=@id_grupo_vencimiento;";
-                                    theCommand = new NpgsqlCommand(sqlUpdateVencimiento, pgConnection);
+                                    updateString = "UPDATE fact_vencido " +
+                                        "SET saldo_vencido=@saldo_vencido " +
+                                        "WHERE id_cliente=@id_cliente and id_grupo_vencimiento=@id_grupo_vencimiento;";
                                 }
                                 // if record does not exists, insert the record
                                 else
                                 {
-                                    string sqlUpdateVencimiento = "INSERT INTO fact_vencido(" +
-                                                                    "id_cliente, id_grupo_vencimiento, saldo_vencido) " +
-                                                                    "VALUES (@id_cliente, @id_grupo_vencimiento, @saldo_vencido);";
-                                    theCommand = new NpgsqlCommand(sqlUpdateVencimiento, pgConnection);
+                                    updateString = "INSERT INTO fact_vencido(" +
+                                        "id_cliente, id_grupo_vencimiento, saldo_vencido) " +
+                                        "VALUES (@id_cliente, @id_grupo_vencimiento, @saldo_vencido);";
                                 }
+                                
+                                theCommand = new NpgsqlCommand(updateString, pgConnection);
 
-                                theCommand.Parameters.Add("@saldo_vencido", NpgsqlTypes.NpgsqlDbType.Double);
+                                theCommand.Parameters.Add("@saldo_vencido", NpgsqlTypes.NpgsqlDbType.Numeric);
                                 theCommand.Parameters.Add("@id_cliente", NpgsqlTypes.NpgsqlDbType.Integer);
                                 theCommand.Parameters.Add("@id_grupo_vencimiento", NpgsqlTypes.NpgsqlDbType.Integer);
 
                                 theCommand.Parameters["@saldo_vencido"].Value = oFactVencimientToPersist.Importe;
-                                theCommand.Parameters["@id_cliente"].Value = oFactVencimientToPersist.IdCliente;
+                                theCommand.Parameters["@id_cliente"].Value = oFactVencimientToPersist.Cliente.IdCliente;
                                 theCommand.Parameters["@id_grupo_vencimiento"].Value = grupo.Id;
 
                                 theCommand.ExecuteNonQuery();
-
                             }
                             transaction.Commit();
                         }
                         catch (Exception ex)
                         {
-                            if(transaction != null) transaction.Rollback();
+                            if (transaction != null) transaction.Rollback();
                             throw ex;
                         }
                     }
@@ -110,9 +126,9 @@ namespace ConsolaODBCFox.ado
             }
         }
 
-        public static void GrabarPorVencer(List<FactPorVencer> porvencer, GrupoVencimiento grupo)
+        public static void GrabarPorVencer(List<FactVencimiento> porvencer, GrupoVencimiento grupo)
         {
-            List<FactPorVencer> listAllFactPorVencerInDB = new List<FactPorVencer>();
+            List<FactVencimiento> listAllFactPorVencerInDB = new List<FactVencimiento>();
 
             string connectionString = ConfigurationManager.ConnectionStrings[Config.Common.JASPER].ConnectionString;
 
@@ -130,11 +146,14 @@ namespace ConsolaODBCFox.ado
 
                 while (dr.Read())
                 {
-                    FactPorVencer oFactPorVencer = new FactPorVencer();
-                    oFactPorVencer.IdCliente = int.Parse(dr["id_cliente"].ToString());
-                    //oFactVencimiento.IdEmpresa = int.Parse(dr[""].ToString()); //TODO
+                    FactVencimiento oFactPorVencer = new FactVencimiento();
+
+                    DimCliente dCliente = new DimCliente();
+                    dCliente.IdCliente = int.Parse(dr["id_cliente"].ToString());
+
+                    oFactPorVencer.Cliente = dCliente;
                     oFactPorVencer.IdVencimiento = int.Parse(dr["id_grupo_vencimiento"].ToString());
-                    oFactPorVencer.Importe = int.Parse(dr["saldo_por_vencer"].ToString());
+                    oFactPorVencer.Importe = double.Parse(dr["saldo_por_vencer"].ToString());
                     listAllFactPorVencerInDB.Add(oFactPorVencer);
                 }
 
@@ -156,13 +175,23 @@ namespace ConsolaODBCFox.ado
 
                         try
                         {
-                            foreach (FactPorVencer currentPorVencer in porvencer)
+                            foreach (FactVencimiento currentPorVencer in porvencer)
                             {
                                 NpgsqlCommand theCommand;
-                                FactPorVencer oFactPorVencerToPersist = currentPorVencer;
+                                FactVencimiento oFactPorVencerToPersist = currentPorVencer;
 
                                 // Check if record exists.
-                                FactPorVencer oFactPorVencerExistente = listAllFactPorVencerInDB.First(record => record.IdCliente == currentPorVencer.IdCliente && record.IdEmpresa == currentPorVencer.IdEmpresa && record.IdVencimiento == currentPorVencer.IdVencimiento);
+                                FactVencimiento oFactPorVencerExistente = null;
+                                foreach (FactVencimiento record in listAllFactPorVencerInDB)
+                                {
+                                    if (record.Cliente.IdCliente == currentPorVencer.Cliente.IdCliente)
+                                    {
+                                        oFactPorVencerExistente = record;
+                                        break;
+                                    }
+                                }
+
+                                //FactPorVencer oFactPorVencerExistente = listAllFactPorVencerInDB.First(record => record.IdCliente == currentPorVencer.IdCliente && record.IdEmpresa == currentPorVencer.IdEmpresa && record.IdVencimiento == currentPorVencer.IdVencimiento);
 
                                 // if record exists, update the record.
                                 if (oFactPorVencerExistente != null)
@@ -187,7 +216,7 @@ namespace ConsolaODBCFox.ado
                                 theCommand.Parameters.Add("@id_grupo_vencimiento", NpgsqlTypes.NpgsqlDbType.Integer);
 
                                 theCommand.Parameters["@saldo_por_vencer"].Value = oFactPorVencerToPersist.Importe;
-                                theCommand.Parameters["@id_cliente"].Value = oFactPorVencerToPersist.IdCliente;
+                                theCommand.Parameters["@id_cliente"].Value = oFactPorVencerToPersist.Cliente.IdCliente;
                                 theCommand.Parameters["@id_grupo_vencimiento"].Value = grupo.Id;
 
                                 theCommand.ExecuteNonQuery();
