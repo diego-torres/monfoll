@@ -173,11 +173,6 @@
             "AssemblyAsmDisplayName" = "8:Npgsql, Version=2.1.1.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_06BB0C9BC69119F305FB0A1110FBA846"
-                    {
-                    "Name" = "8:Npgsql.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:Npgsql.dll"
             "TargetName" = "8:"
@@ -204,11 +199,6 @@
             "AssemblyAsmDisplayName" = "8:Mono.Security, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_0E35C489F79EDD804C5E60EFA063EA43"
-                    {
-                    "Name" = "8:Mono.Security.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:Mono.Security.dll"
             "TargetName" = "8:"
@@ -304,15 +294,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:ConsolaODBCFox"
-        "ProductCode" = "8:{8DCF9A9F-5186-4E60-B5BA-B6DD0278AE7B}"
-        "PackageCode" = "8:{627180B5-0CD7-4C52-8881-8A891EB16738}"
+        "ProductCode" = "8:{CC39C3BE-ABAD-41A6-9A66-9605EDC17958}"
+        "PackageCode" = "8:{FAE8DDFF-A894-4C29-9552-3328377EE8A7}"
         "UpgradeCode" = "8:{D8324497-3EA8-4961-8124-DCFF432CF62C}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.7.4"
+        "ProductVersion" = "8:3.1.0"
         "Manufacturer" = "8:Inspiracode"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"

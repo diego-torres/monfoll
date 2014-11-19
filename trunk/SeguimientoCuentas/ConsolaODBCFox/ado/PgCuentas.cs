@@ -71,8 +71,8 @@ namespace ConsolaODBCFox.ado
                 cmd.Parameters.Add("@folio_doco", NpgsqlTypes.NpgsqlDbType.Integer);
                 cmd.Parameters.Add("@tipo_documento", NpgsqlTypes.NpgsqlDbType.Varchar, 150);
                 cmd.Parameters.Add("@tipo_cobro", NpgsqlTypes.NpgsqlDbType.Varchar, 100);
-                cmd.Parameters.Add("@facturado", NpgsqlTypes.NpgsqlDbType.Money);
-                cmd.Parameters.Add("@saldo", NpgsqlTypes.NpgsqlDbType.Money);
+                cmd.Parameters.Add("@facturado", NpgsqlTypes.NpgsqlDbType.Numeric);
+                cmd.Parameters.Add("@saldo", NpgsqlTypes.NpgsqlDbType.Numeric);
                 cmd.Parameters.Add("@moneda", NpgsqlTypes.NpgsqlDbType.Varchar, 50);
                 cmd.Parameters.Add("@observaciones", NpgsqlTypes.NpgsqlDbType.Varchar, 250);
                 cmd.Parameters.Add("@esperada", NpgsqlTypes.NpgsqlDbType.Date);
@@ -288,7 +288,7 @@ namespace ConsolaODBCFox.ado
 
                 NpgsqlCommand cmd = new NpgsqlCommand(sqlString, conn);
 
-                cmd.Parameters.Add("@saldo", NpgsqlTypes.NpgsqlDbType.Money);
+                cmd.Parameters.Add("@saldo", NpgsqlTypes.NpgsqlDbType.Numeric);
                 cmd.Parameters.Add("@id", NpgsqlTypes.NpgsqlDbType.Integer);
 
                 cmd.Parameters["@saldo"].Value = cuenta.Saldo;
@@ -297,46 +297,6 @@ namespace ConsolaODBCFox.ado
                 cmd.ExecuteNonQuery();
 
                 GrabarAbonos(conn, cuenta);
-
-                conn.Close();
-            }
-        }
-
-        public static void ActualizarCompleto(Cuenta cuenta)
-        {
-            string connectionString = ConfigurationManager.ConnectionStrings[Config.Common.MONFOLL].ConnectionString;
-
-            using (NpgsqlConnection conn = new NpgsqlConnection(connectionString))
-            {
-                conn.Open();
-
-                string sqlString = "UPDATE ctrl_cuenta " +
-                "SET F_COBRO = @collect_date, " +
-                "TIPO_COBRO = @collect_type, " +
-                "OBSERVACIONES = @obs_note, " +
-                "TS_DESCARGADO = CURRENT_TIMESTAMP " +
-                "WHERE id_doco = @id";
-
-                NpgsqlCommand cmd = new NpgsqlCommand(sqlString, conn);
-
-                cmd.Parameters.Add("@saldo", NpgsqlTypes.NpgsqlDbType.Money);
-                cmd.Parameters.Add("@id", NpgsqlTypes.NpgsqlDbType.Integer);
-
-                cmd.Parameters.Add("@collect_date", NpgsqlTypes.NpgsqlDbType.Date);
-                cmd.Parameters.Add("@collect_type", NpgsqlTypes.NpgsqlDbType.Varchar, 100);
-                cmd.Parameters.Add("@obs_note", NpgsqlTypes.NpgsqlDbType.Varchar, 250);
-
-                cmd.Parameters["@saldo"].Value = cuenta.Saldo;
-                cmd.Parameters["@id"].Value = cuenta.Id;
-
-                cmd.Parameters["@collect_date"].Value = cuenta.FechaCobro;
-                cmd.Parameters["@collect_type"].Value = cuenta.TipoCobro.Trim();
-                cmd.Parameters["@obs_note"].Value = cuenta.Observaciones.Trim();
-
-                cmd.ExecuteNonQuery();
-
-                NotaDeCambio(conn, cuenta);
-                //GrabarAbonos(conn, cuenta);
 
                 conn.Close();
             }

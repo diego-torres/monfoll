@@ -11,7 +11,7 @@ namespace ConsolaODBCFox.ado
 {
     public class PgGruposVencimiento
     {
-        public static void GrabarVencimientos(List<FactVencimiento> vencimientos, GrupoVencimiento grupo)
+        public static void GrabarVencimientos(List<FactVencimiento> vencimientos, GrupoVencimiento grupo, string USDTag)
         {
             List<FactVencimiento> listAllFactVencimientosInDB = new List<FactVencimiento>();
             
@@ -24,7 +24,7 @@ namespace ConsolaODBCFox.ado
                 NpgsqlCommand cmd;
 
                 string sqlString = "SELECT id_cliente, id_grupo_vencimiento, saldo_vencido " +
-                                    "FROM fact_vencido;";
+                                    "FROM fact_vencido" + USDTag +";";
 
                 cmd = new NpgsqlCommand(sqlString, pgConnection);
                 dr = cmd.ExecuteReader();
@@ -47,10 +47,10 @@ namespace ConsolaODBCFox.ado
                 pgConnection.Close();
             }
 
-            lGrabarVencimientos(vencimientos, grupo, listAllFactVencimientosInDB);
+            lGrabarVencimientos(vencimientos, grupo, listAllFactVencimientosInDB, USDTag);
         }
 
-        private static void lGrabarVencimientos(List<FactVencimiento> vencimientos, GrupoVencimiento grupo, List<FactVencimiento> listAllFactVencimientosInDB)
+        private static void lGrabarVencimientos(List<FactVencimiento> vencimientos, GrupoVencimiento grupo, List<FactVencimiento> listAllFactVencimientosInDB, string USDTag)
         {
             string connectionString = ConfigurationManager.ConnectionStrings[Config.Common.JASPER].ConnectionString;
             // Para cada ID Doco en la BD de postgres
@@ -70,29 +70,28 @@ namespace ConsolaODBCFox.ado
                                 FactVencimiento oFactVencimientToPersist = vencimiento;
 
                                 // Check if record exists.
-                                FactVencimiento oFactVencimientoExistente = null;
+                                bool exists = false;
                                 foreach (FactVencimiento record in listAllFactVencimientosInDB)
                                 {
                                     if (record.Cliente.IdCliente == vencimiento.Cliente.IdCliente)
                                     {
-                                        oFactVencimientoExistente = record;
+                                        exists = true;
                                         break;
                                     }   
                                 }
 
                                 // if record exists, update the record.
                                 string updateString = "";
-                                if (oFactVencimientoExistente != null)
+                                if (exists)
                                 {
-                                    oFactVencimientToPersist.Importe += oFactVencimientoExistente.Importe;
-                                    updateString = "UPDATE fact_vencido " +
+                                    updateString = "UPDATE fact_vencido" + USDTag + " " +
                                         "SET saldo_vencido=@saldo_vencido " +
                                         "WHERE id_cliente=@id_cliente and id_grupo_vencimiento=@id_grupo_vencimiento;";
                                 }
                                 // if record does not exists, insert the record
                                 else
                                 {
-                                    updateString = "INSERT INTO fact_vencido(" +
+                                    updateString = "INSERT INTO fact_vencido" + USDTag + "(" +
                                         "id_cliente, id_grupo_vencimiento, saldo_vencido) " +
                                         "VALUES (@id_cliente, @id_grupo_vencimiento, @saldo_vencido);";
                                 }
@@ -126,7 +125,7 @@ namespace ConsolaODBCFox.ado
             }
         }
 
-        public static void GrabarPorVencer(List<FactVencimiento> porvencer, GrupoVencimiento grupo)
+        public static void GrabarPorVencer(List<FactVencimiento> porvencer, GrupoVencimiento grupo, string USDTag)
         {
             List<FactVencimiento> listAllFactPorVencerInDB = new List<FactVencimiento>();
 
@@ -139,7 +138,7 @@ namespace ConsolaODBCFox.ado
                 NpgsqlCommand cmd;
 
                 string sqlString = "SELECT id_cliente, id_grupo_vencimiento, saldo_por_vencer " +
-                                    "FROM fact_por_vencer;";
+                                    "FROM fact_por_vencer" + USDTag + ";";
 
                 cmd = new NpgsqlCommand(sqlString, pgConnection);
                 dr = cmd.ExecuteReader();
@@ -181,12 +180,12 @@ namespace ConsolaODBCFox.ado
                                 FactVencimiento oFactPorVencerToPersist = currentPorVencer;
 
                                 // Check if record exists.
-                                FactVencimiento oFactPorVencerExistente = null;
+                                bool exists = false;
                                 foreach (FactVencimiento record in listAllFactPorVencerInDB)
                                 {
                                     if (record.Cliente.IdCliente == currentPorVencer.Cliente.IdCliente)
                                     {
-                                        oFactPorVencerExistente = record;
+                                        exists = true;
                                         break;
                                     }
                                 }
@@ -194,10 +193,9 @@ namespace ConsolaODBCFox.ado
                                 //FactPorVencer oFactPorVencerExistente = listAllFactPorVencerInDB.First(record => record.IdCliente == currentPorVencer.IdCliente && record.IdEmpresa == currentPorVencer.IdEmpresa && record.IdVencimiento == currentPorVencer.IdVencimiento);
 
                                 // if record exists, update the record.
-                                if (oFactPorVencerExistente != null)
+                                if (exists)
                                 {
-                                    oFactPorVencerToPersist.Importe += oFactPorVencerExistente.Importe;
-                                    string sqlUpdateVencimiento = "UPDATE fact_por_vencer " +
+                                    string sqlUpdateVencimiento = "UPDATE fact_por_vencer" + USDTag + " " +
                                                                     "SET saldo_por_vencer=@saldo_por_vencer " +
                                                                     "WHERE id_cliente=@id_cliente and id_grupo_vencimiento=@id_grupo_vencimiento;";
                                     theCommand = new NpgsqlCommand(sqlUpdateVencimiento, pgConnection);
@@ -205,7 +203,7 @@ namespace ConsolaODBCFox.ado
                                 // if record does not exists, insert the record
                                 else
                                 {
-                                    string sqlUpdateVencimiento = "INSERT INTO fact_por_vencer(" +
+                                    string sqlUpdateVencimiento = "INSERT INTO fact_por_vencer" + USDTag + "(" +
                                                                     "id_cliente, id_grupo_vencimiento, saldo_por_vencer) " +
                                                                     "VALUES (@id_cliente, @id_grupo_vencimiento, @saldo_por_vencer);";
                                     theCommand = new NpgsqlCommand(sqlUpdateVencimiento, pgConnection);
@@ -280,7 +278,7 @@ namespace ConsolaODBCFox.ado
             
         }
 
-        public static List<GrupoVencimiento> GruposVencimiento()
+        public static List<GrupoVencimiento> GruposVencimiento(bool ParaVencidos)
         {
             List<GrupoVencimiento> result = new List<GrupoVencimiento>();
             string connectionString = ConfigurationManager.ConnectionStrings[Config.Common.JASPER].ConnectionString;
@@ -291,8 +289,17 @@ namespace ConsolaODBCFox.ado
                 NpgsqlDataReader dr;
                 NpgsqlCommand cmd;
 
-                string sqlString = "SELECT id_grupo_vencimiento, minimo_dias, maximo_dias " +
-                    "FROM dim_grupo_vencimiento;";
+                string sqlString = "";
+
+                if (ParaVencidos)
+                    sqlString = "SELECT id_grupo_vencimiento, minimo_dias, maximo_dias " +
+                        "FROM dim_grupo_vencimiento " +
+                        "WHERE a_vencidos=true";
+                else
+                    sqlString = "SELECT id_grupo_vencimiento, minimo_dias, maximo_dias " +
+                        "FROM dim_grupo_vencimiento " +
+                        "WHERE a_por_vencer=true";
+
 
                 cmd = new NpgsqlCommand(sqlString, pgConnection);
                 dr = cmd.ExecuteReader();

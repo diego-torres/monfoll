@@ -9,6 +9,7 @@ using System.Globalization;
 using Npgsql;
 using ConsolaODBCFox.ado;
 using System.IO;
+using System.Configuration;
 
 namespace ConsolaODBCFox.FoxMiner
 {
@@ -905,7 +906,7 @@ namespace ConsolaODBCFox.FoxMiner
 
         public void CalcularVencidos()
         {
-            List<GrupoVencimiento> grupos = PgGruposVencimiento.GruposVencimiento();
+            List<GrupoVencimiento> grupos = PgGruposVencimiento.GruposVencimiento(true);
             string conceptosCredito = ConceptosCreditoIds();
             Dictionary<int, DimCliente> clientes = new Dictionary<int, DimCliente>();
             foreach (GrupoVencimiento grupo in grupos)
@@ -917,48 +918,53 @@ namespace ConsolaODBCFox.FoxMiner
                 toDate = DateTime.Today.AddDays(grupo.Desde * -1);
 
                 List<FactVencimiento> listaVencimientos = new List<FactVencimiento>();
+                List<FactVencimiento> listaVencimientosUSD = new List<FactVencimiento>();
                 if (grupo.Desde == 0)
                 {
-                    listaVencimientos = CreditosVencidos(fromDate, DateTime.Today, conceptosCredito, clientes);
+                    listaVencimientos = VencimientoCreditos(fromDate, DateTime.Today.AddDays(-1), conceptosCredito, clientes, "");
+                    listaVencimientosUSD = VencimientoCreditos(fromDate, DateTime.Today.AddDays(-1), conceptosCredito, clientes, " NOT ");
                 }
                 else if (grupo.Hasta == 0)
                 {
-                    listaVencimientos = LimiteVencidos(toDate, conceptosCredito, clientes);
+                    listaVencimientos = LimiteVencimiento(toDate, conceptosCredito, clientes, "<=", "");
+                    listaVencimientosUSD = LimiteVencimiento(toDate, conceptosCredito, clientes, "<=", " NOT ");
                 }
                 else
                 {
-                    listaVencimientos = CreditosVencidos(fromDate, toDate, conceptosCredito, clientes);
+                    listaVencimientos = VencimientoCreditos(fromDate, toDate, conceptosCredito, clientes, "");
+                    listaVencimientosUSD = VencimientoCreditos(fromDate, toDate, conceptosCredito, clientes, " NOT ");
                 }
 
-                PgGruposVencimiento.GrabarVencimientos(listaVencimientos, grupo);
+                PgGruposVencimiento.GrabarVencimientos(listaVencimientos, grupo, "");
+                PgGruposVencimiento.GrabarVencimientos(listaVencimientosUSD, grupo, "_usd");
             }
         }
 
-        private List<FactVencimiento> VencimientosFromAdminPaq(string sqlString, Dictionary<int, DimCliente> clientes)
+        private List<FactVencimiento> VencimientosFromDb(string sqlString, Dictionary<int, DimCliente> clientes)
         {
             List<FactVencimiento> result = new List<FactVencimiento>();
 
-            string connString = "Driver={Microsoft Visual FoxPro Driver};SourceType=DBF;Exclusive=No;" +
-                "SourceDB=" + @Empresa.Ruta + ";";
-            using (OdbcConnection conn = new OdbcConnection(connString))
+            string connString = ConfigurationManager.ConnectionStrings[Config.Common.MONFOLL].ConnectionString;
+            using (NpgsqlConnection conn = new NpgsqlConnection(connString))
             {
                 conn.Open();
 
-                OdbcDataReader dr;
-                OdbcCommand cmd;
+                NpgsqlDataReader dr;
+                NpgsqlCommand cmd;
 
-                cmd = new OdbcCommand(sqlString, conn);
+                cmd = new NpgsqlCommand(sqlString, conn);
+                Log.WriteEntry("Gathering due amounts: " + sqlString, EventLogEntryType.Information, 20, 1);
                 dr = cmd.ExecuteReader();
 
                 while (dr.Read())
                 {
                     FactVencimiento vencimiento = new FactVencimiento();
-                    int idCliente = int.Parse(dr["CIDCLIEN01"].ToString());
+                    int idCliente = int.Parse(dr["ap_id"].ToString());
                     vencimiento.IdEmpresa = Empresa.Id;
+
                     if (!clientes.ContainsKey(idCliente))
                     {
-                        Cliente apCliente = ClienteFromAdminPaq(idCliente, conn);
-                        DimCliente dCliente = PgDimCliente.DimClienteByCode(apCliente.Codigo, Empresa.Id);
+                        DimCliente dCliente = PgDimCliente.DimClienteByCode(dr["cd_cliente"].ToString().Trim(), Empresa.Id);
                         
                         if (dCliente == null)
                         {
@@ -967,25 +973,17 @@ namespace ConsolaODBCFox.FoxMiner
                         }
 
                         dCliente.NombreEmpresa = Empresa.Nombre;
-                        dCliente.NombreCliente = apCliente.RazonSocial;
-                        dCliente.EsLocal = apCliente.EsLocal;
-                        dCliente.CodigoCliente = apCliente.Codigo.Trim();
+                        dCliente.NombreCliente = dr["nombre_cliente"].ToString().Trim();
+                        dCliente.EsLocal = Boolean.Parse(dr["es_local"].ToString());
+                        dCliente.CodigoCliente = dr["cd_cliente"].ToString().Trim();
                         dCliente.IdEmpresa = Empresa.Id;
 
                         PgDimCliente.GrabarCliente(dCliente);
-                        dCliente = PgDimCliente.DimClienteByCode(apCliente.Codigo, Empresa.Id);
+                        dCliente = PgDimCliente.DimClienteByCode(dr["cd_cliente"].ToString().Trim(), Empresa.Id);
                         clientes.Add(idCliente, dCliente);
                     }
 
                     vencimiento.Cliente = clientes[idCliente];
-                    double importeVencido = double.Parse(dr["VENCIDO"].ToString());
-                    int idMoneda = int.Parse(dr["CIDMONEDA"].ToString());
-                    if (idMoneda != 1)
-                    {
-                        double tCambio = double.Parse(dr["CTIPOCAM01"].ToString());
-                        importeVencido *= tCambio;
-                    }
-
                     vencimiento.Importe = double.Parse(dr["VENCIDO"].ToString());
 
                     result.Add(vencimiento);
@@ -997,41 +995,36 @@ namespace ConsolaODBCFox.FoxMiner
             return result;
         }
 
-        private List<FactVencimiento> LimiteVencidos(DateTime fecha, string arrCredito, Dictionary<int, DimCliente> clientes)
+        private List<FactVencimiento> LimiteVencimiento(DateTime fecha, string arrCredito, Dictionary<int, DimCliente> clientes, string direction, string USDTag)
         {
             string sqlString = "SELECT " +
-                "SUM(CTOTAL) AS VENCIDO, " +
-                "CIDCLIEN01, " +
-                "CIDMONEDA, " +
-                "CTIPOCAM01 " +
-                "FROM MGW10008 " +
-                "WHERE CCANCELADO = 0 " +
-                "AND CDEVUELTO = 0 " +
-                "AND CIDCONCE01 IN (" + arrCredito + ") " +
-                "AND CFECHAVE01 <= Date(" + fecha.Year + "," + fecha.Month + "," + fecha.Day + ") " +
-                "GROUP BY CIDCLIEN01, CIDMONEDA, CTIPOCAM01, CFECHA";
-
+                "SUM(SALDO) AS VENCIDO, " +
+                "clientes.ap_id, cd_cliente, nombre_cliente, es_local " +
+                "FROM ctrl_cuenta cuentas INNER JOIN cat_cliente clientes " +
+                "ON cuentas.id_cliente = clientes.id_cliente " +
+                "WHERE f_vencimiento " + direction + " '" + fecha.Year + "-" + fecha.Month + "-" + fecha.Day + "' " +
+                "AND moneda" + USDTag + "LIKE 'Peso%' " +
+                "AND id_empresa = " + Empresa.Id + " " +
+                "GROUP BY clientes.ap_id, cd_cliente, nombre_cliente, es_local;";
             
-            return VencimientosFromAdminPaq(sqlString, clientes);
+            return VencimientosFromDb(sqlString, clientes);
         }
 
-        private List<FactVencimiento> CreditosVencidos(DateTime desdeFecha, DateTime hastaFecha, string arrCredito, Dictionary<int, DimCliente> clientes)
+        private List<FactVencimiento> VencimientoCreditos(DateTime desdeFecha, DateTime hastaFecha, string arrCredito, Dictionary<int, DimCliente> clientes, string USDTag)
         {
-            
-            string sqlString = "SELECT " +
-                "SUM(CTOTAL) AS VENCIDO, " +
-                "CIDCLIEN01, " +
-                "CIDMONEDA, " +
-                "CTIPOCAM01 " +
-                "FROM MGW10008 " +
-                "WHERE CCANCELADO = 0 " +
-                "AND CDEVUELTO = 0 " +
-                "AND CIDCONCE01 IN (" + arrCredito + ") " +
-                "AND CFECHAVE01 >= Date(" + desdeFecha.Year + "," + desdeFecha.Month + "," + desdeFecha.Day + ") " +
-                "AND CFECHAVE01 <= Date(" + hastaFecha.Year + "," + hastaFecha.Month + "," + hastaFecha.Day + ") " +
-                "GROUP BY CIDCLIEN01, CIDMONEDA, CTIPOCAM01, CFECHA";
 
-            return VencimientosFromAdminPaq(sqlString, clientes);
+            string sqlString = "SELECT " +
+                "SUM(SALDO) AS VENCIDO, " +
+                "clientes.ap_id, cd_cliente, nombre_cliente, es_local " +
+                "FROM ctrl_cuenta cuentas INNER JOIN cat_cliente clientes " +
+                "ON cuentas.id_cliente = clientes.id_cliente " +
+                "WHERE f_vencimiento BETWEEN '" + desdeFecha.Year + "-" + desdeFecha.Month + "-" + desdeFecha.Day + "' " +
+                "AND '" + hastaFecha.Year + "-" + hastaFecha.Month + "-" + hastaFecha.Day + "' " +
+                "AND moneda" + USDTag + "LIKE 'Peso%' " +
+                "AND id_empresa = " + Empresa.Id + " " +
+                "GROUP BY clientes.ap_id, cd_cliente, nombre_cliente, es_local;";
+
+            return VencimientosFromDb(sqlString, clientes);
         }
         
         #endregion
@@ -1071,7 +1064,7 @@ namespace ConsolaODBCFox.FoxMiner
 
         public void CalcularPorVencer()
         {
-            List<GrupoVencimiento> grupos = PgGruposVencimiento.GruposVencimiento();
+            List<GrupoVencimiento> grupos = PgGruposVencimiento.GruposVencimiento(false);
             Dictionary<int, DimCliente> clientes = new Dictionary<int, DimCliente>();
             string conceptosCredito = ConceptosCreditoIds();
             foreach (GrupoVencimiento grupo in grupos)
@@ -1085,55 +1078,19 @@ namespace ConsolaODBCFox.FoxMiner
                 List<FactVencimiento> listPorVencer = new List<FactVencimiento>();
                 if (grupo.Desde == 0)
                 {
-                    listPorVencer = CreditosPorVencer(DateTime.Today, toDate, conceptosCredito, clientes);
+                    listPorVencer = VencimientoCreditos(DateTime.Today, toDate, conceptosCredito, clientes);
                 }
                 else if (grupo.Hasta == 0)
                 {
-                    listPorVencer = LimitePorVencer(fromDate, conceptosCredito, clientes);
+                    listPorVencer = LimiteVencimiento(toDate, conceptosCredito, clientes, ">=");
                 }
                 else
                 {
-                    listPorVencer = CreditosPorVencer(fromDate, toDate, conceptosCredito, clientes);
+                    listPorVencer = VencimientoCreditos(fromDate, toDate, conceptosCredito, clientes);
                 }
 
                 PgGruposVencimiento.GrabarPorVencer(listPorVencer, grupo);
             }
-        }
-
-        private List<FactVencimiento> LimitePorVencer(DateTime fecha, string arrCredito, Dictionary<int, DimCliente> clientes)
-        {
-
-            string sqlString = "SELECT " +
-                "SUM(CTOTAL) AS VENCIDO, " +
-                "CIDCLIEN01, " +
-                "CIDMONEDA, " +
-                "CTIPOCAM01 " +
-                "FROM MGW10008 " +
-                "WHERE CCANCELADO = 0 " +
-                "AND CDEVUELTO = 0 " +
-                "AND CIDCONCE01 IN (" + arrCredito + ") " +
-                "AND CFECHAVE01 >= Date(" + fecha.Year + "," + fecha.Month + "," + fecha.Day + ") " +
-                "GROUP BY CIDCLIEN01, CIDMONEDA, CTIPOCAM01, CFECHA";
-
-            return VencimientosFromAdminPaq(sqlString, clientes);
-        }
-
-        private List<FactVencimiento> CreditosPorVencer(DateTime desdeFecha, DateTime hastaFecha, string arrCredito, Dictionary<int, DimCliente> clientes)
-        {
-            string sqlString = "SELECT " +
-                "SUM(CTOTAL) AS VENCIDO, " +
-                "CIDCLIEN01, " +
-                "CIDMONEDA, " +
-                "CTIPOCAM01 " +
-                "FROM MGW10008 " +
-                "WHERE CCANCELADO = 0 " +
-                "AND CDEVUELTO = 0 " +
-                "AND CIDCONCE01 IN (" + arrCredito + ") " +
-                "AND CFECHAVE01 >= Date(" + desdeFecha.Year + "," + desdeFecha.Month + "," + desdeFecha.Day + ") " +
-                "AND CFECHAVE01 <= Date(" + hastaFecha.Year + "," + hastaFecha.Month + "," + hastaFecha.Day + ") " +
-                "GROUP BY CIDCLIEN01, CIDMONEDA, CTIPOCAM01, CFECHA";
-
-            return VencimientosFromAdminPaq(sqlString, clientes);
         }
 
         public void CalcularCobrado()

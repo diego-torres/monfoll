@@ -143,6 +143,5 @@ namespace ConsolaODBCFox.ado
 
             return result;
         }
-
     }
 }
