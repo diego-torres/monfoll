@@ -111,18 +111,18 @@ namespace ConsolaODBCFox
                         case "PORVENCER":
                             docosAPI.CalcularPorVencer();
                             break;
-                        case "COBRADO":
+                        /*case "COBRADO":
                             docosAPI.CalcularCobrado();
-                            break;
+                            break;*/
                         case "VENTAS":
                             docosAPI.CalcularVentas();
                             break;
-                        case "DETALLE":
+                        /*case "DETALLE":
                             docosAPI.CalcularDetalle();
                             break;
                         case "FIX":
                             docosAPI.Fix();
-                            break;
+                            break;*/
                         case "CLIENTES":
                             docosAPI.Clientes();
                             break;

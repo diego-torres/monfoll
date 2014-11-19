@@ -662,48 +662,21 @@ namespace SeguimientoCobrador.Collectable.PostgresImpl
                 conn.Open();
 
                 string sqlString = "UPDATE ctrl_cuenta " +
-                    "SET F_DOCUMENTO = @f_documento, " +
-                    "F_VENCIMIENTO = @f_vencimiento, " +
-                    "F_COBRO = @f_cobro, " +
-                    "ID_CLIENTE = @id_cliente, " +
-                    "SERIE_DOCO = @serie_doco, " +
-                    "FOLIO_DOCO = @folio_doco, " +
-                    "TIPO_DOCUMENTO = @tipo_documento, " +
+                    "SET F_COBRO = @f_cobro, " +
                     "TIPO_COBRO = @tipo_cobro, " +
-                    "FACTURADO = @facturado, " +
-                    "SALDO = @saldo, " +
-                    "MONEDA = @moneda, " +
                     "OBSERVACIONES = @observaciones, " +
                     "TS_DESCARGADO = CURRENT_TIMESTAMP " +
                     "WHERE ID_DOCO = @id";
 
                 NpgsqlCommand cmd = new NpgsqlCommand(sqlString, conn);
 
-                cmd.Parameters.Add("@f_documento", NpgsqlTypes.NpgsqlDbType.Date);
-                cmd.Parameters.Add("@f_vencimiento", NpgsqlTypes.NpgsqlDbType.Date);
                 cmd.Parameters.Add("@f_cobro", NpgsqlTypes.NpgsqlDbType.Date);
-                cmd.Parameters.Add("@id_cliente", NpgsqlTypes.NpgsqlDbType.Integer);
-                cmd.Parameters.Add("@serie_doco", NpgsqlTypes.NpgsqlDbType.Varchar, 4);
-                cmd.Parameters.Add("@folio_doco", NpgsqlTypes.NpgsqlDbType.Integer);
-                cmd.Parameters.Add("@tipo_documento", NpgsqlTypes.NpgsqlDbType.Varchar, 150);
                 cmd.Parameters.Add("@tipo_cobro", NpgsqlTypes.NpgsqlDbType.Varchar, 100);
-                cmd.Parameters.Add("@facturado", NpgsqlTypes.NpgsqlDbType.Money);
-                cmd.Parameters.Add("@saldo", NpgsqlTypes.NpgsqlDbType.Money);
-                cmd.Parameters.Add("@moneda", NpgsqlTypes.NpgsqlDbType.Varchar, 50);
                 cmd.Parameters.Add("@observaciones", NpgsqlTypes.NpgsqlDbType.Varchar, 250);
                 cmd.Parameters.Add("@id", NpgsqlTypes.NpgsqlDbType.Integer);
 
-                cmd.Parameters["@f_documento"].Value = adminPaqAccount.DocDate;
-                cmd.Parameters["@f_vencimiento"].Value = adminPaqAccount.DueDate;
                 cmd.Parameters["@f_cobro"].Value = adminPaqAccount.CollectDate;
-                cmd.Parameters["@id_cliente"].Value = adminPaqAccount.Company.Id;
-                cmd.Parameters["@serie_doco"].Value = adminPaqAccount.Serie;
-                cmd.Parameters["@folio_doco"].Value = adminPaqAccount.Folio;
-                cmd.Parameters["@tipo_documento"].Value = adminPaqAccount.DocType;
                 cmd.Parameters["@tipo_cobro"].Value = adminPaqAccount.CollectType;
-                cmd.Parameters["@facturado"].Value = adminPaqAccount.Amount;
-                cmd.Parameters["@saldo"].Value = adminPaqAccount.Balance;
-                cmd.Parameters["@moneda"].Value = adminPaqAccount.Currency;
                 cmd.Parameters["@observaciones"].Value = adminPaqAccount.Note;
                 cmd.Parameters["@id"].Value = adminPaqAccount.DocId;
 
