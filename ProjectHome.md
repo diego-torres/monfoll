@@ -1,0 +1,1 @@
+Se conecta a AdminPaq para obtener datos de cuentas por cobrar y agrega características para un seguimiento  integral.
